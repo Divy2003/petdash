@@ -5,6 +5,11 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
   userType: { type: String, enum: ['Pet Owner', 'Business'], required: true },
+  phoneNumber: String,
+  streetName: String,
+  zipCode: String,
+  city: String,
+  state: String,
   resetPasswordToken: String,
   resetPasswordExpires: Date
 });

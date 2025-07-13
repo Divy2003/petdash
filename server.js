@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes'); 
-
+const profileRoutes = require('./routes/profileRoutes');
 dotenv.config();
 
 const app = express();
@@ -12,6 +12,7 @@ connectDB();
 
 app.use(express.json());
 app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
 
 
 
