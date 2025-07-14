@@ -27,6 +27,11 @@ exports.updateProfile = async (req, res) => {
       }
     });
 
+    // Handle profile image upload
+    if (req.file) {
+      updateFields.profileImage = req.file.path;
+    }
+
     const user = await User.findByIdAndUpdate(
       req.user.id,
       updateFields,

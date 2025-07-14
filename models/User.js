@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   zipCode: String,
   city: String,
   state: String,
+  profileImage: { type: String, default: null },
   resetPasswordToken: String,
   resetPasswordExpires: Date
 });

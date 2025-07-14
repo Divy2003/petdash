@@ -1,0 +1,193 @@
+{
+  "info": {
+    "_postman_id": "petdesh-backend-collection-001",
+    "name": "Petdesh API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for Petdesh backend API."
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"userType\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "signup"]
+            }
+          },
+          "response": [
+            {
+              "code": 201,
+              "body": "{\n  \"message\": \"User created successfully\"\n}"
+            },
+            {
+              "code": 400,
+              "body": "{\n  \"message\": \"User already exists\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": [
+            {
+              "code": 200,
+              "body": "{\n  \"message\": \"Login successful\",\n  \"token\": \"<jwt-token>\",\n  \"user\": { /* user object */ }\n}"
+            },
+            {
+              "code": 400,
+              "body": "{\n  \"message\": \"User not found\"\n}"
+            },
+            {
+              "code": 401,
+              "body": "{\n  \"message\": \"Incorrect password\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Request Password Reset",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/request-password-reset",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "request-password-reset"]
+            }
+          },
+          "response": [
+            {
+              "code": 200,
+              "body": "{\n  \"message\": \"Password reset link sent to email\"\n}"
+            },
+            {
+              "code": 404,
+              "body": "{\n  \"message\": \"User not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"token\": \"<reset-token>\",\n  \"newPassword\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "reset-password"]
+            }
+          },
+          "response": [
+            {
+              "code": 200,
+              "body": "{\n  \"message\": \"Password has been reset\"\n}"
+            },
+            {
+              "code": 400,
+              "body": "{\n  \"message\": \"Invalid or expired token\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/profile/get-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["profile", "get-profile"]
+            }
+          },
+          "response": [
+            {
+              "code": 200,
+              "body": "{\n  \"message\": \"Profile fetched successfully\",\n  \"profile\": { /* user profile object */ }\n}"
+            },
+            {
+              "code": 404,
+              "body": "{\n  \"message\": \"User not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"phoneNumber\": \"1234567890\",\n  \"streetName\": \"Main St\",\n  \"zipCode\": \"12345\",\n  \"city\": \"Metropolis\",\n  \"state\": \"CA\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/profile/create-update-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["profile", "create-update-profile"]
+            }
+          },
+          "response": [
+            {
+              "code": 200,
+              "body": "{\n  \"message\": \"Profile updated successfully\",\n  \"profile\": { /* updated user profile object */ }\n}"
+            },
+            {
+              "code": 404,
+              "body": "{\n  \"message\": \"User not found\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "token", "value": "" }
+  ]
+} 
