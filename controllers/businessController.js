@@ -10,6 +10,7 @@ exports.getBusinessesByCategory = async (req, res) => {
 
     // Verify category exists
     const category = await Category.findById(categoryId);
+    console.log('Category:', category);
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
     }
@@ -25,9 +26,11 @@ exports.getBusinessesByCategory = async (req, res) => {
       category: categoryId, 
       isActive: true 
     }).populate('business', '_id');
+    console.log('Services in category:', services);
 
     // Get unique business IDs
-    const businessIds = [...new Set(services.map(service => service.business._id.toString()))];
+    const businessIds = [...new Set(services.map(service => service.business && service.business._id ? service.business._id.toString() : null).filter(Boolean))];
+    console.log('Business IDs:', businessIds);
 
     // Build business filter
     const businessFilter = {
@@ -35,6 +38,7 @@ exports.getBusinessesByCategory = async (req, res) => {
       userType: 'Business',
       ...locationFilter
     };
+    console.log('Business filter:', businessFilter);
 
     // Get businesses with pagination
     const businesses = await User.find(businessFilter)
@@ -42,6 +46,7 @@ exports.getBusinessesByCategory = async (req, res) => {
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .sort({ name: 1 });
+    console.log('Businesses found:', businesses);
 
     // Get total count for pagination
     const total = await User.countDocuments(businessFilter);
@@ -62,6 +67,7 @@ exports.getBusinessesByCategory = async (req, res) => {
         };
       })
     );
+    console.log('Businesses with services:', businessesWithServices);
 
     res.status(200).json({
       message: 'Businesses fetched successfully',
@@ -80,6 +86,7 @@ exports.getBusinessesByCategory = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('Error in getBusinessesByCategory:', error);
     res.status(500).json({
       message: 'Error fetching businesses',
       error: error.message
