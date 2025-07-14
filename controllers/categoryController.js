@@ -1,10 +1,13 @@
 const Category = require('../models/Category');
+const User = require('../models/User');
 
 // Helper: Check if user is admin (you can modify this based on your admin logic)
-function isAdmin(user) {
+async function isAdmin(user) {
   // For now, assuming admin is a specific userType or email
   // You can modify this logic based on your requirements
-  return user && (user.userType === 'Admin' || user.email === 'admin@petdash.com');
+  console.log(user.email);
+  const admin = await User.findOne({ email: 'admin@petdash.com' });
+  return user && (user.email === admin.email);
 }
 
 // Create Category (Admin only)

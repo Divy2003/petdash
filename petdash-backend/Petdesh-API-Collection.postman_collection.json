@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "petdesh-backend-collection-001",
+    "_postman_id": "petdesh-backend-collection-002",
     "name": "Petdesh API Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": "Postman collection for Petdesh backend API."
@@ -18,7 +18,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"userType\": \"user\"\n}"
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"userType\": \"Business\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/auth/signup",
@@ -26,16 +26,7 @@
               "path": ["auth", "signup"]
             }
           },
-          "response": [
-            {
-              "code": 201,
-              "body": "{\n  \"message\": \"User created successfully\"\n}"
-            },
-            {
-              "code": 400,
-              "body": "{\n  \"message\": \"User already exists\"\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Login",
@@ -54,20 +45,7 @@
               "path": ["auth", "login"]
             }
           },
-          "response": [
-            {
-              "code": 200,
-              "body": "{\n  \"message\": \"Login successful\",\n  \"token\": \"<jwt-token>\",\n  \"user\": { /* user object */ }\n}"
-            },
-            {
-              "code": 400,
-              "body": "{\n  \"message\": \"User not found\"\n}"
-            },
-            {
-              "code": 401,
-              "body": "{\n  \"message\": \"Incorrect password\"\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Request Password Reset",
@@ -86,16 +64,7 @@
               "path": ["auth", "request-password-reset"]
             }
           },
-          "response": [
-            {
-              "code": 200,
-              "body": "{\n  \"message\": \"Password reset link sent to email\"\n}"
-            },
-            {
-              "code": 404,
-              "body": "{\n  \"message\": \"User not found\"\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Reset Password",
@@ -114,16 +83,7 @@
               "path": ["auth", "reset-password"]
             }
           },
-          "response": [
-            {
-              "code": 200,
-              "body": "{\n  \"message\": \"Password has been reset\"\n}"
-            },
-            {
-              "code": 400,
-              "body": "{\n  \"message\": \"Invalid or expired token\"\n}"
-            }
-          ]
+          "response": []
         }
       ]
     },
@@ -143,28 +103,26 @@
               "path": ["profile", "get-profile"]
             }
           },
-          "response": [
-            {
-              "code": 200,
-              "body": "{\n  \"message\": \"Profile fetched successfully\",\n  \"profile\": { /* user profile object */ }\n}"
-            },
-            {
-              "code": 404,
-              "body": "{\n  \"message\": \"User not found\"\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Update Profile",
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"phoneNumber\": \"1234567890\",\n  \"streetName\": \"Main St\",\n  \"zipCode\": \"12345\",\n  \"city\": \"Metropolis\",\n  \"state\": \"CA\"\n}"
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "John Doe", "type": "text" },
+                { "key": "phoneNumber", "value": "1234567890", "type": "text" },
+                { "key": "streetName", "value": "Main St", "type": "text" },
+                { "key": "zipCode", "value": "12345", "type": "text" },
+                { "key": "city", "value": "Metropolis", "type": "text" },
+                { "key": "state", "value": "CA", "type": "text" },
+                { "key": "profileImage", "type": "file" }
+              ]
             },
             "url": {
               "raw": "{{baseUrl}}/profile/create-update-profile",
@@ -172,16 +130,7 @@
               "path": ["profile", "create-update-profile"]
             }
           },
-          "response": [
-            {
-              "code": 200,
-              "body": "{\n  \"message\": \"Profile updated successfully\",\n  \"profile\": { /* updated user profile object */ }\n}"
-            },
-            {
-              "code": 404,
-              "body": "{\n  \"message\": \"User not found\"\n}"
-            }
-          ]
+          "response": []
         }
       ]
     },
@@ -227,14 +176,12 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/api/pet/create",
+              "raw": "{{baseUrl}}/pet/create",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "pet", "create"]
+              "path": ["pet", "create"]
             }
           },
-          "response": [
-            { "code": 201, "body": "{\n  \"message\": \"Pet profile created successfully\",\n  \"pet\": { /* pet object */ }\n}" }
-          ]
+          "response": []
         },
         {
           "name": "Update Pet Profile",
@@ -252,14 +199,12 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/api/pet/update/:id",
+              "raw": "{{baseUrl}}/pet/update/:id",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "pet", "update", ":id"]
+              "path": ["pet", "update", ":id"]
             }
           },
-          "response": [
-            { "code": 200, "body": "{\n  \"message\": \"Pet profile updated successfully\",\n  \"pet\": { /* updated pet object */ }\n}" }
-          ]
+          "response": []
         },
         {
           "name": "Get Pet Profile",
@@ -269,21 +214,297 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/pet/:id",
+              "raw": "{{baseUrl}}/pet/:id",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "pet", ":id"]
+              "path": ["pet", ":id"]
             }
           },
-          "response": [
-            { "code": 200, "body": "{\n  \"message\": \"Pet profile fetched successfully\",\n  \"pet\": { /* pet object */ }\n}" },
-            { "code": 404, "body": "{\n  \"message\": \"Pet not found\"\n}" }
-          ]
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Service (Business)",
+      "item": [
+        {
+          "name": "Create Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "Bath & Full Haircut", "type": "text" },
+                { "key": "description", "value": "For dogs who need a bath & haircut.", "type": "text" },
+                { "key": "serviceIncluded", "value": "Bath, Haircut", "type": "text" },
+                { "key": "notes", "value": "Special care for sensitive skin.", "type": "text" },
+                { "key": "price", "value": "45", "type": "text" },
+                { "key": "category", "value": "<categoryId>", "type": "text" },
+                { "key": "images", "type": "file" },
+                { "key": "availableFor[cats][]", "value": "Small", "type": "text" },
+                { "key": "availableFor[dogs][]", "value": "Medium", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/service/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["service", "create"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Service",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "Bath & Full Haircut", "type": "text" },
+                { "key": "price", "value": "55", "type": "text" },
+                { "key": "category", "value": "<categoryId>", "type": "text" },
+                { "key": "images", "type": "file" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/service/update/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["service", "update", ":id"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Service",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/service/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["service", ":id"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Business Services",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/service/business/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["service", "business", "all"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Service",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/service/delete/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["service", "delete", ":id"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Category",
+      "item": [
+        {
+          "name": "Get All Public Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/category/public",
+              "host": ["{{baseUrl}}"],
+              "path": ["category", "public"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Category",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/category/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["category", ":id"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sitting\",\n  \"description\": \"Pet sitting services\",\n  \"icon\": \"sitting-icon.png\",\n  \"color\": \"#007bff\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/category/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["category", "create"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Categories (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/category/admin/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["category", "admin", "all"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sitting\",\n  \"description\": \"Updated description\",\n  \"icon\": \"sitting-icon.png\",\n  \"color\": \"#007bff\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/category/update/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["category", "update", ":id"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/category/delete/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["category", "delete", ":id"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Seed Categories (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/category/seed",
+              "host": ["{{baseUrl}}"],
+              "path": ["category", "seed"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Business",
+      "item": [
+        {
+          "name": "Get Businesses by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/business/category/:categoryId?page=1&limit=10&city=&state=&zipCode=",
+              "host": ["{{baseUrl}}"],
+              "path": ["business", "category", ":categoryId"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "city", "value": "" },
+                { "key": "state", "value": "" },
+                { "key": "zipCode", "value": "" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Business Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/business/profile/:businessId",
+              "host": ["{{baseUrl}}"],
+              "path": ["business", "profile", ":businessId"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Businesses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/business/search?query=&category=&city=&state=&zipCode=&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["business", "search"],
+              "query": [
+                { "key": "query", "value": "" },
+                { "key": "category", "value": "" },
+                { "key": "city", "value": "" },
+                { "key": "state", "value": "" },
+                { "key": "zipCode", "value": "" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
         }
       ]
     }
   ],
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
     { "key": "token", "value": "" }
   ]
 } 

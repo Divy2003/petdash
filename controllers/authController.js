@@ -15,7 +15,7 @@ exports.signup = async (req, res) => {
     await newUser.save();
 
     res.status(201).json({ message: 'User created successfully' });
-    
+
   } catch (err) {
     res.status(500).json({ message: 'Signup failed', error: err.message });
   }
@@ -24,7 +24,7 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email }).select('-password');
+    const user = await User.findOne({ email })
     if (!user) return res.status(400).json({ message: 'User not found' });
 
     const match = await bcrypt.compare(password, user.password);
@@ -34,6 +34,9 @@ exports.login = async (req, res) => {
       expiresIn: '1d'
     });
 
+
+    // Remove password before sending user object in response
+    user.password = undefined;
     res.status(200).json({ message: 'Login successful', token, user });
   } catch (err) {
     res.status(500).json({ message: 'Login failed', error: err.message });

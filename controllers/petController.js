@@ -1,8 +1,14 @@
 const Pet = require('../models/Pet');
 
+// Helper: Check if user is pet owner
+function isPetOwner(user) {
+  return user && user.userType === 'Pet Owner';
+}
+
 // Create Pet Profile
 exports.createPetProfile = async (req, res) => {
   try {
+    if (!isPetOwner(req.user)) return res.status(403).json({ message: 'Only pet owners can create pet profiles' });
     const petData = { ...req.body, owner: req.user.id };
     if (req.file) {
       petData.profileImage = req.file.path;
@@ -22,6 +28,7 @@ exports.createPetProfile = async (req, res) => {
 // Update Pet Profile
 exports.updatePetProfile = async (req, res) => {
   try {
+    if (!isPetOwner(req.user)) return res.status(403).json({ message: 'Only pet owners can update pet profiles' });
     const updateFields = { ...req.body };
     if (req.file) {
       updateFields.profileImage = req.file.path;
@@ -44,10 +51,22 @@ exports.updatePetProfile = async (req, res) => {
 // Get Pet Profile
 exports.getPetProfile = async (req, res) => {
   try {
+    if (!isPetOwner(req.user)) return res.status(403).json({ message: 'Only pet owners can access pet profiles' });
     const pet = await Pet.findOne({ _id: req.params.id, owner: req.user.id });
     if (!pet) return res.status(404).json({ message: 'Pet not found' });
     res.status(200).json({ message: 'Pet profile fetched successfully', pet });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching pet profile', error: error.message });
+  }
+};
+
+// Get All Pets for the authenticated Pet Owner
+exports.getAllPets = async (req, res) => {
+  try {
+    if (!isPetOwner(req.user)) return res.status(403).json({ message: 'Only pet owners can access their pets' });
+    const pets = await Pet.find({ owner: req.user.id });
+    res.status(200).json({ message: 'Pets fetched successfully', pets });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching pets', error: error.message });
   }
 }; 
