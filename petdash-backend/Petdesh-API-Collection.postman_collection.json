@@ -184,6 +184,102 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Pet Profile",
+      "item": [
+        {
+          "name": "Create Pet Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Troy", "type": "text" },
+                { "key": "species", "value": "Dog", "type": "text" },
+                { "key": "typeOfPet", "value": "Toy Terrier", "type": "text" },
+                { "key": "breed", "value": "Toy terrier", "type": "text" },
+                { "key": "weight", "value": "47LBS", "type": "text" },
+                { "key": "gender", "value": "Male", "type": "text" },
+                { "key": "birthday", "value": "2016-02-02", "type": "text" },
+                { "key": "allergies", "value": "[\"Beef\",\"Soy\",\"Egg\"]", "type": "text" },
+                { "key": "currentMedications", "value": "", "type": "text" },
+                { "key": "lastVaccinatedDate", "value": "2021-10-02", "type": "text" },
+                { "key": "vaccinations", "value": "[{\"name\":\"Rabies\",\"date\":\"2021-10-02\"}]", "type": "text" },
+                { "key": "favoriteToys", "value": "[\"Toy Rope\"]", "type": "text" },
+                { "key": "neutered", "value": "true", "type": "text" },
+                { "key": "vaccinated", "value": "true", "type": "text" },
+                { "key": "friendlyWithDogs", "value": "true", "type": "text" },
+                { "key": "friendlyWithCats", "value": "false", "type": "text" },
+                { "key": "friendlyWithKidsUnder10", "value": "true", "type": "text" },
+                { "key": "friendlyWithKidsOver10", "value": "true", "type": "text" },
+                { "key": "microchipped", "value": "true", "type": "text" },
+                { "key": "purebred", "value": "true", "type": "text" },
+                { "key": "pottyTrained", "value": "true", "type": "text" },
+                { "key": "preferredVeterinarian", "value": "", "type": "text" },
+                { "key": "preferredPharmacy", "value": "", "type": "text" },
+                { "key": "preferredGroomer", "value": "", "type": "text" },
+                { "key": "favoriteDogPark", "value": "", "type": "text" },
+                { "key": "profileImage", "type": "file" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pet/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "pet", "create"]
+            }
+          },
+          "response": [
+            { "code": 201, "body": "{\n  \"message\": \"Pet profile created successfully\",\n  \"pet\": { /* pet object */ }\n}" }
+          ]
+        },
+        {
+          "name": "Update Pet Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Troy", "type": "text" },
+                { "key": "weight", "value": "50LBS", "type": "text" },
+                { "key": "profileImage", "type": "file" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pet/update/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "pet", "update", ":id"]
+            }
+          },
+          "response": [
+            { "code": 200, "body": "{\n  \"message\": \"Pet profile updated successfully\",\n  \"pet\": { /* updated pet object */ }\n}" }
+          ]
+        },
+        {
+          "name": "Get Pet Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pet/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "pet", ":id"]
+            }
+          },
+          "response": [
+            { "code": 200, "body": "{\n  \"message\": \"Pet profile fetched successfully\",\n  \"pet\": { /* pet object */ }\n}" },
+            { "code": 404, "body": "{\n  \"message\": \"Pet not found\"\n}" }
+          ]
+        }
+      ]
     }
   ],
   "variable": [
