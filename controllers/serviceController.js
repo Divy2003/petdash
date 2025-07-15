@@ -74,7 +74,7 @@ exports.updateService = async (req, res) => {
 // Get Service
 exports.getService = async (req, res) => {
   try {
-    const service = await Service.findOne({ _id: req.params.id, business: req.user.id })
+    const service = await Service.findById(req.params.id)
       .populate('category', 'name description icon color');
     if (!service) return res.status(404).json({ message: 'Service not found' });
     res.status(200).json({ message: 'Service fetched successfully', service });

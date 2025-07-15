@@ -10,10 +10,12 @@ router.post('/create', auth, upload.single('profileImage'), createPetProfile);
 // Update Pet Profile
 router.put('/update/:id', auth, upload.single('profileImage'), updatePetProfile);
 
+// Get All Pets
+router.get('/all', auth, getAllPets);
+
 // Get Pet Profile
 router.get('/:id', auth, getPetProfile);
 
-// Get All Pets
-router.get('/all', auth, getAllPets);
+
 
 module.exports = router; 

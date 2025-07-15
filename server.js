@@ -6,6 +6,7 @@ const petRoutes = require('./routes/petRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const businessRoutes = require('./routes/businessRoutes');
+const appointmentRoutes = require('./routes/appointmentRoutes');
 dotenv.config();
 
 const app = express();
@@ -21,6 +22,7 @@ app.use('/api/pet', petRoutes);
 app.use('/api/service', serviceRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/business', businessRoutes);
+app.use('/api/appointment', appointmentRoutes);
 
 
 app.listen(process.env.PORT || 5000, () => {

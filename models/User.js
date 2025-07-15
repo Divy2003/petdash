@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
   city: String,
   state: String,
   profileImage: { type: String, default: null },
+  // Business-specific fields (optional)
+  shopImage: { type: String, default: null },
+  shopOpenTime: { type: String, default: null },
+  shopCloseTime: { type: String, default: null },
   resetPasswordToken: String,
   resetPasswordExpires: Date
 });

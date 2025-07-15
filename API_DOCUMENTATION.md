@@ -1,5 +1,108 @@
 # PetDash Backend API Documentation
 
+## Appointment Management System
+
+### Overview
+The appointment management system allows pet owners to book appointments with service providers and automatically sends email confirmations to both parties.
+
+### Appointment Endpoints
+
+#### 1. Create Appointment
+**POST** `/api/appointment/create`
+
+Creates a new appointment booking and sends confirmation emails to both customer and business.
+
+**Headers:**
+```
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "businessId": "64a1b2c3d4e5f6789012345a",
+  "serviceId": "64a1b2c3d4e5f6789012345b",
+  "petId": "64a1b2c3d4e5f6789012345c",
+  "appointmentDate": "2024-05-20",
+  "appointmentTime": "11:00 AM",
+  "addOnServices": [
+    {
+      "name": "Nail Trimming",
+      "price": 15
+    }
+  ],
+  "subtotal": 80,
+  "tax": 20,
+  "total": 100,
+  "notes": "Pet is nervous around strangers",
+  "couponCode": "SAVE10"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Appointment created successfully",
+  "appointment": {
+    "_id": "64a1b2c3d4e5f6789012345d",
+    "bookingId": "APT17524859528611234",
+    "status": "upcoming",
+    "emailSent": true,
+    "createdAt": "2024-01-15T10:30:00.000Z"
+  },
+  "emailSent": true
+}
+```
+
+#### 2. Get Customer Appointments
+**GET** `/api/appointment/customer`
+
+Retrieves all appointments for the logged-in customer (pet owner).
+
+**Headers:**
+```
+Authorization: Bearer <jwt_token>
+```
+
+#### 3. Get Business Appointments
+**GET** `/api/appointment/business`
+
+Retrieves all appointments for the logged-in business owner.
+
+**Headers:**
+```
+Authorization: Bearer <jwt_token>
+```
+
+#### 4. Get Appointment Details
+**GET** `/api/appointment/:appointmentId`
+
+Retrieves detailed information about a specific appointment.
+
+#### 5. Update Appointment Status
+**PUT** `/api/appointment/:appointmentId/status`
+
+Updates the status of an appointment (upcoming, completed, cancelled).
+
+**Request Body:**
+```json
+{
+  "status": "completed"
+}
+```
+
+### Email Notifications
+
+The appointment system automatically sends email notifications:
+
+1. **Customer Confirmation Email**: Sent to the pet owner with booking details
+2. **Business Notification Email**: Sent to the service provider with customer and pet details
+
+Both emails include booking ID, appointment details, contact information, and service specifics.
+
+---
+
 ## Category Management System
 
 ### Overview
