@@ -7,7 +7,25 @@ exports.createProduct = async (req, res) => {
     if (req.user.userType !== 'Business') {
       return res.status(403).json({ message: 'Only businesses can create products.' });
     }
-    const { name, description, price, images, stock, subscriptionAvailable, category } = req.body;
+    const {
+      name,
+      description,
+      price,
+      images,
+      stock,
+      subscriptionAvailable,
+      category,
+      manufacturer,
+      shippingCost,
+      monthlyDeliveryPrice,
+      brand,
+      itemWeight,
+      itemForm,
+      ageRange,
+      breedRecommendation,
+      dietType
+    } = req.body;
+
     const product = new Product({
       name,
       description,
@@ -16,7 +34,16 @@ exports.createProduct = async (req, res) => {
       stock,
       business: req.user.id,
       subscriptionAvailable,
-      category
+      category,
+      manufacturer,
+      shippingCost,
+      monthlyDeliveryPrice,
+      brand,
+      itemWeight,
+      itemForm,
+      ageRange,
+      breedRecommendation,
+      dietType
     });
     await product.save();
     res.status(201).json({ message: 'Product created successfully', product });
@@ -98,10 +125,55 @@ exports.getBusinessProducts = async (req, res) => {
     if (req.user.userType !== 'Business') {
       return res.status(403).json({ message: 'Only businesses can view their products.' });
     }
-    const products = await Product.find({ business: req.user.id });
+    const products = await Product.find({ business: req.user.id }).sort({ createdAt: -1 });
     res.json({ products });
   } catch (error) {
     console.error('Get business products error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
-}; 
+};
+
+// Get products by category (public)
+exports.getProductsByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const products = await Product.find({ category }).populate('business', 'name');
+    res.json({ products });
+  } catch (error) {
+    console.error('Get products by category error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Search products (public)
+exports.searchProducts = async (req, res) => {
+  try {
+    const { q, category, minPrice, maxPrice } = req.query;
+    let query = {};
+
+    if (q) {
+      query.$or = [
+        { name: { $regex: q, $options: 'i' } },
+        { description: { $regex: q, $options: 'i' } },
+        { manufacturer: { $regex: q, $options: 'i' } },
+        { brand: { $regex: q, $options: 'i' } }
+      ];
+    }
+
+    if (category) {
+      query.category = category;
+    }
+
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = parseFloat(minPrice);
+      if (maxPrice) query.price.$lte = parseFloat(maxPrice);
+    }
+
+    const products = await Product.find(query).populate('business', 'name');
+    res.json({ products });
+  } catch (error) {
+    console.error('Search products error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

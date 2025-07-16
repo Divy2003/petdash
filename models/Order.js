@@ -30,7 +30,7 @@ const orderSchema = new mongoose.Schema({
   products: [orderProductSchema],
   status: {
     type: String,
-    enum: ['cart', 'pending', 'paid', 'failed', 'shipped', 'delivered', 'cancelled'],
+    enum: ['cart', 'pending', 'paid', 'failed', 'shipped', 'delivered', 'cancelled', 'subscription'],
     default: 'cart'
   },
   paymentStatus: {
@@ -38,19 +38,59 @@ const orderSchema = new mongoose.Schema({
     enum: ['pending', 'paid', 'failed'],
     default: 'pending'
   },
+  subtotal: {
+    type: Number,
+    default: 0
+  },
+  shippingCost: {
+    type: Number,
+    default: 0
+  },
+  tax: {
+    type: Number,
+    default: 0
+  },
   total: {
     type: Number,
     required: true
+  },
+  promoCode: {
+    code: String,
+    discount: Number, // Percentage or fixed amount
+    discountType: {
+      type: String,
+      enum: ['percentage', 'fixed']
+    }
   },
   shippingAddress: {
     street: String,
     city: String,
     state: String,
-    zipCode: String
+    zipCode: String,
+    country: String
   },
   paymentMethod: {
     type: String
+  },
+  orderNumber: {
+    type: String,
+    unique: true
+  },
+  deliveryFrequency: {
+    type: String,
+    enum: ['weekly', 'monthly', 'quarterly']
+  },
+  nextDeliveryDate: {
+    type: Date
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Order', orderSchema); 
+// Generate unique order number before saving
+orderSchema.pre('save', function(next) {
+  if (!this.orderNumber && this.status !== 'cart') {
+    this.orderNumber = 'ORD' + Date.now() + Math.floor(Math.random() * 1000);
+  }
+  next();
+});
+
+module.exports = mongoose.model('Order', orderSchema);

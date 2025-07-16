@@ -9,6 +9,7 @@ const businessRoutes = require('./routes/businessRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const subscriptionRoutes = require('./routes/subscriptionRoutes');
 const cors = require('cors');
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use('/api/business', businessRoutes);
 app.use('/api/appointment', appointmentRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/order', orderRoutes);
+app.use('/api/subscription', subscriptionRoutes);
 
 
 app.listen(process.env.PORT || 5000, () => {

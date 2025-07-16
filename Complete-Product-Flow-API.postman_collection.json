@@ -1,0 +1,729 @@
+{
+  "info": {
+    "_postman_id": "complete-product-flow-api",
+    "name": "Complete Product Flow API - PetDash",
+    "description": "Complete Postman collection for PetDash Product Flow including products, cart, orders, and subscriptions",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Business Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Pet Store Business\",\n  \"email\": \"business@petstore.com\",\n  \"password\": \"password123\",\n  \"userType\": \"Business\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "signup"]
+            }
+          }
+        },
+        {
+          "name": "Pet Owner Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"userType\": \"Pet Owner\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "signup"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('token', response.token);",
+                  "    console.log('Token saved:', response.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"business@petstore.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Product Management",
+      "item": [
+        {
+          "name": "Create Dog Food Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('dogFoodId', response.product._id);",
+                  "    console.log('Dog Food Product ID saved:', response.product._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Royal Canin Medium Breed Adult Dry Dog Food\",\n  \"description\": \"Complete nutrition for medium breed adult dogs aged 1-7 years. Made with high-quality proteins and balanced nutrition.\",\n  \"price\": 59.74,\n  \"manufacturer\": \"Royal Canin\",\n  \"shippingCost\": 5.99,\n  \"monthlyDeliveryPrice\": 55.00,\n  \"brand\": \"Royal Canin\",\n  \"itemWeight\": \"30 Pounds\",\n  \"itemForm\": \"Dry\",\n  \"ageRange\": \"Adult\",\n  \"breedRecommendation\": \"Medium Breeds\",\n  \"dietType\": \"Complete\",\n  \"images\": [\"https://example.com/royal-canin-1.jpg\", \"https://example.com/royal-canin-2.jpg\"],\n  \"stock\": 100,\n  \"subscriptionAvailable\": true,\n  \"category\": \"Dog Food\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/product",
+              "host": ["{{baseUrl}}"],
+              "path": ["product"]
+            }
+          }
+        },
+        {
+          "name": "Create Cat Food Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('catFoodId', response.product._id);",
+                  "    console.log('Cat Food Product ID saved:', response.product._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Whiskas Adult Dry Cat Food\",\n  \"description\": \"Complete nutrition for adult cats with real chicken and essential vitamins.\",\n  \"price\": 25.99,\n  \"manufacturer\": \"Whiskas\",\n  \"shippingCost\": 3.99,\n  \"monthlyDeliveryPrice\": 23.99,\n  \"brand\": \"Whiskas\",\n  \"itemWeight\": \"16 Pounds\",\n  \"itemForm\": \"Dry\",\n  \"ageRange\": \"Adult\",\n  \"breedRecommendation\": \"All Breeds\",\n  \"dietType\": \"Complete\",\n  \"images\": [\"https://example.com/whiskas-1.jpg\"],\n  \"stock\": 75,\n  \"subscriptionAvailable\": true,\n  \"category\": \"Cat Food\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/product",
+              "host": ["{{baseUrl}}"],
+              "path": ["product"]
+            }
+          }
+        },
+        {
+          "name": "Create Dog Toy Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('dogToyId', response.product._id);",
+                  "    console.log('Dog Toy Product ID saved:', response.product._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"KONG Classic Dog Toy\",\n  \"description\": \"Durable rubber toy perfect for stuffing with treats. Great for mental stimulation.\",\n  \"price\": 12.99,\n  \"manufacturer\": \"KONG\",\n  \"shippingCost\": 2.99,\n  \"brand\": \"KONG\",\n  \"itemWeight\": \"0.5 Pounds\",\n  \"itemForm\": \"Solid\",\n  \"ageRange\": \"All Ages\",\n  \"breedRecommendation\": \"All Breeds\",\n  \"images\": [\"https://example.com/kong-toy.jpg\"],\n  \"stock\": 200,\n  \"subscriptionAvailable\": false,\n  \"category\": \"Dog Toys\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/product",
+              "host": ["{{baseUrl}}"],
+              "path": ["product"]
+            }
+          }
+        },
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product",
+              "host": ["{{baseUrl}}"],
+              "path": ["product"]
+            }
+          }
+        },
+        {
+          "name": "Search Products - Dog Food",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product/search?q=dog&category=Dog Food&minPrice=20&maxPrice=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["product", "search"],
+              "query": [
+                { "key": "q", "value": "dog" },
+                { "key": "category", "value": "Dog Food" },
+                { "key": "minPrice", "value": "20" },
+                { "key": "maxPrice", "value": "100" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Products by Category - Dog Food",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product/category/Dog Food",
+              "host": ["{{baseUrl}}"],
+              "path": ["product", "category", "Dog Food"]
+            }
+          }
+        },
+        {
+          "name": "Get Product Details - Dog Food",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product/{{dogFoodId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["product", "{{dogFoodId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Business Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/product/business/list",
+              "host": ["{{baseUrl}}"],
+              "path": ["product", "business", "list"]
+            }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 65.99,\n  \"stock\": 150,\n  \"description\": \"Updated: Complete nutrition for medium breed adult dogs aged 1-7 years. Now with improved formula!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/product/{{dogFoodId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["product", "{{dogFoodId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart Management (Pet Owner Login Required)",
+      "item": [
+        {
+          "name": "Login as Pet Owner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('token', response.token);",
+                  "    console.log('Pet Owner Token saved:', response.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Add Dog Food to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{dogFoodId}}\",\n  \"quantity\": 2,\n  \"subscription\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "cart"]
+            }
+          }
+        },
+        {
+          "name": "Add Cat Food to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{catFoodId}}\",\n  \"quantity\": 1,\n  \"subscription\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "cart"]
+            }
+          }
+        },
+        {
+          "name": "Add Dog Toy to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{dogToyId}}\",\n  \"quantity\": 3,\n  \"subscription\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "cart"]
+            }
+          }
+        },
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/order/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "cart"]
+            }
+          }
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{dogFoodId}}\",\n  \"quantity\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "cart"]
+            }
+          }
+        },
+        {
+          "name": "Apply Promo Code - SAVE10",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"promoCode\": \"SAVE10\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/cart/promo",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "cart", "promo"]
+            }
+          }
+        },
+        {
+          "name": "Apply Promo Code - SAVE20",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"promoCode\": \"SAVE20\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/cart/promo",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "cart", "promo"]
+            }
+          }
+        },
+        {
+          "name": "Apply Promo Code - FLAT5",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"promoCode\": \"FLAT5\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/cart/promo",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "cart", "promo"]
+            }
+          }
+        },
+        {
+          "name": "Remove Item from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/order/cart/{{catFoodId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "cart", "{{catFoodId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Updated Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/order/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "cart"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Order Management",
+      "item": [
+        {
+          "name": "Checkout - Complete Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.orderNumber) {",
+                  "        pm.collectionVariables.set('orderNumber', response.orderNumber);",
+                  "        console.log('Order Number saved:', response.orderNumber);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shippingAddress\": {\n    \"street\": \"123 Royal Ln\",\n    \"city\": \"Mesa\",\n    \"state\": \"New Jersey\",\n    \"zipCode\": \"08043\",\n    \"country\": \"USA\"\n  },\n  \"paymentMethod\": \"Visa Card ending in 4350\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/order/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Get Order Details by Order Number",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/order/orders/{{orderNumber}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "orders", "{{orderNumber}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subscription Management",
+      "item": [
+        {
+          "name": "Create Monthly Dog Food Subscription",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('subscriptionId', response.subscription._id);",
+                  "    console.log('Subscription ID saved:', response.subscription._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{dogFoodId}}\",\n  \"deliveryFrequency\": \"monthly\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/subscription",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscription"]
+            }
+          }
+        },
+        {
+          "name": "Create Weekly Cat Food Subscription",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{catFoodId}}\",\n  \"deliveryFrequency\": \"weekly\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/subscription",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscription"]
+            }
+          }
+        },
+        {
+          "name": "Get User Subscriptions",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscription",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscription"]
+            }
+          }
+        },
+        {
+          "name": "Update Subscription - Change to Weekly",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deliveryFrequency\": \"weekly\",\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/subscription/{{subscriptionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscription", "{{subscriptionId}}"]
+            }
+          }
+        },
+        {
+          "name": "Cancel Subscription",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscription/{{subscriptionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscription", "{{subscriptionId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Testing Scenarios",
+      "item": [
+        {
+          "name": "Test Invalid Promo Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"promoCode\": \"INVALID123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/cart/promo",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "cart", "promo"]
+            }
+          }
+        },
+        {
+          "name": "Test Checkout with Empty Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shippingAddress\": {\n    \"street\": \"123 Test St\",\n    \"city\": \"Test City\",\n    \"state\": \"TS\",\n    \"zipCode\": \"12345\",\n    \"country\": \"USA\"\n  },\n  \"paymentMethod\": \"Test Card\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Test Subscription for Non-Subscription Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{dogToyId}}\",\n  \"deliveryFrequency\": \"monthly\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/subscription",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscription"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
+    { "key": "token", "value": "" },
+    { "key": "dogFoodId", "value": "" },
+    { "key": "catFoodId", "value": "" },
+    { "key": "dogToyId", "value": "" },
+    { "key": "orderNumber", "value": "" },
+    { "key": "subscriptionId", "value": "" }
+  ]
+}

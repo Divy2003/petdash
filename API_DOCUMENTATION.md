@@ -349,6 +349,188 @@ Authorization: Bearer <business_token>
 }
 ```
 
+### Product Model
+```javascript
+{
+  name: String (required),
+  description: String (required),
+  price: Number (required),
+  images: [String],
+  stock: Number (required, default: 0),
+  business: ObjectId (ref: 'User', required),
+  subscriptionAvailable: Boolean (default: false),
+  category: String,
+  manufacturer: String,
+  shippingCost: Number (default: 0),
+  monthlyDeliveryPrice: Number,
+  brand: String,
+  itemWeight: String,
+  itemForm: String,
+  ageRange: String,
+  breedRecommendation: String,
+  dietType: String,
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Order Model
+```javascript
+{
+  user: ObjectId (ref: 'User', required),
+  products: [{
+    product: ObjectId (ref: 'Product', required),
+    quantity: Number (required, default: 1),
+    price: Number (required),
+    subscription: Boolean (default: false)
+  }],
+  status: String (enum: ['cart', 'pending', 'paid', 'failed', 'shipped', 'delivered', 'cancelled', 'subscription'], default: 'cart'),
+  paymentStatus: String (enum: ['pending', 'paid', 'failed'], default: 'pending'),
+  subtotal: Number (default: 0),
+  shippingCost: Number (default: 0),
+  tax: Number (default: 0),
+  total: Number (required),
+  promoCode: {
+    code: String,
+    discount: Number,
+    discountType: String (enum: ['percentage', 'fixed'])
+  },
+  shippingAddress: {
+    street: String,
+    city: String,
+    state: String,
+    zipCode: String,
+    country: String
+  },
+  paymentMethod: String,
+  orderNumber: String (unique),
+  deliveryFrequency: String (enum: ['weekly', 'monthly', 'quarterly']),
+  nextDeliveryDate: Date,
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+## Product Flow API Documentation
+
+### Product Management
+
+#### Create Product
+**POST** `/api/product`
+```json
+{
+  "name": "Royal Canin Medium Breed Adult Dry Dog Food",
+  "description": "Complete nutrition for medium breed adult dogs",
+  "price": 59.74,
+  "manufacturer": "Royal Canin",
+  "shippingCost": 5.99,
+  "monthlyDeliveryPrice": 55.00,
+  "brand": "Royal Canin",
+  "itemWeight": "30 Pounds",
+  "itemForm": "Dry",
+  "ageRange": "Adult",
+  "breedRecommendation": "Medium Breeds",
+  "dietType": "Complete",
+  "images": ["image1.jpg", "image2.jpg"],
+  "stock": 100,
+  "subscriptionAvailable": true,
+  "category": "Dog Food"
+}
+```
+
+#### Get All Products
+**GET** `/api/product`
+
+#### Search Products
+**GET** `/api/product/search?q=royal&category=Dog Food&minPrice=50&maxPrice=100`
+
+#### Get Products by Category
+**GET** `/api/product/category/Dog Food`
+
+### Cart Management
+
+#### Add to Cart
+**POST** `/api/order/cart`
+```json
+{
+  "productId": "product_id_here",
+  "quantity": 2,
+  "subscription": false
+}
+```
+
+#### Get Cart
+**GET** `/api/order/cart`
+
+#### Update Cart Item
+**PUT** `/api/order/cart`
+```json
+{
+  "productId": "product_id_here",
+  "quantity": 3
+}
+```
+
+#### Remove from Cart
+**DELETE** `/api/order/cart/:productId`
+
+#### Apply Promo Code
+**POST** `/api/order/cart/promo`
+```json
+{
+  "promoCode": "SAVE10"
+}
+```
+
+### Order Management
+
+#### Checkout
+**POST** `/api/order/orders`
+```json
+{
+  "shippingAddress": {
+    "street": "123 Main St",
+    "city": "New York",
+    "state": "NY",
+    "zipCode": "10001",
+    "country": "USA"
+  },
+  "paymentMethod": "Credit Card"
+}
+```
+
+#### Get Orders
+**GET** `/api/order/orders`
+
+#### Get Order Details
+**GET** `/api/order/orders/:orderNumber`
+
+### Subscription Management
+
+#### Create Subscription
+**POST** `/api/subscription`
+```json
+{
+  "productId": "product_id_here",
+  "deliveryFrequency": "monthly"
+}
+```
+
+#### Get User Subscriptions
+**GET** `/api/subscription`
+
+#### Update Subscription
+**PUT** `/api/subscription/:subscriptionId`
+```json
+{
+  "deliveryFrequency": "weekly",
+  "quantity": 2
+}
+```
+
+#### Cancel Subscription
+**DELETE** `/api/subscription/:subscriptionId`
+
 ## Testing the Implementation
 
 1. Start the server: `npm run dev`
@@ -356,3 +538,4 @@ Authorization: Bearer <business_token>
 3. Seed categories: `POST /api/category/seed`
 4. Create business accounts and add services with categories
 5. Test the discovery flow using the business endpoints
+6. Test the product flow using the new product and order endpoints

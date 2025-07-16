@@ -32,6 +32,34 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: String
+  },
+  manufacturer: {
+    type: String
+  },
+  shippingCost: {
+    type: Number,
+    default: 0
+  },
+  monthlyDeliveryPrice: {
+    type: Number // For subscription products
+  },
+  brand: {
+    type: String
+  },
+  itemWeight: {
+    type: String
+  },
+  itemForm: {
+    type: String
+  },
+  ageRange: {
+    type: String
+  },
+  breedRecommendation: {
+    type: String
+  },
+  dietType: {
+    type: String
   }
 }, { timestamps: true });
 

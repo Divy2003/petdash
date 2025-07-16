@@ -5,6 +5,8 @@ const auth = require('../middlewares/auth');
 
 // Public routes
 router.get('/', productController.getAllProducts);
+router.get('/search', productController.searchProducts);
+router.get('/category/:category', productController.getProductsByCategory);
 router.get('/:productId', productController.getProductById);
 
 // Protected routes (business only)
