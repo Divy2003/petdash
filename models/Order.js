@@ -74,7 +74,8 @@ const orderSchema = new mongoose.Schema({
   },
   orderNumber: {
     type: String,
-    unique: true
+    unique: true,
+    sparse: true  // This allows multiple null values
   },
   deliveryFrequency: {
     type: String,
@@ -87,8 +88,13 @@ const orderSchema = new mongoose.Schema({
 
 // Generate unique order number before saving
 orderSchema.pre('save', function(next) {
+  // Only generate orderNumber for non-cart orders
   if (!this.orderNumber && this.status !== 'cart') {
     this.orderNumber = 'ORD' + Date.now() + Math.floor(Math.random() * 1000);
+  }
+  // Ensure cart orders don't have orderNumber
+  if (this.status === 'cart' && this.orderNumber) {
+    this.orderNumber = undefined;
   }
   next();
 });

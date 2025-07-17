@@ -4,36 +4,86 @@ const Product = require('../../models/Product');
 // Add to cart (add or update cart order for user)
 exports.addToCart = async (req, res) => {
   try {
+    // Validate user authentication
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+
     const userId = req.user.id;
     const { productId, quantity, subscription } = req.body;
-    const product = await Product.findById(productId);
-    if (!product) return res.status(404).json({ message: 'Product not found' });
-    // Find or create cart
-    let cart = await Order.findOne({ user: userId, status: 'cart' }).populate('products.product');
-    if (!cart) {
-      cart = new Order({ user: userId, products: [], status: 'cart', subtotal: 0, shippingCost: 0, tax: 0, total: 0 });
+
+    // Validate required fields
+    if (!productId) {
+      return res.status(400).json({ message: 'Product ID is required' });
     }
+    if (!quantity || quantity < 1) {
+      return res.status(400).json({ message: 'Valid quantity is required' });
+    }
+
+    console.log('Adding to cart:', { userId, productId, quantity, subscription });
+
+    // Find product
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    console.log('Product found:', product.name);
+
+    // Find or create cart
+    let cart = await Order.findOne({ user: userId, status: 'cart' });
+    if (!cart) {
+      console.log('Creating new cart for user:', userId);
+      cart = new Order({
+        user: userId,
+        products: [],
+        status: 'cart',
+        subtotal: 0,
+        shippingCost: 0,
+        tax: 0,
+        total: 0
+      });
+    } else {
+      console.log('Found existing cart with', cart.products.length, 'items');
+      // Populate products for existing cart
+      await cart.populate('products.product');
+    }
+
     // Check if product already in cart
-    const prodIndex = cart.products.findIndex(p => p.product.toString() === productId);
+    const prodIndex = cart.products.findIndex(p => {
+      if (cart.isNew) return false; // New cart, no products yet
+      return p.product && p.product.toString() === productId;
+    });
+
     if (prodIndex > -1) {
-      cart.products[prodIndex].quantity += quantity;
+      console.log('Updating existing product in cart');
+      cart.products[prodIndex].quantity += parseInt(quantity);
       cart.products[prodIndex].subscription = subscription || false;
     } else {
+      console.log('Adding new product to cart');
       cart.products.push({
         product: productId,
-        quantity,
+        quantity: parseInt(quantity),
         price: product.price,
-        subscription: subscription || false    
+        subscription: subscription || false
       });
     }
+
     // Recalculate totals
-    cart.subtotal = cart.products.reduce((sum, p) => sum + p.price * p.quantity, 0);
-    cart.shippingCost = product.shippingCost || 0; // Use the current product's shipping cost
+    cart.subtotal = cart.products.reduce((sum, p) => sum + (p.price * p.quantity), 0);
+    cart.shippingCost = product.shippingCost || 0;
     cart.tax = cart.subtotal * 0.08; // 8% tax rate
     cart.total = cart.subtotal + cart.shippingCost + cart.tax;
 
+    console.log('Cart totals:', { subtotal: cart.subtotal, tax: cart.tax, total: cart.total });
+
     await cart.save();
-    res.json({ message: 'Added to cart', cart });
+    console.log('Cart saved successfully');
+
+    // Populate the cart before sending response
+    await cart.populate('products.product');
+
+    res.json({ message: 'Added to cart successfully', cart });
   } catch (error) {
     console.error('Add to cart error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
