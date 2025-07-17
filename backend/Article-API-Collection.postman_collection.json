@@ -1,0 +1,327 @@
+{
+  "info": {
+    "name": "Pet Patch USA - Article System API",
+    "description": "Complete API collection for the article/blog system allowing business owners to create articles and pet users to read and engage",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "businessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "petOwnerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "articleId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "productId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login Business Owner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('businessToken', response.token);",
+                  "    console.log('Business Token saved:', response.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"business@test.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login Pet Owner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('petOwnerToken', response.token);",
+                  "    console.log('Pet Owner Token saved:', response.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"petowner@test.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Public Article Endpoints",
+      "item": [
+        {
+          "name": "Get Published Articles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/article/published?page=1&limit=10&category=Training Tips&search=puppy",
+              "host": ["{{baseUrl}}"],
+              "path": ["article", "published"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "category",
+                  "value": "Training Tips"
+                },
+                {
+                  "key": "search",
+                  "value": "puppy"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Article by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/article/{{articleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["article", "{{articleId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Article Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/article/meta/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["article", "meta", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Trending Articles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/article/meta/trending?limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["article", "meta", "trending"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Business Owner Article Management",
+      "item": [
+        {
+          "name": "Create Article",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('articleId', response.article._id);",
+                  "    console.log('Article ID saved:', response.article._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{businessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Essential Puppy Training Tips for New Pet Owners\",\n  \"category\": \"Training Tips\",\n  \"body\": \"Training a new puppy can be both exciting and challenging. Here are some essential tips to help you get started:\\n\\n1. **Start Early**: Begin training as soon as you bring your puppy home.\\n2. **Be Consistent**: Use the same commands and rewards every time.\\n3. **Positive Reinforcement**: Always reward good behavior with treats, praise, or play.\\n4. **House Training**: Establish a routine for feeding and bathroom breaks.\\n5. **Socialization**: Expose your puppy to different people, animals, and environments.\\n\\nTraining your puppy takes time and dedication, but the results are worth it!\",\n  \"excerpt\": \"Essential tips for training your new puppy, including house training, basic commands, and socialization techniques.\",\n  \"tags\": [\"training\", \"puppy\", \"behavior\", \"tips\"],\n  \"relatedProducts\": [\"{{productId}}\"],\n  \"status\": \"published\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/article/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["article", "create"]
+            }
+          }
+        },
+        {
+          "name": "Get My Articles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{businessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/article/my/articles?page=1&limit=10&status=published",
+              "host": ["{{baseUrl}}"],
+              "path": ["article", "my", "articles"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": "published"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Article",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{businessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Advanced Puppy Training Tips for New Pet Owners\",\n  \"excerpt\": \"Updated essential tips for training your new puppy, including advanced techniques.\",\n  \"tags\": [\"training\", \"puppy\", \"behavior\", \"tips\", \"advanced\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/article/update/{{articleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["article", "update", "{{articleId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Article",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{businessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/article/delete/{{articleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["article", "delete", "{{articleId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Engagement",
+      "item": [
+        {
+          "name": "Like Article",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{petOwnerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/article/like/{{articleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["article", "like", "{{articleId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
