@@ -5,7 +5,6 @@ const auth = async (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
     if (!token) {
-      console.log('No token provided in request');
       return res.status(401).json({ message: 'Authentication required - No token provided' });
     }
 
@@ -15,7 +14,6 @@ const auth = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('Token decoded successfully for user:', decoded.id);
     req.user = decoded;
     next();
   } catch (error) {

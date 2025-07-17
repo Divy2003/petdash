@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Service = require('../models/Service');
 const Category = require('../models/Category');
+const Review = require('../models/Review');
 
 // Get businesses by category
 exports.getBusinessesByCategory = async (req, res) => {
@@ -10,7 +11,6 @@ exports.getBusinessesByCategory = async (req, res) => {
 
     // Verify category exists
     const category = await Category.findById(categoryId);
-    console.log('Category:', category);
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
     }
@@ -22,15 +22,13 @@ exports.getBusinessesByCategory = async (req, res) => {
     if (zipCode) locationFilter.zipCode = zipCode;
 
     // Find services in this category
-    const services = await Service.find({ 
-      category: categoryId, 
-      isActive: true 
+    const services = await Service.find({
+      category: categoryId,
+      isActive: true
     }).populate('business', '_id');
-    console.log('Services in category:', services);
 
     // Get unique business IDs
     const businessIds = [...new Set(services.map(service => service.business && service.business._id ? service.business._id.toString() : null).filter(Boolean))];
-    console.log('Business IDs:', businessIds);
 
     // Build business filter
     const businessFilter = {
@@ -38,7 +36,6 @@ exports.getBusinessesByCategory = async (req, res) => {
       userType: 'Business',
       ...locationFilter
     };
-    console.log('Business filter:', businessFilter);
 
     // Get businesses with pagination
     const businesses = await User.find(businessFilter)
@@ -46,12 +43,11 @@ exports.getBusinessesByCategory = async (req, res) => {
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .sort({ name: 1 });
-    console.log('Businesses found:', businesses);
 
     // Get total count for pagination
     const total = await User.countDocuments(businessFilter);
 
-    // For each business, get their services in this category
+    // For each business, get their services in this category and review statistics
     const businessesWithServices = await Promise.all(
       businesses.map(async (business) => {
         const businessServices = await Service.find({
@@ -60,14 +56,18 @@ exports.getBusinessesByCategory = async (req, res) => {
           isActive: true
         }).select('title description price images');
 
+        // Get review statistics for this business
+        const reviewStats = await Review.calculateAverageRating(business._id);
+
         return {
           ...business.toObject(),
           services: businessServices,
-          serviceCount: businessServices.length
+          serviceCount: businessServices.length,
+          averageRating: reviewStats.averageRating,
+          totalReviews: reviewStats.totalReviews
         };
       })
     );
-    console.log('Businesses with services:', businessesWithServices);
 
     res.status(200).json({
       message: 'Businesses fetched successfully',
@@ -86,7 +86,6 @@ exports.getBusinessesByCategory = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error in getBusinessesByCategory:', error);
     res.status(500).json({
       message: 'Error fetching businesses',
       error: error.message
@@ -137,12 +136,17 @@ exports.getBusinessProfile = async (req, res) => {
       return acc;
     }, {});
 
+    // Get review statistics for this business
+    const reviewStats = await Review.calculateAverageRating(businessId);
+
     res.status(200).json({
       message: 'Business profile fetched successfully',
       business: {
         ...business.toObject(),
         totalServices: services.length,
-        categoriesOffered: Object.keys(servicesByCategory).length
+        categoriesOffered: Object.keys(servicesByCategory).length,
+        averageRating: reviewStats.averageRating,
+        totalReviews: reviewStats.totalReviews
       },
       servicesByCategory
     });
@@ -218,7 +222,7 @@ exports.searchBusinesses = async (req, res) => {
 
     const total = await User.countDocuments(businessFilter);
 
-    // Get services for each business
+    // Get services and reviews for each business
     const businessesWithServices = await Promise.all(
       businesses.map(async (business) => {
         const businessServices = await Service.find({
@@ -228,10 +232,15 @@ exports.searchBusinesses = async (req, res) => {
         }).populate('category', 'name icon color')
           .select('title description price images category');
 
+        // Get review statistics for this business
+        const reviewStats = await Review.calculateAverageRating(business._id);
+
         return {
           ...business.toObject(),
           services: businessServices,
-          serviceCount: businessServices.length
+          serviceCount: businessServices.length,
+          averageRating: reviewStats.averageRating,
+          totalReviews: reviewStats.totalReviews
         };
       })
     );

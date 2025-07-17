@@ -1,0 +1,299 @@
+{
+  "info": {
+    "name": "Pet Patch USA - Review System API",
+    "description": "Complete API collection for the review system allowing pet owners to review businesses",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "petOwnerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "businessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "businessId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "reviewId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login Pet Owner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('petOwnerToken', response.token);",
+                  "    console.log('Pet Owner Token saved:', response.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"petowner@test.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login Business",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('businessToken', response.token);",
+                  "    console.log('Business Token saved:', response.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"business@test.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Create Review",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('reviewId', response.review._id);",
+                  "    console.log('Review ID saved:', response.review._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{petOwnerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"businessId\": \"{{businessId}}\",\n  \"rating\": 5,\n  \"reviewText\": \"Excellent service! My dog loved the grooming session. The staff was very professional and caring.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/review/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["review", "create"]
+            }
+          }
+        },
+        {
+          "name": "Get Business Reviews",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/review/business/{{businessId}}?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["review", "business", "{{businessId}}"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Review by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/review/{{reviewId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["review", "{{reviewId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Review",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{petOwnerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 4,\n  \"reviewText\": \"Good service! Updated my review after some consideration.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/review/update/{{reviewId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["review", "update", "{{reviewId}}"]
+            }
+          }
+        },
+        {
+          "name": "Business Response to Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{businessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"responseText\": \"Thank you for your feedback! We appreciate your business and are glad you enjoyed our service.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/review/respond/{{reviewId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["review", "respond", "{{reviewId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Review",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{petOwnerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/review/delete/{{reviewId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["review", "delete", "{{reviewId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Business Profile with Reviews",
+      "item": [
+        {
+          "name": "Get Business Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/business/profile/{{businessId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["business", "profile", "{{businessId}}"]
+            }
+          }
+        },
+        {
+          "name": "Search Businesses (with reviews)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/business/search?query=grooming&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["business", "search"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "grooming"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
