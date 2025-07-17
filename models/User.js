@@ -16,7 +16,9 @@ const userSchema = new mongoose.Schema({
   shopOpenTime: { type: String, default: null },
   shopCloseTime: { type: String, default: null },
   resetPasswordToken: String,
-  resetPasswordExpires: Date
+  resetPasswordExpires: Date,
+  resetPasswordOTP: String,
+  resetPasswordOTPExpires: Date
 });
 
 module.exports = mongoose.model('User', userSchema);
