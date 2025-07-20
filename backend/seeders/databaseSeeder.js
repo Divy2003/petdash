@@ -8,6 +8,7 @@ const Article = require('../models/Article');
 const Review = require('../models/Review');
 const Appointment = require('../models/Appointment');
 const Order = require('../models/Order');
+const { seedAdoptions } = require('./adoptionSeeder');
 
 // Sample data
 const sampleUsers = [
@@ -818,6 +819,7 @@ const runSeeder = async () => {
     const reviews = await seedReviews(users);
     const appointments = await seedAppointments(users, pets, services);
     const orders = await seedOrders(users, products);
+    await seedAdoptions();
 
     console.log('\n🎉 Database seeding completed successfully!');
     console.log('📊 Summary:');
@@ -830,6 +832,7 @@ const runSeeder = async () => {
     console.log(`   - Reviews: ${reviews.length}`);
     console.log(`   - Appointments: ${appointments.length}`);
     console.log(`   - Orders: ${orders.length}`);
+    console.log(`   - Adoptions: Sample adoption listings created`);
 
   } catch (error) {
     console.error('❌ Error during database seeding:', error);

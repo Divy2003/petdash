@@ -1,0 +1,481 @@
+{
+  "info": {
+    "name": "Pet Adoption API",
+    "description": "Complete API collection for pet adoption functionality",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login Business User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"business1@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('authToken', response.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Pet Owner",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"petowner1@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('authToken', response.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Public Endpoints",
+      "item": [
+        {
+          "name": "Get All Adoptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/adoption/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "adoption", ""],
+              "query": [
+                {
+                  "key": "species",
+                  "value": "Dog",
+                  "disabled": true
+                },
+                {
+                  "key": "ageCategory",
+                  "value": "Young",
+                  "disabled": true
+                },
+                {
+                  "key": "gender",
+                  "value": "Female",
+                  "disabled": true
+                },
+                {
+                  "key": "city",
+                  "value": "Mesa",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Adoption",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/adoption/:adoptionId",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "adoption", ":adoptionId"],
+              "variable": [
+                {
+                  "key": "adoptionId",
+                  "value": "687ca7c826f5641287e10e6e"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Adoptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/adoption/search?q=friendly&location=40.7128,-74.0060&radius=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "adoption", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "friendly"
+                },
+                {
+                  "key": "location",
+                  "value": "40.7128,-74.0060"
+                },
+                {
+                  "key": "radius",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Business Endpoints",
+      "item": [
+        {
+          "name": "Create Adoption Listing",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Buddy",
+                  "type": "text"
+                },
+                {
+                  "key": "species",
+                  "value": "Dog",
+                  "type": "text"
+                },
+                {
+                  "key": "breed",
+                  "value": "Labrador Mix",
+                  "type": "text"
+                },
+                {
+                  "key": "age",
+                  "value": "2 years",
+                  "type": "text"
+                },
+                {
+                  "key": "ageCategory",
+                  "value": "Adult",
+                  "type": "text"
+                },
+                {
+                  "key": "gender",
+                  "value": "Male",
+                  "type": "text"
+                },
+                {
+                  "key": "size",
+                  "value": "Large",
+                  "type": "text"
+                },
+                {
+                  "key": "weight",
+                  "value": "60 lbs",
+                  "type": "text"
+                },
+                {
+                  "key": "color",
+                  "value": "Brown",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Buddy is a friendly and energetic dog looking for an active family.",
+                  "type": "text"
+                },
+                {
+                  "key": "story",
+                  "value": "Buddy was rescued from the streets and has been in foster care.",
+                  "type": "text"
+                },
+                {
+                  "key": "adoptionFee",
+                  "value": "200",
+                  "type": "text"
+                },
+                {
+                  "key": "vaccinated",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "neutered",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "microchipped",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "goodWithKids",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "goodWithDogs",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "goodWithCats",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "energyLevel",
+                  "value": "High",
+                  "type": "text"
+                },
+                {
+                  "key": "personality",
+                  "value": "[\"Friendly\", \"Energetic\", \"Playful\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "adoptionRequirements",
+                  "value": "[\"Active family\", \"Secure yard\", \"Experience with large dogs\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "{\"address\": \"123 Shelter St\", \"city\": \"New York\", \"state\": \"NY\", \"zipCode\": \"10001\", \"coordinates\": {\"latitude\": 40.7128, \"longitude\": -74.0060}}",
+                  "type": "text"
+                },
+                {
+                  "key": "shelter",
+                  "value": "{\"name\": \"City Animal Shelter\", \"phone\": \"555-0123\", \"email\": \"info@shelter.org\", \"website\": \"www.shelter.org\", \"hours\": \"Mon-Fri 9am-5pm\", \"adoptionProcess\": \"Fill application, meet pet, home visit\"}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/adoption/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "adoption", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Adoption Listing",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "adoptionStatus",
+                  "value": "Pending",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Updated description for this wonderful pet.",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/adoption/:adoptionId",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "adoption", ":adoptionId"],
+              "variable": [
+                {
+                  "key": "adoptionId",
+                  "value": "REPLACE_WITH_ACTUAL_ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Adoption Listing",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/adoption/:adoptionId",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "adoption", ":adoptionId"],
+              "variable": [
+                {
+                  "key": "adoptionId",
+                  "value": "REPLACE_WITH_ACTUAL_ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Business Listings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/adoption/business/listings",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "adoption", "business", "listings"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "adoptionStatus",
+                  "value": "Available",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Endpoints",
+      "item": [
+        {
+          "name": "Toggle Favorite",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/adoption/:adoptionId/favorite",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "adoption", ":adoptionId", "favorite"],
+              "variable": [
+                {
+                  "key": "adoptionId",
+                  "value": "687ca7c826f5641287e10e6e"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User Favorites",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/adoption/user/favorites",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "adoption", "user", "favorites"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
