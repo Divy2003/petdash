@@ -51,12 +51,6 @@ const userSchema = new mongoose.Schema({
   userType: { type: String, enum: ['Pet Owner', 'Business'], required: true },
   phoneNumber: String,
 
-  // Legacy address fields (for backward compatibility)
-  streetName: String,
-  zipCode: String,
-  city: String,
-  state: String,
-
   // New multiple addresses system
   addresses: [addressSchema],
 
@@ -89,12 +83,6 @@ userSchema.methods.setPrimaryAddress = function(addressId) {
   const targetAddress = this.addresses.id(addressId);
   if (targetAddress) {
     targetAddress.isPrimary = true;
-
-    // Update legacy fields for backward compatibility
-    this.streetName = targetAddress.streetName;
-    this.city = targetAddress.city;
-    this.state = targetAddress.state;
-    this.zipCode = targetAddress.zipCode;
   }
 
   return this.save();
@@ -102,15 +90,6 @@ userSchema.methods.setPrimaryAddress = function(addressId) {
 
 // Pre-save middleware to maintain legacy fields
 userSchema.pre('save', function(next) {
-  // If addresses exist and there's a primary address, sync legacy fields
-  const primaryAddr = this.addresses.find(addr => addr.isPrimary && addr.isActive);
-  if (primaryAddr) {
-    this.streetName = primaryAddr.streetName;
-    this.city = primaryAddr.city;
-    this.state = primaryAddr.state;
-    this.zipCode = primaryAddr.zipCode;
-  }
-
   // Ensure only one primary address
   const primaryAddresses = this.addresses.filter(addr => addr.isPrimary && addr.isActive);
   if (primaryAddresses.length > 1) {

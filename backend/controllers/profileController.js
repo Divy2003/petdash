@@ -43,38 +43,6 @@ exports.updateProfile = async (req, res) => {
       }
     });
 
-    // Handle legacy address fields for backward compatibility
-    if (req.body.streetName || req.body.city || req.body.state || req.body.zipCode) {
-      // If legacy address fields are provided, update the primary address or create one
-      const primaryAddress = user.addresses.find(addr => addr.isPrimary && addr.isActive);
-
-      if (primaryAddress) {
-        // Update existing primary address
-        if (req.body.streetName) primaryAddress.streetName = req.body.streetName;
-        if (req.body.city) primaryAddress.city = req.body.city;
-        if (req.body.state) primaryAddress.state = req.body.state;
-        if (req.body.zipCode) primaryAddress.zipCode = req.body.zipCode;
-      } else {
-        // Create new primary address if none exists
-        const newAddress = {
-          label: 'Primary',
-          streetName: req.body.streetName || user.streetName || '',
-          city: req.body.city || user.city || '',
-          state: req.body.state || user.state || '',
-          zipCode: req.body.zipCode || user.zipCode || '',
-          isPrimary: true,
-          isActive: true
-        };
-        user.addresses.push(newAddress);
-      }
-
-      // Update legacy fields for backward compatibility
-      updateFields.streetName = req.body.streetName || primaryAddress?.streetName;
-      updateFields.city = req.body.city || primaryAddress?.city;
-      updateFields.state = req.body.state || primaryAddress?.state;
-      updateFields.zipCode = req.body.zipCode || primaryAddress?.zipCode;
-    }
-
     // Handle profile image upload (if using file upload)
     if (req.file) {
       updateFields.profileImage = req.file.path;
