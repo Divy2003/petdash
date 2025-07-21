@@ -1,15 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const { getProfile } = require('../controllers/profileController');
 const auth = require('../middlewares/auth');
 const upload = require('../middlewares/uploadImage');
-const { updateProfile } = require('../controllers/profileController');
+const {
+  getProfile,
+  updateProfile,
+  getUserAddresses,
+  addAddress,
+  updateAddress,
+  deleteAddress,
+  setPrimaryAddress,
+  getPrimaryAddress
+} = require('../controllers/profileController');
 
-// This route is protected - only authenticated users can access it
+// Profile routes - all protected with auth middleware
 router.get('/get-profile', auth, getProfile);
-
-// Update profile (edit)
 router.put('/create-update-profile', auth, upload.single('profileImage'), updateProfile);
 
+// Address management routes
+router.get('/addresses', auth, getUserAddresses);
+router.post('/addresses', auth, addAddress);
+router.put('/addresses/:addressId', auth, updateAddress);
+router.delete('/addresses/:addressId', auth, deleteAddress);
+router.put('/addresses/:addressId/primary', auth, setPrimaryAddress);
+router.get('/addresses/primary', auth, getPrimaryAddress);
 
 module.exports = router;

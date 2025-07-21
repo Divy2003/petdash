@@ -25,7 +25,19 @@ const sampleUsers = [
     profileImage: 'uploads/admin.jpg',
     shopImage: 'uploads/admin-shop.jpg',
     shopOpenTime: '00:00',
-    shopCloseTime: '23:59'
+    shopCloseTime: '23:59',
+    addresses: [
+      {
+        label: 'Primary',
+        streetName: '1 Admin Plaza',
+        city: 'New York',
+        state: 'NY',
+        zipCode: '10001',
+        country: 'USA',
+        isPrimary: true,
+        isActive: true
+      }
+    ]
   },
   {
     name: 'John Doe',
@@ -37,7 +49,29 @@ const sampleUsers = [
     zipCode: '12345',
     city: 'New York',
     state: 'NY',
-    profileImage: 'uploads/profile1.jpg'
+    profileImage: 'uploads/profile1.jpg',
+    addresses: [
+      {
+        label: 'Home',
+        streetName: '123 Main St',
+        city: 'New York',
+        state: 'NY',
+        zipCode: '12345',
+        country: 'USA',
+        isPrimary: true,
+        isActive: true
+      },
+      {
+        label: 'Work',
+        streetName: '789 Business Ave',
+        city: 'New York',
+        state: 'NY',
+        zipCode: '12347',
+        country: 'USA',
+        isPrimary: false,
+        isActive: true
+      }
+    ]
   },
   {
     name: 'Jane Smith',
@@ -49,7 +83,19 @@ const sampleUsers = [
     zipCode: '12346',
     city: 'Los Angeles',
     state: 'CA',
-    profileImage: 'uploads/profile2.jpg'
+    profileImage: 'uploads/profile2.jpg',
+    addresses: [
+      {
+        label: 'Home',
+        streetName: '456 Oak Ave',
+        city: 'Los Angeles',
+        state: 'CA',
+        zipCode: '12346',
+        country: 'USA',
+        isPrimary: true,
+        isActive: true
+      }
+    ]
   },
   {
     name: 'Pet Care Plus',
@@ -63,7 +109,19 @@ const sampleUsers = [
     state: 'IL',
     shopImage: 'uploads/shop1.jpg',
     shopOpenTime: '08:00',
-    shopCloseTime: '18:00'
+    shopCloseTime: '18:00',
+    addresses: [
+      {
+        label: 'Shop',
+        streetName: '789 Business Blvd',
+        city: 'Chicago',
+        state: 'IL',
+        zipCode: '12347',
+        country: 'USA',
+        isPrimary: true,
+        isActive: true
+      }
+    ]
   },
   {
     name: 'Happy Paws Grooming',
@@ -77,7 +135,29 @@ const sampleUsers = [
     state: 'FL',
     shopImage: 'uploads/shop2.jpg',
     shopOpenTime: '09:00',
-    shopCloseTime: '17:00'
+    shopCloseTime: '17:00',
+    addresses: [
+      {
+        label: 'Main Shop',
+        streetName: '321 Pet Lane',
+        city: 'Miami',
+        state: 'FL',
+        zipCode: '12348',
+        country: 'USA',
+        isPrimary: true,
+        isActive: true
+      },
+      {
+        label: 'Branch Location',
+        streetName: '555 Beach Blvd',
+        city: 'Miami',
+        state: 'FL',
+        zipCode: '12350',
+        country: 'USA',
+        isPrimary: false,
+        isActive: true
+      }
+    ]
   },
   {
     name: 'Veterinary Clinic Pro',
@@ -91,7 +171,19 @@ const sampleUsers = [
     state: 'WA',
     shopImage: 'uploads/shop3.jpg',
     shopOpenTime: '07:00',
-    shopCloseTime: '19:00'
+    shopCloseTime: '19:00',
+    addresses: [
+      {
+        label: 'Clinic',
+        streetName: '654 Health St',
+        city: 'Seattle',
+        state: 'WA',
+        zipCode: '12349',
+        country: 'USA',
+        isPrimary: true,
+        isActive: true
+      }
+    ]
   }
 ];
 
