@@ -59,7 +59,7 @@ class DateTimePickerWidget extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.borderColor),
+                        border: Border.all(color: AppColors.textprimaryColor),
                         borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
                       ),
                       child: Row(
@@ -86,7 +86,7 @@ class DateTimePickerWidget extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.borderColor),
+                        border: Border.all(color: AppColors.textprimaryColor),
                         borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
                       ),
                       child: Row(

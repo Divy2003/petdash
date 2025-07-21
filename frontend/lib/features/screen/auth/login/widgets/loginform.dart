@@ -104,7 +104,7 @@ class _LoginFormState extends State<LoginForm> {
                   decoration: InputDecoration(
                     hintText: 'Your email',
                     hintStyle: TextStyle(
-                      color: AppColors.borderColor,
+                      color: AppColors.textprimaryColor,
                       fontFamily: 'Encode Sans Expanded',
                       fontWeight: FontWeight.w400,
                       fontSize: AppSizes.fontSizeLg,
@@ -115,14 +115,14 @@ class _LoginFormState extends State<LoginForm> {
                       borderRadius:
                           BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius:
                           BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                       ),
                     ),
                   ),
@@ -155,7 +155,7 @@ class _LoginFormState extends State<LoginForm> {
                   decoration: InputDecoration(
                     hintText: 'Password',
                     hintStyle: TextStyle(
-                      color: AppColors.borderColor,
+                      color: AppColors.textprimaryColor,
                       fontFamily: 'Encode Sans Expanded',
                       fontWeight: FontWeight.w400,
                       fontSize: AppSizes.fontSizeLg,
@@ -166,14 +166,14 @@ class _LoginFormState extends State<LoginForm> {
                       borderRadius:
                           BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius:
                           BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                       ),
                     ),
                   ),
@@ -204,7 +204,7 @@ class _LoginFormState extends State<LoginForm> {
               child: Text(
                 'Forgot Password ?',
                 style: TextStyle(
-                  color: AppColors.borderColor,
+                  color: AppColors.textprimaryColor,
                   fontFamily: 'Encode Sans Expanded',
                   fontWeight: FontWeight.w400,
                   fontSize: AppSizes.fontSizeSm,
@@ -273,7 +273,7 @@ class _LoginFormState extends State<LoginForm> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
               border: Border.all(
-                color: AppColors.borderColor,
+                color: AppColors.textprimaryColor,
                 width: 1,
               ),
             ),
@@ -290,7 +290,7 @@ class _LoginFormState extends State<LoginForm> {
                 Text(
                   'Log-in with Google',
                   style: TextStyle(
-                    color: AppColors.borderColor,
+                    color: AppColors.textprimaryColor,
                     fontFamily: 'Encode Sans Expanded',
                     fontWeight: FontWeight.w500,
                     fontSize: AppSizes.fontSizeLg,

@@ -258,7 +258,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                     width: 60.w,
                     height: 60.h,
                     decoration: BoxDecoration(
-                      color: AppColors.borderColor,
+                      color: AppColors.textprimaryColor,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Icon(
@@ -303,7 +303,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                       decoration: BoxDecoration(
                         color: Colors.grey[50],
                         borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
-                        border: Border.all(color: AppColors.borderColor),
+                        border: Border.all(color: AppColors.textprimaryColor),
                       ),
                       child: Row(
                         children: [

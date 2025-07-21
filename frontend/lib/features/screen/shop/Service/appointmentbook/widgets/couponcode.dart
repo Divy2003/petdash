@@ -75,10 +75,10 @@ class CouponInput extends StatelessWidget {
                           vertical: 12, horizontal: 12),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
-                        borderSide: const BorderSide(color: AppColors.borderColor),
+                        borderSide: const BorderSide(color: AppColors.textprimaryColor),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: AppColors.borderColor),
+                        borderSide: const BorderSide(color: AppColors.textprimaryColor),
                         borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
                       ),
                       focusedBorder: OutlineInputBorder(

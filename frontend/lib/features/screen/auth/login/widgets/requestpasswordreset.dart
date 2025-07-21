@@ -86,7 +86,7 @@ class _RequestPasswordResetScreenState
                 Text(
                   'Enter your email address and we\'ll send you a code to reset your password.',
                   style: TextStyle(
-                    color: AppColors.borderColor,
+                    color: AppColors.textprimaryColor,
                     fontFamily: 'Encode Sans Expanded',
                     fontWeight: FontWeight.w400,
                     fontSize: AppSizes.fontSizeMd,
@@ -112,7 +112,7 @@ class _RequestPasswordResetScreenState
                   decoration: InputDecoration(
                     hintText: 'Your email',
                     hintStyle: TextStyle(
-                      color: AppColors.borderColor,
+                      color: AppColors.textprimaryColor,
                       fontFamily: 'Encode Sans Expanded',
                       fontWeight: FontWeight.w400,
                       fontSize: AppSizes.fontSizeLg,
@@ -123,7 +123,7 @@ class _RequestPasswordResetScreenState
                       borderRadius:
                           BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         width: 2,
                       ),
                     ),
@@ -131,7 +131,7 @@ class _RequestPasswordResetScreenState
                       borderRadius:
                           BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         width: 2,
                       ),
                     ),

@@ -69,7 +69,7 @@ class _ServicesListState extends State<ServicesList> {
                 Expanded(
                   child: Row(
                     children: [
-                      Icon(Icons.sort, size: AppSizes.iconMd, color: AppColors.borderColor),
+                      Icon(Icons.sort, size: AppSizes.iconMd, color: AppColors.textprimaryColor),
                       SizedBox(width: AppSizes.xs),
                       Text(
                         'Sort',
@@ -89,7 +89,7 @@ class _ServicesListState extends State<ServicesList> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.filter_list, size: AppSizes.iconMd, color: AppColors.borderColor),
+                      Icon(Icons.filter_list, size: AppSizes.iconMd, color: AppColors.textprimaryColor),
                       SizedBox(width: AppSizes.xs),
                       Text(
                         'Filter',
@@ -213,7 +213,7 @@ class _ServicesListState extends State<ServicesList> {
                                     Text(
                                       provider['openTime'],
                                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                        color: AppColors.borderColor,
+                                        color: AppColors.textprimaryColor,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -225,7 +225,7 @@ class _ServicesListState extends State<ServicesList> {
                               Text(
                                 provider['distance'],
                                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                  color: AppColors.borderColor,
+                                  color: AppColors.textprimaryColor,
                                 ),
                               ),
                             ],

@@ -74,45 +74,39 @@ class _RegisterFormState extends State<RegisterForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Name',
-                  style: TextStyle(
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: AppColors.primary,
-                    fontFamily: 'Encode Sans Expanded',
-                    fontWeight: FontWeight.w500,
-                    fontSize: AppSizes.fontSizeMd,
                   ),
                 ),
                 SizedBox(height: 15),
                 TextFormField(
                   controller: nameController,
-                  // validator: (value) {
-                  //   if (value == null || value.trim().isEmpty) {
-                  //     return 'Name is required';
-                  //   }
-                  //   return null;
-                  // },
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Name is required';
+                    }
+                    return null;
+                  },
                   keyboardType: TextInputType.emailAddress,
                   cursorColor:AppColors.primary,
                   decoration: InputDecoration(
                     hintText: 'Your name',
-                    hintStyle: TextStyle(
-                      color: AppColors.borderColor,
-                      fontFamily: 'Encode Sans Expanded',
-                      fontWeight: FontWeight.w400,
-                      fontSize: AppSizes.fontSizeLg,
+                    hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: AppColors.textprimaryColor,
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         width: 2,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         width: 2,
                       ),
                     ),
@@ -120,45 +114,38 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
                 SizedBox(height: 15,),
                 Text('Your email',
-
-                  style: TextStyle(
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: AppColors.primary,
-                    fontFamily: 'Encode Sans Expanded',
-                    fontWeight: FontWeight.w500,
-                    fontSize: AppSizes.fontSizeMd,
                   ),
                 ),
                 SizedBox(height: 15),
                 TextFormField(
                   controller: emailController,
-                  // validator: (value) {
-                  //   if (value == null || value.isEmpty) return 'Email is required';
-                  //   if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) return 'Enter a valid email';
-                  //   return null;
-                  // },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return 'Email is required';
+                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) return 'Enter a valid email';
+                    return null;
+                  },
                   keyboardType: TextInputType.emailAddress,
                   cursorColor:AppColors.primary,
                   decoration: InputDecoration(
                     hintText: 'Your email',
-                    hintStyle: TextStyle(
-                      color: AppColors.borderColor,
-                      fontFamily: 'Encode Sans Expanded',
-                      fontWeight: FontWeight.w400,
-                      fontSize: AppSizes.fontSizeLg,
+                    hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: AppColors.textprimaryColor,
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         width: 2,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         width: 2,
                       ),
                     ),
@@ -166,44 +153,38 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
                 SizedBox(height: 15,),
                 Text('Password',
-                  style: TextStyle(
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: AppColors.primary,
-                    fontFamily: 'Encode Sans Expanded',
-                    fontWeight: FontWeight.w500,
-                    fontSize: AppSizes.fontSizeMd,
                   ),
                 ),
                 SizedBox(height: 15),
                 TextFormField(
                   controller: passwordController,
                   obscureText: true,
-                  // validator: (value) {
-                  //   if (value == null || value.length < 6) return 'Password must be at least 6 characters';
-                  //   return null;
-                  // },
+                  validator: (value) {
+                    if (value == null || value.length < 6) return 'Password must be at least 6 characters';
+                    return null;
+                  },
                   keyboardType: TextInputType.emailAddress,
                   cursorColor:AppColors.primary,
                   decoration: InputDecoration(
                     hintText: 'Password',
-                    hintStyle: TextStyle(
-                      color: AppColors.borderColor,
-                      fontFamily: 'Encode Sans Expanded',
-                      fontWeight: FontWeight.w400,
-                      fontSize: AppSizes.fontSizeLg,
+                    hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: AppColors.textprimaryColor,
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         width: 2,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         width: 2,
                       ),
                     ),
@@ -211,11 +192,8 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
                 SizedBox(height: 15,),
                 Text('User Type',
-                  style: TextStyle(
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: AppColors.primary,
-                    fontFamily: 'Encode Sans Expanded',
-                    fontWeight: FontWeight.w500,
-                    fontSize: AppSizes.fontSizeMd,
                   ),
                 ),
                 SizedBox(height: 15),
@@ -235,7 +213,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             border: Border.all(
                               color: registerProvider.selectedType == UserType.petOwner
                                   ? AppColors.primary
-                                  : AppColors.borderColor,
+                                  : AppColors.textprimaryColor,
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
@@ -246,7 +224,7 @@ class _RegisterFormState extends State<RegisterForm> {
                               style: TextStyle(
                                 color: registerProvider.selectedType == UserType.petOwner
                                     ? AppColors.primary
-                                    : AppColors.borderColor,
+                                    : AppColors.textprimaryColor,
                                 fontFamily: 'Encode Sans Expanded',
                                 fontWeight: FontWeight.w500,
                                 fontSize: AppSizes.fontSizeLg,
@@ -271,7 +249,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             border: Border.all(
                               color: registerProvider.selectedType == UserType.business
                                   ? AppColors.primary
-                                  : AppColors.borderColor,
+                                  : AppColors.textprimaryColor,
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
@@ -282,7 +260,7 @@ class _RegisterFormState extends State<RegisterForm> {
                               style: TextStyle(
                                 color: registerProvider.selectedType == UserType.business
                                     ? AppColors.primary
-                                    : AppColors.borderColor,
+                                    : AppColors.textprimaryColor,
                                 fontFamily: 'Encode Sans Expanded',
                                 fontWeight: FontWeight.w500,
                                 fontSize: AppSizes.fontSizeLg,
@@ -335,7 +313,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
                     border: Border.all(
-                      color: AppColors.borderColor,
+                      color: AppColors.textprimaryColor,
                       width: 1,
                     ),
                   ),
@@ -346,7 +324,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       SizedBox(width: 30,),
                       Text('Log-in with Google',
                         style: TextStyle(
-                          color: AppColors.borderColor,
+                          color: AppColors.textprimaryColor,
                           fontFamily: 'Encode Sans Expanded',
                           fontWeight: FontWeight.w500,
                           fontSize: AppSizes.fontSizeLg,
@@ -391,7 +369,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     text: TextSpan(
                       text: "Already Have an Account?",
                       style: TextStyle(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         fontSize: AppSizes.fontSizeSm,
                         fontWeight: FontWeight.w500,
                         fontFamily: 'Encode Sans Expanded',
@@ -407,11 +385,7 @@ class _RegisterFormState extends State<RegisterForm> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              // if (_formKey.currentState!.validate()) {
-                              //   // All fields are valid
-                              //   Get.to(() => const LoginScreen());
-                              //    }// <-- Use const if applicable
-                              Get.to(() => const LoginScreen());
+                                Get.to(() => const LoginScreen());
                             },
                         ),
                       ],

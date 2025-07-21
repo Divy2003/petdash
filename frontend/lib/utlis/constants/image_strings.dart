@@ -30,7 +30,7 @@ class AppImages{
   static const String store2 = "assets/homeimage/store/store 2.png";
   static const String storeLogo1 = "assets/homeimage/store/store logo 1.png";
   static const String storeLogo2 = "assets/homeimage/store/store logo 2.png";
-
+  static const String person = "assets/homeimage/store/person.png";
 
   //dog
   static const String dog1 = "assets/Dog/Dog1.png";
@@ -38,4 +38,9 @@ class AppImages{
   static const String dog3 = "assets/Dog/Dog3.png";
   static const String dog4 = "assets/Dog/Dog4.png";
   static const String dog5 = "assets/Dog/Dog5.png";
+
+  //cart foot
+  static const String foot1 = "assets/profile/p1.png";
+  static const String foot2 = "assets/profile/p2.png";
+  static const String foot3 = "assets/profile/p3.png";
 }

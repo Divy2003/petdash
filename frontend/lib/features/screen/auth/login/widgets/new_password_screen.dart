@@ -102,7 +102,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                 Text(
                   'Your new password must be different from previously used passwords.',
                   style: TextStyle(
-                    color: AppColors.borderColor,
+                    color: AppColors.textprimaryColor,
                     fontFamily: 'Encode Sans Expanded',
                     fontWeight: FontWeight.w400,
                     fontSize: AppSizes.fontSizeMd,
@@ -128,7 +128,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                   decoration: InputDecoration(
                     hintText: 'Enter new password',
                     hintStyle: TextStyle(
-                      color: AppColors.borderColor,
+                      color: AppColors.textprimaryColor,
                       fontFamily: 'Encode Sans Expanded',
                       fontWeight: FontWeight.w400,
                       fontSize: AppSizes.fontSizeLg,
@@ -139,7 +139,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                       borderRadius:
                           BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         width: 2,
                       ),
                     ),
@@ -147,7 +147,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                       borderRadius:
                           BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         width: 2,
                       ),
                     ),
@@ -164,7 +164,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         _obscurePassword
                             ? Icons.visibility_off
                             : Icons.visibility,
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                       ),
                       onPressed: () {
                         setState(() {
@@ -203,7 +203,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                   decoration: InputDecoration(
                     hintText: 'Confirm new password',
                     hintStyle: TextStyle(
-                      color: AppColors.borderColor,
+                      color: AppColors.textprimaryColor,
                       fontFamily: 'Encode Sans Expanded',
                       fontWeight: FontWeight.w400,
                       fontSize: AppSizes.fontSizeLg,
@@ -214,7 +214,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                       borderRadius:
                           BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         width: 2,
                       ),
                     ),
@@ -222,7 +222,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                       borderRadius:
                           BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                         width: 2,
                       ),
                     ),
@@ -239,7 +239,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         _obscureConfirmPassword
                             ? Icons.visibility_off
                             : Icons.visibility,
-                        color: AppColors.borderColor,
+                        color: AppColors.textprimaryColor,
                       ),
                       onPressed: () {
                         setState(() {

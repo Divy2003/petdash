@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:petcare/utlis/constants/size.dart';
-
 import '../../../utlis/constants/colors.dart';
-
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onBack;
+  final List<Widget>? actions; // <-- Optional actions
 
   const CustomAppBar({
     Key? key,
     required this.title,
     this.onBack,
+    this.actions,
   }) : super(key: key);
 
   @override
@@ -22,9 +22,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.white,
       elevation: 0,
       leading: Padding(
-        padding: EdgeInsets.only(left: 10.0, top: 7, bottom: 7),
+        padding: const EdgeInsets.only(left: 10.0, top: 7, bottom: 7),
         child: IconButton(
-          icon: Icon(Icons.arrow_back_outlined, color: AppColors.black),
+          icon: const Icon(Icons.arrow_back_outlined, color: AppColors.black),
           onPressed: onBack ?? () => Get.back(),
         ),
       ),
@@ -34,9 +34,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: AppColors.primary,
         ),
       ),
+      actions: actions, // <-- Set optional actions here
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

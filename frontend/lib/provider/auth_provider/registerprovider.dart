@@ -3,15 +3,27 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../../features/screen/auth/model/usermodel.dart';
+
 import '../../utlis/app_config/app_config.dart';
 
-enum UserType {petOwner, business }
+enum UserType { petOwner, business }
 
 class RegisterProvider with ChangeNotifier {
   UserType? selectedType;
+  UserModel? _registeredUser;
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+  UserModel? get registeredUser => _registeredUser;
 
   void setUserType(UserType type) {
     selectedType = type;
+    notifyListeners();
+  }
+
+  void _setLoading(bool value) {
+    _isLoading = value;
     notifyListeners();
   }
 
@@ -32,15 +44,29 @@ class RegisterProvider with ChangeNotifier {
     });
 
     try {
+      _setLoading(true);
+
       final response = await http.post(url, headers: headers, body: body);
       final responseBody = jsonDecode(response.body);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return null; // success
+        // Save user for reuse (Edit Profile, etc.)
+        _registeredUser = UserModel(
+          name: name,
+          email: email,
+          password: password,
+          userType: selectedType!,
+        );
+
+        notifyListeners();
+        return null;
       } else {
         return responseBody['message'] ?? 'Signup failed';
       }
     } catch (e) {
       return "An error occurred. Please try again.";
+    } finally {
+      _setLoading(false);
     }
   }
 }
