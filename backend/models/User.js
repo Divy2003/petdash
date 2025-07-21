@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
   password: String,
-  userType: { type: String, enum: ['Pet Owner', 'Business'], required: true },
+  userType: { type: String, enum: ['Pet Owner', 'Business', 'Admin'], required: true },
   phoneNumber: String,
 
   // New multiple addresses system
