@@ -21,7 +21,6 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-
   final emailFocus = FocusNode();
   final passwordFocus = FocusNode();
 
@@ -53,11 +52,35 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 
+
+  Future<void> submit() async{
+    final provider =
+    Provider.of<LoginProvider>(context, listen: false);
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    final error = await provider.login(email, password);
+
+    if (error == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Login successful")),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => CurvedNavScreen()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error)),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<LoginProvider>(context);
 
-    return  Form(
+    return Form(
       child: Column(
         children: [
           Padding(
@@ -67,17 +90,17 @@ class _LoginFormState extends State<LoginForm> {
               children: [
                 Text(
                   'Email',
-                  style:Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.primary,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary,
+                      ),
                 ),
                 SizedBox(height: 15),
                 TextFormField(
                   controller: emailController,
                   focusNode: emailFocus,
                   keyboardType: TextInputType.emailAddress,
-                  cursorColor:AppColors.primary,
+                  cursorColor: AppColors.primary,
                   decoration: InputDecoration(
                     hintText: 'Your email',
                     hintStyle: TextStyle(
@@ -89,36 +112,43 @@ class _LoginFormState extends State<LoginForm> {
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
+                      borderRadius:
+                          BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
                         color: AppColors.borderColor,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
+                      borderRadius:
+                          BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
                         color: AppColors.borderColor,
                       ),
                     ),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Email is required';
-                    if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(
-                        value)) {
+                    if (value == null || value.isEmpty)
+                      return 'Email is required';
+                    if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
+                        .hasMatch(value)) {
                       return 'Enter a valid email';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 15,),
-                Text('Password',
-                  style:Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.primary,
-                ),),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  'Password',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary,
+                      ),
+                ),
                 const SizedBox(height: 15),
                 TextFormField(
-                  cursorColor:AppColors.primary,
+                  cursorColor: AppColors.primary,
                   controller: passwordController,
                   focusNode: passwordFocus,
                   obscureText: true,
@@ -133,13 +163,15 @@ class _LoginFormState extends State<LoginForm> {
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
+                      borderRadius:
+                          BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
                         color: AppColors.borderColor,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
+                      borderRadius:
+                          BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
                         color: AppColors.borderColor,
                       ),
@@ -151,8 +183,9 @@ class _LoginFormState extends State<LoginForm> {
                     return null;
                   },
                 ),
-
-                SizedBox(height: 15,),
+                SizedBox(
+                  height: 15,
+                ),
               ],
             ),
           ),
@@ -164,7 +197,8 @@ class _LoginFormState extends State<LoginForm> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) =>  RequestPasswordResetScreen()),
+                  MaterialPageRoute(
+                      builder: (_) => RequestPasswordResetScreen()),
                 );
               },
               child: Text(
@@ -178,44 +212,37 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
           ),
-          SizedBox(height: 40,),
-           PrimaryButton(
-                  onPressed: () async {
-                    final provider =
-                        Provider.of<LoginProvider>(context, listen: false);
-                    final email = emailController.text.trim();
-                    final password = passwordController.text.trim();
-
-                    final error = await provider.login(email, password);
-
-                    if (error == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Login successful")),
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => CurvedNavScreen()),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(error)),
-                      );
-                    }
-                  },
-                  title: 'Log-in',
-                ),
+          SizedBox(
+            height: 40,
+          ),
+          PrimaryButton(
+            onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CurvedNavScreen(),));
+            },
+            // onPressed: loginProvider.isLoading ? null : submit,
+            title: 'Log-in',
+          ),
           // Login  button
 
-          SizedBox(height: 30,),
+          SizedBox(
+            height: 30,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 17.0),
             child: Row(
               children: const [
-                Expanded(child: Divider(thickness: 1,color: AppColors.dividerColor,)),
-                SizedBox(width: 2,),
+                Expanded(
+                    child: Divider(
+                  thickness: 1,
+                  color: AppColors.dividerColor,
+                )),
+                SizedBox(
+                  width: 2,
+                ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Text("or",
+                  child: Text(
+                    "or",
                     style: TextStyle(
                       color: AppColors.dividerColor,
                       fontFamily: 'Encode Sans Expanded',
@@ -224,17 +251,23 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                   ),
                 ),
-                SizedBox(width: 2,),
-                Expanded(child: Divider(thickness: 1,color: AppColors.dividerColor)),
+                SizedBox(
+                  width: 2,
+                ),
+                Expanded(
+                    child:
+                        Divider(thickness: 1, color: AppColors.dividerColor)),
               ],
             ),
           ),
 
-          SizedBox(height: 30,),
+          SizedBox(
+            height: 30,
+          ),
 
           // Google button
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 35,vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
             width: 350,
             height: 50, // responsive height
             decoration: BoxDecoration(
@@ -246,26 +279,33 @@ class _LoginFormState extends State<LoginForm> {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-             children: [
-               Image.asset(AppImages.google,height: 30,),
-               SizedBox(width: 30,),
-               Text('Log-in with Google',
-                 style: TextStyle(
-                   color: AppColors.borderColor,
-                   fontFamily: 'Encode Sans Expanded',
-                   fontWeight: FontWeight.w500,
-                   fontSize: AppSizes.fontSizeLg,
-                 ),
-               )
-
-             ],
+              children: [
+                Image.asset(
+                  AppImages.google,
+                  height: 30,
+                ),
+                SizedBox(
+                  width: 30,
+                ),
+                Text(
+                  'Log-in with Google',
+                  style: TextStyle(
+                    color: AppColors.borderColor,
+                    fontFamily: 'Encode Sans Expanded',
+                    fontWeight: FontWeight.w500,
+                    fontSize: AppSizes.fontSizeLg,
+                  ),
+                )
+              ],
             ),
           ),
-          SizedBox(height: 30,),
+          SizedBox(
+            height: 30,
+          ),
 
           // facebook button
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 35,vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
             width: 350,
             height: 50, // responsive height
             decoration: BoxDecoration(
@@ -275,9 +315,15 @@ class _LoginFormState extends State<LoginForm> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(AppImages.facebook,height: 30,),
-                SizedBox(width: 30,),
-                Text('Log-in with facebook',
+                Image.asset(
+                  AppImages.facebook,
+                  height: 30,
+                ),
+                SizedBox(
+                  width: 30,
+                ),
+                Text(
+                  'Log-in with facebook',
                   style: TextStyle(
                     color: AppColors.white,
                     fontFamily: 'Encode Sans Expanded',
@@ -285,14 +331,15 @@ class _LoginFormState extends State<LoginForm> {
                     fontSize: AppSizes.fontSizeLg,
                   ),
                 )
-
               ],
             ),
           ),
-          SizedBox(height: 15,),
+          SizedBox(
+            height: 15,
+          ),
           // Register sign button,
           Center(
-            child:   Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
@@ -306,7 +353,8 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => RegisterScreen()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => RegisterScreen()));
                   },
                   child: Text(
                     " Sign Up",
@@ -320,7 +368,6 @@ class _LoginFormState extends State<LoginForm> {
               ],
             ),
           ),
-
         ],
       ),
     );

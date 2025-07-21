@@ -1,12 +1,39 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utlis/app_config/app_config.dart';
 
 class LoginProvider with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  String? _token;
+  String? get token => _token;
+
+  // Initialize token from shared preferences
+  Future<void> initToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString('auth_token');
+    notifyListeners();
+  }
+
+  // Save token to shared preferences
+  Future<void> saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('auth_token', token);
+    _token = token;
+    notifyListeners();
+  }
+
+  // Clear token (for logout)
+  Future<void> clearToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth_token');
+    _token = null;
+    notifyListeners();
+  }
 
   Future<String?> login(String email, String password) async {
     _isLoading = true;
@@ -29,9 +56,12 @@ class LoginProvider with ChangeNotifier {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(responseBody);
+        // Store the token
+        if (data['token'] != null) {
+          await saveToken(data['token']);
+        }
         _isLoading = false;
         notifyListeners();
-        // You can store token if needed using shared_preferences here
         return null; // Success
       } else {
         final errorData = jsonDecode(responseBody);

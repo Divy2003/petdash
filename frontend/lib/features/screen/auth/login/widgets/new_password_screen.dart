@@ -88,7 +88,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
 
                 // Title
                 Text(
-                  'Create New\nPassword',
+                  'Create New Password',
                   style: TextStyle(
                     fontSize: 35,
                     color: AppColors.secondary,

@@ -38,12 +38,13 @@ dependencies:
   flutter_screenutil: ^5.9.3
   google_fonts: ^6.2.1
   curved_labeled_navigation_bar: ^2.0.6
-
+  intl: ^0.18.1
 
   #auth
   http: ^1.4.0
   provider: ^6.1.5
-
+  shared_preferences: ^2.2.2
+  url_launcher: ^6.2.6
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -70,6 +71,24 @@ flutter:
     - assets/auth_images/welcome.png
     - assets/auth_images/google.png
     - assets/auth_images/facebook.png
+    - assets/homeimage/pet.png
+    - assets/homeimage/health.png
+    - assets/homeimage/sitting.png
+    - assets/homeimage/boarding.png
+    - assets/homeimage/traning.png
+    - assets/homeimage/groming.png
+    - assets/homeimage/traning.png
+    - assets/homeimage/logom.png
+    - assets/homeimage/walking.png
+    - assets/homeimage/store/store1.png
+    - assets/homeimage/store/store 2.png
+    - assets/homeimage/store/store logo 1.png
+    - assets/homeimage/store/store logo 2.png
+    - assets/Dog/Dog1.png
+    - assets/Dog/Dog2.png
+    - assets/Dog/Dog3.png
+    - assets/Dog/Dog4.png
+    - assets/Dog/Dog5.png
 
   fonts:
     - family: Playfair Display

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../utlis/constants/image_strings.dart';
+import 'package:get/get.dart';
+import '../../../../../utlis/constants/image_strings.dart';
+import '../../../../../utlis/constants/size.dart';
+import '../../Service/ServicesList.dart';
 import 'service_tile.dart';
-import '../../../../utlis/constants/size.dart';
+
 
 class ServiceGrid extends StatelessWidget {
   const ServiceGrid({super.key});
@@ -49,7 +52,9 @@ class ServiceGrid extends StatelessWidget {
       mainAxisSpacing: AppSizes.gridViewSpacing,
       children: serviceList.map((service) {
         return GestureDetector(
-
+          onTap: (){
+            Get.to(() => ServicesList());
+          },
           child: ServiceTile(
             title: service['title'],
             color: service['color'],

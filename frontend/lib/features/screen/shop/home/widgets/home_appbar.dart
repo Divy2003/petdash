@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../utlis/constants/colors.dart';
-import '../../../../utlis/constants/size.dart';
+import '../../../../../utlis/constants/colors.dart';
+import '../../../../../utlis/constants/size.dart';
 
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key});

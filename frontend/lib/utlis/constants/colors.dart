@@ -13,4 +13,6 @@ class AppColors{
   static const Color borderColor = Color(0xFF969292);
   static const Color dividerColor  = Color(0xFF979292);
 
+
+  static const Color cart = Color(0xFF1976D2);
 }

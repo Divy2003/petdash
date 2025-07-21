@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../utlis/constants/colors.dart';
-import '../../../../utlis/constants/image_strings.dart';
-import '../../../../utlis/constants/size.dart';
+
+import '../../../../../utlis/constants/colors.dart';
+import '../../../../../utlis/constants/image_strings.dart';
+import '../../../../../utlis/constants/size.dart';
+
 
 class HomeHeaderBanner extends StatelessWidget {
   const HomeHeaderBanner({super.key});
