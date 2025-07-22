@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:petcare/features/screen/auth/login/widgets/requestpasswordreset.dart';
 import 'package:petcare/features/screen/auth/register/registerScreen.dart';
 import 'package:petcare/utlis/constants/colors.dart';
@@ -216,10 +216,7 @@ class _LoginFormState extends State<LoginForm> {
             height: 40,
           ),
           PrimaryButton(
-            onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CurvedNavScreen(),));
-            },
-            // onPressed: loginProvider.isLoading ? null : submit,
+             onPressed: loginProvider.isLoading ? null : submit,
             title: 'Log-in',
           ),
           // Login  button

@@ -5,6 +5,7 @@ import 'package:petcare/features/screen/shop/Service/ServicesSelectPetAndReview/
 import 'package:petcare/features/screen/shop/Service/ServicesSelectPetAndReview/widgets/gallerywidgets.dart';
 import 'package:petcare/features/screen/shop/Service/ServicesSelectPetAndReview/widgets/reviews.dart';
 
+import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/image_strings.dart';
 import '../../../../../utlis/constants/size.dart';
@@ -19,7 +20,7 @@ class _ServiceSelectPetAndReviewState extends State<ServiceSelectPetAndReview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      appBar: CustomAppBar(title: 'Pet Patch USA'),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

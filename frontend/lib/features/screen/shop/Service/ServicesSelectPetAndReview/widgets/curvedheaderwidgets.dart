@@ -31,29 +31,11 @@ class CurvedHeaderWidget extends StatelessWidget {
 
           // App bar items (back + title + rating)
           Positioned(
-            top: 50.h,
-            left: 16.w,
+            top: 20.h,
             right: 16.w,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    InkWell(
-                      onTap: () => Navigator.pop(context),
-                      child: Icon(Icons.arrow_back_outlined, color: AppColors.secondary),
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      "Pet Patch USA",
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge!
-                          .copyWith(
-                          color: AppColors.secondary),
-                    ),
-                  ],
-                ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
