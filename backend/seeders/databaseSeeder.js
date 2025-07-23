@@ -10,6 +10,7 @@ const Appointment = require('../models/Appointment');
 const Order = require('../models/Order');
 const { seedAdoptions } = require('./adoptionSeeder');
 const { seedCourses } = require('./courseSeed');
+const { migrateRoleSwitching } = require('../migrations/migrateRoleSwitching');
 
 // Sample data
 const sampleUsers = [
@@ -876,7 +877,6 @@ const seedOrders = async (users, products) => {
 // Main seeder function
 const runSeeder = async () => {
   try {
-    console.log('🌱 Starting database seeding...\n');
 
     // Seed in order due to dependencies
     const users = await seedUsers();
@@ -891,6 +891,11 @@ const runSeeder = async () => {
     await seedAdoptions();
     const courses = await seedCourses();
 
+    // Initialize role switching for all users
+    console.log('🔄 Initializing role switching...');
+    await migrateRoleSwitching();
+    console.log('✅ Role switching initialized');
+
     console.log('\n🎉 Database seeding completed successfully!');
     console.log('📊 Summary:');
     console.log(`   - Users: ${users.length} (1 Admin + 2 Pet Owners + 3 Businesses)`);
@@ -904,6 +909,7 @@ const runSeeder = async () => {
     console.log(`   - Orders: ${orders.length}`);
     console.log(`   - Adoptions: Sample adoption listings created`);
     console.log(`   - Courses: ${courses.length}`);
+    console.log(`   - Role Switching: Initialized for all users`);
 
   } catch (error) {
     console.error('❌ Error during database seeding:', error);

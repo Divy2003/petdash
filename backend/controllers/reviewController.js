@@ -11,17 +11,27 @@ exports.createReview = async (req, res) => {
     
     // Validate user type - only Pet Owners can leave reviews
     const reviewer = await User.findById(reviewerId);
-    if (!reviewer || reviewer.userType !== 'Pet Owner') {
-      return res.status(403).json({ 
-        message: 'Only pet owners can leave reviews' 
+    if (!reviewer) {
+      return res.status(404).json({ message: 'Reviewer not found' });
+    }
+
+    const reviewerCurrentRole = reviewer.currentRole || reviewer.userType;
+    if (reviewerCurrentRole !== 'Pet Owner' && (!reviewer.availableRoles || !reviewer.availableRoles.includes('Pet Owner'))) {
+      return res.status(403).json({
+        message: 'Pet Owner access required to leave reviews'
       });
     }
-    
+
     // Validate business exists and is a business account
     const business = await User.findById(businessId);
-    if (!business || business.userType !== 'Business') {
-      return res.status(404).json({ 
-        message: 'Business not found' 
+    if (!business) {
+      return res.status(404).json({ message: 'Business not found' });
+    }
+
+    const businessCurrentRole = business.currentRole || business.userType;
+    if (businessCurrentRole !== 'Business' && business.userType !== 'Business') {
+      return res.status(404).json({
+        message: 'Business not found'
       });
     }
     

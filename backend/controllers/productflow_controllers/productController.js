@@ -4,8 +4,10 @@ const User = require('../../models/User');
 // Create a new product (Business only)
 exports.createProduct = async (req, res) => {
   try {
-    if (req.user.userType !== 'Business') {
-      return res.status(403).json({ message: 'Only businesses can create products.' });
+    // Check current role for business access
+    const currentRole = req.user.currentRole || req.user.userType;
+    if (currentRole !== 'Business' && (!req.user.availableRoles || !req.user.availableRoles.includes('Business'))) {
+      return res.status(403).json({ message: 'Business access required to create products.' });
     }
     const {
       name,
@@ -122,8 +124,10 @@ exports.getProductById = async (req, res) => {
 // Get products for a business (Business only)
 exports.getBusinessProducts = async (req, res) => {
   try {
-    if (req.user.userType !== 'Business') {
-      return res.status(403).json({ message: 'Only businesses can view their products.' });
+    // Check current role for business access
+    const currentRole = req.user.currentRole || req.user.userType;
+    if (currentRole !== 'Business' && (!req.user.availableRoles || !req.user.availableRoles.includes('Business'))) {
+      return res.status(403).json({ message: 'Business access required to view products.' });
     }
     const products = await Product.find({ business: req.user.id }).sort({ createdAt: -1 });
     res.json({ products });

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const courseController = require('../controllers/training/courseController');
 const authMiddleware = require('../middlewares/auth');
+const { requireAdmin, updateUserContext } = require('../middlewares/roleAuth');
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -29,41 +30,41 @@ router.get('/:courseId/reviews', courseController.getCourseReviews);
 // ==================== PROTECTED ROUTES (Require Authentication) ====================
 
 // Course enrollment
-router.post('/:courseId/enroll', authMiddleware, courseController.enrollInCourse);
+router.post('/:courseId/enroll', authMiddleware, updateUserContext, courseController.enrollInCourse);
 
 // Get user's enrolled courses
-router.get('/user/enrollments', authMiddleware, courseController.getUserEnrollments);
+router.get('/user/enrollments', authMiddleware, updateUserContext, courseController.getUserEnrollments);
 
 // Get specific enrollment details
-router.get('/enrollments/:enrollmentId', authMiddleware, courseController.getEnrollmentDetails);
+router.get('/enrollments/:enrollmentId', authMiddleware, updateUserContext, courseController.getEnrollmentDetails);
 
 // Mark step as completed
-router.put('/enrollments/:enrollmentId/steps/:stepId/complete', authMiddleware, courseController.completeStep);
+router.put('/enrollments/:enrollmentId/steps/:stepId/complete', authMiddleware, updateUserContext, courseController.completeStep);
 
 // Add course review and rating
-router.post('/enrollments/:enrollmentId/review', authMiddleware, courseController.addCourseReview);
+router.post('/enrollments/:enrollmentId/review', authMiddleware, updateUserContext, courseController.addCourseReview);
 
 // Get user's certificates
-router.get('/user/certificates', authMiddleware, courseController.getUserCertificates);
+router.get('/user/certificates', authMiddleware, updateUserContext, courseController.getUserCertificates);
 
 // Get user's earned badges
-router.get('/user/badges', authMiddleware, courseController.getUserBadges);
+router.get('/user/badges', authMiddleware, updateUserContext, courseController.getUserBadges);
 
 // Get user's learning analytics
-router.get('/user/analytics', authMiddleware, courseController.getUserLearningAnalytics);
+router.get('/user/analytics', authMiddleware, updateUserContext, courseController.getUserLearningAnalytics);
 
 // ==================== ADMIN ROUTES (Admin Only) ====================
 
 // Create new course (Admin only)
-router.post('/admin/create', authMiddleware, courseController.createCourse);
+router.post('/admin/create', authMiddleware, requireAdmin, courseController.createCourse);
 
 // Update course (Admin only)
-router.put('/admin/:courseId', authMiddleware, courseController.updateCourse);
+router.put('/admin/:courseId', authMiddleware, requireAdmin, courseController.updateCourse);
 
 // Delete course (Admin only)
-router.delete('/admin/:courseId', authMiddleware, courseController.deleteCourse);
+router.delete('/admin/:courseId', authMiddleware, requireAdmin, courseController.deleteCourse);
 
 // Get all courses for admin management
-router.get('/admin/all', authMiddleware, courseController.getAllCoursesAdmin);
+router.get('/admin/all', authMiddleware, requireAdmin, courseController.getAllCoursesAdmin);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/auth');
+const { updateUserContext } = require('../middlewares/roleAuth');
 const upload = require('../middlewares/uploadImage');
 const {
   getProfile,
@@ -10,19 +11,23 @@ const {
   updateAddress,
   deleteAddress,
   setPrimaryAddress,
-  getPrimaryAddress
+  getPrimaryAddress,
+  getSharedData
 } = require('../controllers/profileController');
 
-// Profile routes - all protected with auth middleware
-router.get('/get-profile', auth, getProfile);
-router.put('/create-update-profile', auth, upload.single('profileImage'), updateProfile);
+// Profile routes - all protected with auth middleware and role context
+router.get('/get-profile', auth, updateUserContext, getProfile);
+router.put('/create-update-profile', auth, updateUserContext, upload.single('profileImage'), updateProfile);
+
+// Shared data across roles
+router.get('/shared-data', auth, updateUserContext, getSharedData);
 
 // Address management routes
-router.get('/addresses', auth, getUserAddresses);
-router.post('/addresses', auth, addAddress);
-router.put('/addresses/:addressId', auth, updateAddress);
-router.delete('/addresses/:addressId', auth, deleteAddress);
-router.put('/addresses/:addressId/primary', auth, setPrimaryAddress);
-router.get('/addresses/primary', auth, getPrimaryAddress);
+router.get('/addresses', auth, updateUserContext, getUserAddresses);
+router.post('/addresses', auth, updateUserContext, addAddress);
+router.put('/addresses/:addressId', auth, updateUserContext, updateAddress);
+router.delete('/addresses/:addressId', auth, updateUserContext, deleteAddress);
+router.put('/addresses/:addressId/primary', auth, updateUserContext, setPrimaryAddress);
+router.get('/addresses/primary', auth, updateUserContext, getPrimaryAddress);
 
 module.exports = router;

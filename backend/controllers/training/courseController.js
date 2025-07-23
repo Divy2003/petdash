@@ -9,10 +9,10 @@ const authMiddleware = require('../../middlewares/auth');
 // Create a new course (Admin only)
 exports.createCourse = async (req, res) => {
   try {
-    // Check if user is admin
+    // Role check is handled by requireAdmin middleware
     const user = await User.findById(req.user.id);
-    if (!user || user.userType !== 'Admin') {
-      return res.status(403).json({ message: 'Access denied. Admin only.' });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
     }
 
     const {
@@ -107,11 +107,7 @@ exports.createCourse = async (req, res) => {
 // Update course (Admin only)
 exports.updateCourse = async (req, res) => {
   try {
-    // Check if user is admin
-    const user = await User.findById(req.user.id);
-    if (!user || user.userType !== 'Admin') {
-      return res.status(403).json({ message: 'Access denied. Admin only.' });
-    }
+    // Role check is handled by requireAdmin middleware
 
     const { courseId } = req.params;
     const updateData = req.body;
@@ -143,11 +139,7 @@ exports.updateCourse = async (req, res) => {
 // Delete course (Admin only)
 exports.deleteCourse = async (req, res) => {
   try {
-    // Check if user is admin
-    const user = await User.findById(req.user.id);
-    if (!user || user.userType !== 'Admin') {
-      return res.status(403).json({ message: 'Access denied. Admin only.' });
-    }
+    // Role check is handled by requireAdmin middleware
 
     const { courseId } = req.params;
 
@@ -170,11 +162,7 @@ exports.deleteCourse = async (req, res) => {
 // Get all courses for admin management
 exports.getAllCoursesAdmin = async (req, res) => {
   try {
-    // Check if user is admin
-    const user = await User.findById(req.user.id);
-    if (!user || user.userType !== 'Admin') {
-      return res.status(403).json({ message: 'Access denied. Admin only.' });
-    }
+    // Role check is handled by requireAdmin middleware
 
     const { page = 1, limit = 10, category, difficulty, trainingType, status } = req.query;
     

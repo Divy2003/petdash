@@ -28,20 +28,30 @@ const { runSeeder } = require('./seeders/databaseSeeder');
 const initializeDatabase = async () => {
   try {
     await connectDB();
-    console.log('📦 Database connected successfully');
-
-    // Run seeder after database connection
     await runSeeder();
+    console.log('✅ Database initialization complete');
   } catch (error) {
-    console.error('❌ Database initialization failed:', error);
+    console.error('❌ Database initialization failed:', error.message);
     process.exit(1);
   }
 };
 
-initializeDatabase();
+// Initialize database before starting server
+initializeDatabase().then(() => {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log('✅ Server ready to accept requests');
+  });
+}).catch((error) => {
+  console.error('❌ Failed to start server:', error);
+  process.exit(1);
+});
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cors());
+app.use('/uploads', express.static(require('path').join(__dirname, 'uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/pet', petRoutes);
@@ -59,6 +69,4 @@ app.use('/api/gallery', galleryRoutes);
 app.use('/api/courses', courseRoutes);
 
 
-app.listen(process.env.PORT || 5000, () => {
-      console.log('Server running');
-    });
+

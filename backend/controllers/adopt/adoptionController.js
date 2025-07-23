@@ -1,15 +1,16 @@
 const Adoption = require('../../models/Adoption');
 
-// Helper: Check if user is business (shelter/organization)
-function isBusiness(user) {
-  return user && user.userType === 'Business';
+// Helper: Check if user has business access (shelter/organization)
+function hasBusinessAccess(user) {
+  const currentRole = user.currentRole || user.userType;
+  return user && (currentRole === 'Business' || (user.availableRoles && user.availableRoles.includes('Business')));
 }
 
 // Create Adoption Listing
 exports.createAdoption = async (req, res) => {
   try {
-    if (!isBusiness(req.user)) {
-      return res.status(403).json({ message: 'Only businesses can create adoption listings' });
+    if (!hasBusinessAccess(req.user)) {
+      return res.status(403).json({ message: 'Business access required to create adoption listings' });
     }
 
     const adoptionData = { ...req.body, postedBy: req.user.id };
@@ -145,8 +146,8 @@ exports.getAdoption = async (req, res) => {
 // Update Adoption Listing
 exports.updateAdoption = async (req, res) => {
   try {
-    if (!isBusiness(req.user)) {
-      return res.status(403).json({ message: 'Only businesses can update adoption listings' });
+    if (!hasBusinessAccess(req.user)) {
+      return res.status(403).json({ message: 'Business access required to update adoption listings' });
     }
 
     const updateFields = { ...req.body };
@@ -199,8 +200,8 @@ exports.updateAdoption = async (req, res) => {
 // Delete Adoption Listing
 exports.deleteAdoption = async (req, res) => {
   try {
-    if (!isBusiness(req.user)) {
-      return res.status(403).json({ message: 'Only businesses can delete adoption listings' });
+    if (!hasBusinessAccess(req.user)) {
+      return res.status(403).json({ message: 'Business access required to delete adoption listings' });
     }
 
     const adoption = await Adoption.findOneAndDelete({ 
@@ -224,8 +225,8 @@ exports.deleteAdoption = async (req, res) => {
 // Get Adoption Listings by Business
 exports.getBusinessAdoptions = async (req, res) => {
   try {
-    if (!isBusiness(req.user)) {
-      return res.status(403).json({ message: 'Only businesses can access their adoption listings' });
+    if (!hasBusinessAccess(req.user)) {
+      return res.status(403).json({ message: 'Business access required to access adoption listings' });
     }
 
     const { page = 1, limit = 10, adoptionStatus } = req.query;

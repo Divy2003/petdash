@@ -1,20 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/auth');
+const { requirePetOwnerAccess } = require('../middlewares/roleAuth');
 const upload = require('../middlewares/uploadImage');
 const { createPetProfile, updatePetProfile, getPetProfile, getAllPets } = require('../controllers/petController');
 
-// Create Pet Profile
-router.post('/create', auth, upload.single('profileImage'), createPetProfile);
+// Create Pet Profile (Pet Owner access required)
+router.post('/create', auth, requirePetOwnerAccess, upload.single('profileImage'), createPetProfile);
 
-// Update Pet Profile
-router.put('/update/:id', auth, upload.single('profileImage'), updatePetProfile);
+// Update Pet Profile (Pet Owner access required)
+router.put('/update/:id', auth, requirePetOwnerAccess, upload.single('profileImage'), updatePetProfile);
 
-// Get All Pets
-router.get('/all', auth, getAllPets);
+// Get All Pets (Pet Owner access required)
+router.get('/all', auth, requirePetOwnerAccess, getAllPets);
 
-// Get Pet Profile
-router.get('/:id', auth, getPetProfile);
+// Get Pet Profile (Pet Owner access required)
+router.get('/:id', auth, requirePetOwnerAccess, getPetProfile);
 
 
 
