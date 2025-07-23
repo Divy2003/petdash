@@ -81,7 +81,7 @@ class CancelledOrderDetails extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.textprimaryColor),
+                  border: Border.all(color: AppColors.textPrimaryColor),
                   color: AppColors.white,
                 ),
                 child: Center(

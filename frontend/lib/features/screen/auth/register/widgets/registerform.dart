@@ -114,21 +114,21 @@ class _RegisterFormState extends State<RegisterForm> {
                   decoration: InputDecoration(
                     hintText: 'Your name',
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: AppColors.textprimaryColor,
+                      color: AppColors.textPrimaryColor,
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.textprimaryColor,
+                        color: AppColors.textPrimaryColor,
                         width: 2,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.textprimaryColor,
+                        color: AppColors.textPrimaryColor,
                         width: 2,
                       ),
                     ),
@@ -153,21 +153,21 @@ class _RegisterFormState extends State<RegisterForm> {
                   decoration: InputDecoration(
                     hintText: 'Your email',
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: AppColors.textprimaryColor,
+                      color: AppColors.textPrimaryColor,
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.textprimaryColor,
+                        color: AppColors.textPrimaryColor,
                         width: 2,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.textprimaryColor,
+                        color: AppColors.textPrimaryColor,
                         width: 2,
                       ),
                     ),
@@ -192,21 +192,21 @@ class _RegisterFormState extends State<RegisterForm> {
                   decoration: InputDecoration(
                     hintText: 'Password',
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: AppColors.textprimaryColor,
+                      color: AppColors.textPrimaryColor,
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.textprimaryColor,
+                        color: AppColors.textPrimaryColor,
                         width: 2,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       borderSide: BorderSide(
-                        color: AppColors.textprimaryColor,
+                        color: AppColors.textPrimaryColor,
                         width: 2,
                       ),
                     ),
@@ -235,7 +235,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             border: Border.all(
                               color: registerProvider.selectedType == UserType.petOwner
                                   ? AppColors.primary
-                                  : AppColors.textprimaryColor,
+                                  : AppColors.textPrimaryColor,
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
@@ -246,7 +246,7 @@ class _RegisterFormState extends State<RegisterForm> {
                               style: TextStyle(
                                 color: registerProvider.selectedType == UserType.petOwner
                                     ? AppColors.primary
-                                    : AppColors.textprimaryColor,
+                                    : AppColors.textPrimaryColor,
                                 fontFamily: 'Encode Sans Expanded',
                                 fontWeight: FontWeight.w500,
                                 fontSize: AppSizes.fontSizeLg,
@@ -271,7 +271,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             border: Border.all(
                               color: registerProvider.selectedType == UserType.business
                                   ? AppColors.primary
-                                  : AppColors.textprimaryColor,
+                                  : AppColors.textPrimaryColor,
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
@@ -282,7 +282,7 @@ class _RegisterFormState extends State<RegisterForm> {
                               style: TextStyle(
                                 color: registerProvider.selectedType == UserType.business
                                     ? AppColors.primary
-                                    : AppColors.textprimaryColor,
+                                    : AppColors.textPrimaryColor,
                                 fontFamily: 'Encode Sans Expanded',
                                 fontWeight: FontWeight.w500,
                                 fontSize: AppSizes.fontSizeLg,
@@ -335,7 +335,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
                     border: Border.all(
-                      color: AppColors.textprimaryColor,
+                      color: AppColors.textPrimaryColor,
                       width: 1,
                     ),
                   ),
@@ -346,7 +346,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       SizedBox(width: 30,),
                       Text('Log-in with Google',
                         style: TextStyle(
-                          color: AppColors.textprimaryColor,
+                          color: AppColors.textPrimaryColor,
                           fontFamily: 'Encode Sans Expanded',
                           fontWeight: FontWeight.w500,
                           fontSize: AppSizes.fontSizeLg,
@@ -391,7 +391,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     text: TextSpan(
                       text: "Already Have an Account?",
                       style: TextStyle(
-                        color: AppColors.textprimaryColor,
+                        color: AppColors.textPrimaryColor,
                         fontSize: AppSizes.fontSizeSm,
                         fontWeight: FontWeight.w500,
                         fontFamily: 'Encode Sans Expanded',

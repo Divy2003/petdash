@@ -100,21 +100,21 @@ class _EditProfileState extends State<EditProfile> {
                 decoration: InputDecoration(
                   hintText: 'Your name',
                   hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: AppColors.textprimaryColor,
+                    color: AppColors.textPrimaryColor,
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 14),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                     borderSide: BorderSide(
-                      color: AppColors.textprimaryColor,
+                      color: AppColors.textPrimaryColor,
                       width: 2,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                     borderSide: BorderSide(
-                      color: AppColors.textprimaryColor,
+                      color: AppColors.textPrimaryColor,
                       width: 2,
                     ),
                   ),
@@ -139,21 +139,21 @@ class _EditProfileState extends State<EditProfile> {
                 decoration: InputDecoration(
                   hintText: 'Your email',
                   hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: AppColors.textprimaryColor,
+                    color: AppColors.textPrimaryColor,
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 14),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                     borderSide: BorderSide(
-                      color: AppColors.textprimaryColor,
+                      color: AppColors.textPrimaryColor,
                       width: 2,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                     borderSide: BorderSide(
-                      color: AppColors.textprimaryColor,
+                      color: AppColors.textPrimaryColor,
                       width: 2,
                     ),
                   ),
@@ -178,21 +178,21 @@ class _EditProfileState extends State<EditProfile> {
                 decoration: InputDecoration(
                   hintText: 'Your phone number',
                   hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: AppColors.textprimaryColor,
+                    color: AppColors.textPrimaryColor,
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 14),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                     borderSide: BorderSide(
-                      color: AppColors.textprimaryColor,
+                      color: AppColors.textPrimaryColor,
                       width: 2,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                     borderSide: BorderSide(
-                      color: AppColors.textprimaryColor,
+                      color: AppColors.textPrimaryColor,
                       width: 2,
                     ),
                   ),
@@ -216,21 +216,21 @@ class _EditProfileState extends State<EditProfile> {
                 decoration: InputDecoration(
                   hintText: 'E /202 RatanSagarHeight',
                   hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: AppColors.textprimaryColor,
+                    color: AppColors.textPrimaryColor,
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 14),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                     borderSide: BorderSide(
-                      color: AppColors.textprimaryColor,
+                      color: AppColors.textPrimaryColor,
                       width: 2,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                     borderSide: BorderSide(
-                      color: AppColors.textprimaryColor,
+                      color: AppColors.textPrimaryColor,
                       width: 2,
                     ),
                   ),

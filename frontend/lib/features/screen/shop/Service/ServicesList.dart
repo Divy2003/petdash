@@ -61,7 +61,7 @@ class _ServicesListState extends State<ServicesList> {
                 Expanded(
                   child: Row(
                     children: [
-                      Icon(Icons.sort, size: AppSizes.iconMd, color: AppColors.textprimaryColor),
+                      Icon(Icons.sort, size: AppSizes.iconMd, color: AppColors.textPrimaryColor),
                       SizedBox(width: AppSizes.xs),
                       Text(
                         'Sort',
@@ -81,7 +81,7 @@ class _ServicesListState extends State<ServicesList> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.filter_list, size: AppSizes.iconMd, color: AppColors.textprimaryColor),
+                      Icon(Icons.filter_list, size: AppSizes.iconMd, color: AppColors.textPrimaryColor),
                       SizedBox(width: AppSizes.xs),
                       Text(
                         'Filter',
@@ -353,7 +353,7 @@ class _ServicesListState extends State<ServicesList> {
                       Text(
                         business.openStatus,
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: AppColors.textprimaryColor,
+                          color: AppColors.textPrimaryColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -365,7 +365,7 @@ class _ServicesListState extends State<ServicesList> {
                 Text(
                   business.distanceDisplay,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: AppColors.textprimaryColor,
+                    color: AppColors.textPrimaryColor,
                   ),
                 ),
               ],
@@ -475,7 +475,7 @@ class _ServicesListState extends State<ServicesList> {
                       Text(
                         provider['openTime'],
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: AppColors.textprimaryColor,
+                          color: AppColors.textPrimaryColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -487,7 +487,7 @@ class _ServicesListState extends State<ServicesList> {
                 Text(
                   provider['distance'],
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: AppColors.textprimaryColor,
+                    color: AppColors.textPrimaryColor,
                   ),
                 ),
               ],

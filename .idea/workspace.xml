@@ -4,45 +4,36 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1353c25d-7094-4b07-9800-038a75bcafb3" name="Changes" comment="second">
-      <change afterPath="$PROJECT_DIR$/frontend/assets/homeimage/store/products.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/common/widgets/Button/secondarybutton.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Appoinments/AppointmentsDetails.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Appoinments/appoinments.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/orderScreen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/ordercancle.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/orderdetails.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/widgets/ordercard.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/model/appointments.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/model/ordermodel.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/profile/BusinessProfileScreen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/serchscreen/searchscreen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/models/business_model.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/models/category_model.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/provider/business_provider.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/provider/category_provider.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/provider/user_session_provider.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/services/api_service.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/services/business_service.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/services/category_service.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/services/user_session_service.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/utlis/helpers/navigation_helper.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/common/widgets/cart/servicescart.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/common/widgets/cart/servicescart.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/Navigation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/Navigation.dart" afterDir="false" />
+    <list default="true" id="1353c25d-7094-4b07-9800-038a75bcafb3" name="Changes" comment="business">
+      <change afterPath="$PROJECT_DIR$/frontend/lib/common/widgets/Button/dotborder.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyClients/myClients.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyProducts/myproducts.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/addnewServices.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/editServicesdetails.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/myServices.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/common/widgets/Button/primarybutton.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/common/widgets/Button/primarybutton.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/common/widgets/Button/secondarybutton.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/common/widgets/Button/secondarybutton.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/loginform.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/loginform.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/new_password_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/new_password_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/otp_verification_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/otp_verification_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/requestpasswordreset.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/requestpasswordreset.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/register/widgets/registerform.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/register/widgets/registerform.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/splashScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/splashScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/profileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/profileScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Appoinments/AppointmentsDetails.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Appoinments/AppointmentsDetails.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Appoinments/appoinments.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Appoinments/appoinments.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/ordercancle.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/ordercancle.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/orderdetails.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/orderdetails.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/widgets/ordercard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/widgets/ordercard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/profile/BusinessProfileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/profile/BusinessProfileScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/widgets/editProfile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/widgets/editProfile.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/ServiceDetails.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/ServiceDetails.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/ServicesList.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/ServicesList.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/home/widgets/service_grid.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/home/widgets/service_grid.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/provider/auth_provider/loginprovider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/provider/auth_provider/loginprovider.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/provider/auth_provider/registerprovider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/provider/auth_provider/registerprovider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/appointmentbook/widgets/Notes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/appointmentbook/widgets/Notes.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/appointmentbook/widgets/couponcode.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/appointmentbook/widgets/couponcode.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/appointmentbook/widgets/dateAndTimePicker.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/appointmentbook/widgets/dateAndTimePicker.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/utlis/constants/colors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/utlis/constants/colors.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/utlis/constants/image_strings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/utlis/constants/image_strings.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pubspec.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,11 +139,31 @@
       <option name="project" value="LOCAL" />
       <updated>1753167506926</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="business">
+      <option name="closed" value="true" />
+      <created>1753264348225</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1753264348225</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="second" />
-    <option name="LAST_COMMIT_MESSAGE" value="second" />
+    <MESSAGE value="business" />
+    <option name="LAST_COMMIT_MESSAGE" value="business" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Appoinments/AppointmentsDetails.dart</url>
+          <line>281</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

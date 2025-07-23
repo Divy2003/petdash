@@ -237,7 +237,7 @@ class _AppointmentsDetailsState extends State<AppointmentsDetails> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
                 color: AppColors.primary,
-                border: Border.all(color: AppColors.textprimaryColor),
+                border: Border.all(color: AppColors.textPrimaryColor),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

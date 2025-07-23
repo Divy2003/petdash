@@ -9,7 +9,11 @@ import 'package:petcare/services/user_session_service.dart';
 
 import '../../../../utlis/constants/colors.dart';
 import '../../../../utlis/constants/image_strings.dart';
+import '../../shop/Service/ServicesList.dart';
 import '../Screen/Appoinments/appoinments.dart';
+import '../Screen/MyClients/myClients.dart';
+import '../Screen/MyProducts/myproducts.dart';
+import '../Screen/MyServices/myServices.dart';
 import '../Screen/order/orderScreen.dart';
 
 class BusinessProfileScreen extends StatefulWidget {
@@ -50,7 +54,9 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                       ProfileMenuTile(
                         icon: Icons.business,
                         title: 'My Products',
-                        onTap: () {},
+                        onTap: () {
+                          Get.to(() => MyProducts());
+                        },
                       ),
                       Divider(height: 1, color: AppColors.divider),
                       ProfileMenuTile(
@@ -72,13 +78,17 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                       ProfileMenuTile(
                         icon: Icons.shopping_bag_outlined,
                         title: 'My Services',
-                        onTap: () {},
+                        onTap: () {
+                          Get.to(() => MyServices());
+                        },
                       ),
                       Divider(height: 1, color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.analytics,
                         title: 'My Clients',
-                        onTap: () {},
+                        onTap: () {
+                          Get.to(() => MyClients());
+                        },
                       ),
                       Divider(height: 1, color: AppColors.divider),
                       ProfileMenuTile(

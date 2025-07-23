@@ -63,7 +63,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
           return Container(
             margin: EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.textprimaryColor),
+              border: Border.all(color: AppColors.textPrimaryColor),
               borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
               color: AppColors.white,
             ),
@@ -106,14 +106,14 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       Text(
                         DateFormat('MMMM dd yyyy, EEEE').format(appt.dateTime),
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.textprimaryColor,
+                          color: AppColors.textPrimaryColor,
                         ),
                       ),
                       Spacer(),
                       Text(
                         DateFormat('h:mm a').format(appt.dateTime),
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.textprimaryColor,
+                          color: AppColors.textPrimaryColor,
                         ),
                       )
                     ],

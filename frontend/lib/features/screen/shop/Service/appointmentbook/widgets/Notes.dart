@@ -30,11 +30,11 @@ class NotesInput extends StatelessWidget {
                 contentPadding: const EdgeInsets.all(12),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
-                  borderSide: const BorderSide(color: AppColors.textprimaryColor),
+                  borderSide: const BorderSide(color: AppColors.textPrimaryColor),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
-                  borderSide: const BorderSide(color: AppColors.textprimaryColor),
+                  borderSide: const BorderSide(color: AppColors.textPrimaryColor),
                 ),
               ),
             );

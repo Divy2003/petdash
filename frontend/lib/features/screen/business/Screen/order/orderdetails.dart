@@ -37,7 +37,7 @@ class _OrderDetailsState extends State<OrderDetails> {
               padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-                border: Border.all(color: AppColors.textprimaryColor),
+                border: Border.all(color: AppColors.textPrimaryColor),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +101,7 @@ class _OrderDetailsState extends State<OrderDetails> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.textprimaryColor),
+                border: Border.all(color: AppColors.textPrimaryColor),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

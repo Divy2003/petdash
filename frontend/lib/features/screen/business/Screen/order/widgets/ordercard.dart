@@ -23,7 +23,7 @@ class OrderCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
           color: Colors.white,
           border: Border.all(
-              color: AppColors.textprimaryColor,
+              color: AppColors.textPrimaryColor,
               width: 1
           ),
         ),
