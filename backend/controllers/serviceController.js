@@ -1,15 +1,20 @@
 const Service = require('../models/Service');
 const Category = require('../models/Category');
 
-// Helper: Check if user is business
-function isBusiness(user) {
-  return user && user.userType === 'Business';
+// Helper: Check if user has business access (using current role)
+function hasBusinessAccess(user) {
+  const currentRole = user.currentRole || user.userType;
+  return user && (currentRole === 'Business' || (user.availableRoles && user.availableRoles.includes('Business')));
 }
 
 // Create Service
 exports.createService = async (req, res) => {
   try {
-    if (!isBusiness(req.user)) return res.status(403).json({ message: 'Only business users can create services' });
+    // Role check is now handled by requireBusinessAccess middleware
+    // But we'll keep a backup check for safety
+    if (!hasBusinessAccess(req.user)) {
+      return res.status(403).json({ message: 'Business access required to create services' });
+    }
 
     const { category, ...otherData } = req.body;
 
@@ -41,7 +46,10 @@ exports.createService = async (req, res) => {
 // Update Service
 exports.updateService = async (req, res) => {
   try {
-    if (!isBusiness(req.user)) return res.status(403).json({ message: 'Only business users can update services' });
+    // Role check is now handled by requireBusinessAccess middleware
+    if (!hasBusinessAccess(req.user)) {
+      return res.status(403).json({ message: 'Business access required to update services' });
+    }
 
     const updateFields = { ...req.body };
 
@@ -86,7 +94,10 @@ exports.getService = async (req, res) => {
 // Get all services for a business (for business owner to manage their services)
 exports.getBusinessServices = async (req, res) => {
   try {
-    if (!isBusiness(req.user)) return res.status(403).json({ message: 'Only business users can access this endpoint' });
+    // Role check is now handled by requireBusinessAccess middleware
+    if (!hasBusinessAccess(req.user)) {
+      return res.status(403).json({ message: 'Business access required to view business services' });
+    }
 
     const { page = 1, limit = 10, category } = req.query;
 
@@ -122,7 +133,10 @@ exports.getBusinessServices = async (req, res) => {
 // Delete Service
 exports.deleteService = async (req, res) => {
   try {
-    if (!isBusiness(req.user)) return res.status(403).json({ message: 'Only business users can delete services' });
+    // Role check is now handled by requireBusinessAccess middleware
+    if (!hasBusinessAccess(req.user)) {
+      return res.status(403).json({ message: 'Business access required to delete services' });
+    }
 
     const service = await Service.findOneAndDelete({ _id: req.params.id, business: req.user.id });
     if (!service) return res.status(404).json({ message: 'Service not found' });

@@ -1,13 +1,11 @@
 const Category = require('../models/Category');
 const User = require('../models/User');
 
-// Helper: Check if user is admin (you can modify this based on your admin logic)
+// Helper: Check if user is admin (using current role)
 async function isAdmin(user) {
-  // For now, assuming admin is a specific userType or email
-  // You can modify this logic based on your requirements
-  console.log(user.email);
-  const admin = await User.findOne({ email: 'admin@petdash.com' });
-  return user && (user.email === admin.email);
+  // Check if user has admin access
+  const currentRole = user.currentRole || user.userType;
+  return user && (currentRole === 'Admin' || user.userType === 'Admin');
 }
 
 // Create Category (Admin only)
@@ -17,28 +15,65 @@ exports.createCategory = async (req, res) => {
       return res.status(403).json({ message: 'Only admin can create categories' });
     }
 
-    const { name, description, icon, color, order } = req.body;
-    
+    const {
+      name,
+      description,
+      shortDescription,
+      icon,
+      thumbnailImage,
+      color,
+      textColor,
+      order,
+      isFeatured,
+      metaTitle,
+      metaDescription,
+      tags
+    } = req.body;
+
+    // Handle uploaded image
+    let imageUrl = req.body.image;
+    if (req.file) {
+      // Serve as /uploads/filename
+      imageUrl = `/uploads/${req.file.filename}`;
+    }
+
     const category = new Category({
       name,
       description,
+      shortDescription,
       icon,
+      image: imageUrl,
+      thumbnailImage,
       color,
-      order
+      textColor,
+      order: order || 0,
+      isFeatured: isFeatured || false,
+      metaTitle,
+      metaDescription,
+      tags: tags || [],
+      createdBy: req.user._id
     });
 
     await category.save();
-    res.status(201).json({ 
-      message: 'Category created successfully', 
-      category 
+
+    // Populate creator info
+    await category.populate('createdBy', 'name email');
+
+    res.status(201).json({
+      message: 'Category created successfully',
+      category
     });
   } catch (error) {
     if (error.code === 11000) {
-      return res.status(400).json({ message: 'Category name already exists' });
+      const field = Object.keys(error.keyPattern)[0];
+      return res.status(400).json({
+        message: `Category ${field} already exists`,
+        error: `A category with this ${field} already exists`
+      });
     }
-    res.status(500).json({ 
-      message: 'Error creating category', 
-      error: error.message 
+    res.status(500).json({
+      message: 'Error creating category',
+      error: error.message
     });
   }
 };
@@ -111,29 +146,54 @@ exports.updateCategory = async (req, res) => {
       return res.status(403).json({ message: 'Only admin can update categories' });
     }
 
-    const { name, description, icon, color, order, isActive } = req.body;
-    
+    const updateData = {};
+    const allowedFields = [
+      'name', 'description', 'shortDescription', 'icon', 'image', 'thumbnailImage',
+      'color', 'textColor', 'order', 'isActive', 'isFeatured', 'metaTitle',
+      'metaDescription', 'tags'
+    ];
+
+    // Only include fields that are provided in the request
+    allowedFields.forEach(field => {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    });
+
+    // Handle uploaded image
+    if (req.file) {
+      // Serve as /uploads/filename
+      updateData.image = `/uploads/${req.file.filename}`;
+    }
+
+    // Update timestamp
+    updateData.updatedAt = Date.now();
+
     const category = await Category.findByIdAndUpdate(
       req.params.id,
-      { name, description, icon, color, order, isActive },
+      updateData,
       { new: true, runValidators: true }
-    );
+    ).populate('createdBy', 'name email');
 
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
     }
 
-    res.status(200).json({ 
-      message: 'Category updated successfully', 
-      category 
+    res.status(200).json({
+      message: 'Category updated successfully',
+      category
     });
   } catch (error) {
     if (error.code === 11000) {
-      return res.status(400).json({ message: 'Category name already exists' });
+      const field = Object.keys(error.keyPattern)[0];
+      return res.status(400).json({
+        message: `Category ${field} already exists`,
+        error: `A category with this ${field} already exists`
+      });
     }
-    res.status(500).json({ 
-      message: 'Error updating category', 
-      error: error.message 
+    res.status(500).json({
+      message: 'Error updating category',
+      error: error.message
     });
   }
 };

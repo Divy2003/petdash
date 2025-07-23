@@ -14,7 +14,14 @@ const auth = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+
+    // Ensure backward compatibility and add role information
+    req.user = {
+      ...decoded,
+      currentRole: decoded.currentRole || decoded.userType,
+      availableRoles: decoded.availableRoles || [decoded.userType]
+    };
+
     next();
   } catch (error) {
     console.error('Auth middleware error:', error.message);

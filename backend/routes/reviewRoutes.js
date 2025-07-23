@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const auth = require('../middlewares/auth');
+const { requirePetOwnerAccess, requireBusinessAccess, updateUserContext } = require('../middlewares/roleAuth');
 const {
   createReview,
   getBusinessReviews,
@@ -53,18 +54,18 @@ router.get('/:reviewId', getReviewById);
 
 // Create a new review (Pet Owners only)
 // POST /api/review/create
-router.post('/create', auth, upload.array('images', 5), createReview);
+router.post('/create', auth, requirePetOwnerAccess, upload.array('images', 5), createReview);
 
 // Update a review (only by the reviewer)
 // PUT /api/review/update/:reviewId
-router.put('/update/:reviewId', auth, upload.array('images', 5), updateReview);
+router.put('/update/:reviewId', auth, updateUserContext, upload.array('images', 5), updateReview);
 
 // Business response to a review (only by business owner)
 // POST /api/review/respond/:reviewId
-router.post('/respond/:reviewId', auth, respondToReview);
+router.post('/respond/:reviewId', auth, requireBusinessAccess, respondToReview);
 
 // Delete a review (only by the reviewer)
 // DELETE /api/review/delete/:reviewId
-router.delete('/delete/:reviewId', auth, deleteReview);
+router.delete('/delete/:reviewId', auth, updateUserContext, deleteReview);
 
 module.exports = router;

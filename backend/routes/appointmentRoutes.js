@@ -8,20 +8,21 @@ const {
   updateAppointmentStatus
 } = require('../controllers/appointmentController');
 const auth = require('../middlewares/auth');
+const { requirePetOwnerAccess, requireBusinessAccess, updateUserContext } = require('../middlewares/roleAuth');
 
-// Create new appointment (Pet Owner only)
-router.post('/create', auth, createAppointment);
+// Create new appointment (Pet Owner access required)
+router.post('/create', auth, requirePetOwnerAccess, createAppointment);
 
-// Get appointments for customer (Pet Owner)
-router.get('/customer', auth, getCustomerAppointments);
+// Get appointments for customer (Pet Owner access required)
+router.get('/customer', auth, requirePetOwnerAccess, getCustomerAppointments);
 
-// Get appointments for business (Business Owner)
-router.get('/business', auth, getBusinessAppointments);
+// Get appointments for business (Business access required)
+router.get('/business', auth, requireBusinessAccess, getBusinessAppointments);
 
-// Get single appointment details
-router.get('/:appointmentId', auth, getAppointmentDetails);
+// Get single appointment details (accessible to both roles)
+router.get('/:appointmentId', auth, updateUserContext, getAppointmentDetails);
 
-// Update appointment status
-router.put('/:appointmentId/status', auth, updateAppointmentStatus);
+// Update appointment status (accessible to both roles)
+router.put('/:appointmentId/status', auth, updateUserContext, updateAppointmentStatus);
 
 module.exports = router;

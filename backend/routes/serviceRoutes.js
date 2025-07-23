@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/auth');
+const { requireBusinessAccess, updateUserContext } = require('../middlewares/roleAuth');
 const upload = require('../middlewares/uploadImage');
 const {
   createService,
@@ -10,19 +11,19 @@ const {
   deleteService
 } = require('../controllers/serviceController');
 
-// Create Service (multiple images)
-router.post('/create', auth, upload.array('images', 5), createService);
+// Create Service (multiple images) - Requires Business access
+router.post('/create', auth, requireBusinessAccess, upload.array('images', 5), createService);
 
-// Update Service (multiple images)
-router.put('/update/:id', auth, upload.array('images', 5), updateService);
+// Update Service (multiple images) - Requires Business access
+router.put('/update/:id', auth, requireBusinessAccess, upload.array('images', 5), updateService);
 
-// Get Service
-router.get('/:id', auth, getService);
+// Get Service - Available to all authenticated users
+router.get('/:id', auth, updateUserContext, getService);
 
-// Get all services for the authenticated business
-router.get('/business/all', auth, getBusinessServices);
+// Get all services for the authenticated business - Requires Business access
+router.get('/business/all', auth, requireBusinessAccess, getBusinessServices);
 
-// Delete Service
-router.delete('/delete/:id', auth, deleteService);
+// Delete Service - Requires Business access
+router.delete('/delete/:id', auth, requireBusinessAccess, deleteService);
 
 module.exports = router;

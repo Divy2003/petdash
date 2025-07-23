@@ -48,14 +48,25 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
   password: String,
-  userType: { type: String, enum: ['Pet Owner', 'Business'], required: true },
+  userType: { type: String, enum: ['Pet Owner', 'Business', 'Admin'], required: true },
   phoneNumber: String,
 
-  // Legacy address fields (for backward compatibility)
-  streetName: String,
-  zipCode: String,
-  city: String,
-  state: String,
+  // Role switching functionality
+  availableRoles: [{
+    type: String,
+    enum: ['Pet Owner', 'Business'],
+    default: []
+  }],
+  currentRole: {
+    type: String,
+    enum: ['Pet Owner', 'Business', 'Admin'],
+    default: function() { return this.userType; }
+  },
+  roleHistory: [{
+    role: { type: String, enum: ['Pet Owner', 'Business', 'Admin'] },
+    switchedAt: { type: Date, default: Date.now },
+    switchedFrom: { type: String, enum: ['Pet Owner', 'Business', 'Admin'] }
+  }],
 
   // New multiple addresses system
   addresses: [addressSchema],
@@ -69,6 +80,8 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpires: Date,
   resetPasswordOTP: String,
   resetPasswordOTPExpires: Date
+}, {
+  timestamps: true
 });
 
 // Virtual to get primary address
@@ -89,34 +102,92 @@ userSchema.methods.setPrimaryAddress = function(addressId) {
   const targetAddress = this.addresses.id(addressId);
   if (targetAddress) {
     targetAddress.isPrimary = true;
-
-    // Update legacy fields for backward compatibility
-    this.streetName = targetAddress.streetName;
-    this.city = targetAddress.city;
-    this.state = targetAddress.state;
-    this.zipCode = targetAddress.zipCode;
   }
 
   return this.save();
 };
 
-// Pre-save middleware to maintain legacy fields
-userSchema.pre('save', function(next) {
-  // If addresses exist and there's a primary address, sync legacy fields
-  const primaryAddr = this.addresses.find(addr => addr.isPrimary && addr.isActive);
-  if (primaryAddr) {
-    this.streetName = primaryAddr.streetName;
-    this.city = primaryAddr.city;
-    this.state = primaryAddr.state;
-    this.zipCode = primaryAddr.zipCode;
+// Method to switch user role
+userSchema.methods.switchRole = function(newRole) {
+  // Validate the new role
+  if (!['Pet Owner', 'Business'].includes(newRole)) {
+    throw new Error('Invalid role. Only Pet Owner and Business roles can be switched.');
   }
 
+  // Admin users cannot switch roles
+  if (this.userType === 'Admin') {
+    throw new Error('Admin users cannot switch roles.');
+  }
+
+  // Check if user has access to this role
+  if (!this.availableRoles.includes(newRole) && this.userType !== newRole) {
+    throw new Error('User does not have access to this role.');
+  }
+
+  // Record the role switch in history
+  const previousRole = this.currentRole;
+  this.roleHistory.push({
+    role: newRole,
+    switchedAt: new Date(),
+    switchedFrom: previousRole
+  });
+
+  // Update current role
+  this.currentRole = newRole;
+
+  // Ensure both roles are in availableRoles
+  if (!this.availableRoles.includes(this.userType)) {
+    this.availableRoles.push(this.userType);
+  }
+  if (!this.availableRoles.includes(newRole)) {
+    this.availableRoles.push(newRole);
+  }
+
+  return this.save();
+};
+
+// Method to check if user can switch to a role
+userSchema.methods.canSwitchToRole = function(role) {
+  if (this.userType === 'Admin') return false;
+  return this.availableRoles.includes(role) || this.userType === role;
+};
+
+// Method to get available roles for switching
+userSchema.methods.getAvailableRoles = function() {
+  if (this.userType === 'Admin') return ['Admin'];
+
+  const roles = [...this.availableRoles];
+  if (!roles.includes(this.userType)) {
+    roles.push(this.userType);
+  }
+
+  return roles.filter(role => role !== this.currentRole);
+};
+
+// Pre-save middleware to maintain legacy fields and initialize role switching
+userSchema.pre('save', function(next) {
   // Ensure only one primary address
   const primaryAddresses = this.addresses.filter(addr => addr.isPrimary && addr.isActive);
   if (primaryAddresses.length > 1) {
     // Keep the first one as primary, remove primary flag from others
     for (let i = 1; i < primaryAddresses.length; i++) {
       primaryAddresses[i].isPrimary = false;
+    }
+  }
+
+  // Initialize role switching fields for existing users
+  if (this.isNew || !this.currentRole) {
+    this.currentRole = this.userType;
+  }
+
+  // Initialize availableRoles for non-admin users
+  if (this.userType !== 'Admin') {
+    if (!this.availableRoles || this.availableRoles.length === 0) {
+      this.availableRoles = [this.userType];
+    }
+    // Ensure userType is always in availableRoles
+    if (!this.availableRoles.includes(this.userType)) {
+      this.availableRoles.push(this.userType);
     }
   }
 

@@ -1,14 +1,18 @@
 const Pet = require('../models/Pet');
 
-// Helper: Check if user is pet owner
-function isPetOwner(user) {
-  return user && user.userType === 'Pet Owner';
+// Helper: Check if user has pet owner access (using current role)
+function hasPetOwnerAccess(user) {
+  const currentRole = user.currentRole || user.userType;
+  return user && (currentRole === 'Pet Owner' || (user.availableRoles && user.availableRoles.includes('Pet Owner')));
 }
 
 // Create Pet Profile
 exports.createPetProfile = async (req, res) => {
   try {
-    if (!isPetOwner(req.user)) return res.status(403).json({ message: 'Only pet owners can create pet profiles' });
+    // Role check is now handled by requirePetOwnerAccess middleware
+    if (!hasPetOwnerAccess(req.user)) {
+      return res.status(403).json({ message: 'Pet Owner access required to create pet profiles' });
+    }
     const petData = { ...req.body, owner: req.user.id };
     if (req.file) {
       petData.profileImage = req.file.path;
@@ -51,7 +55,10 @@ exports.updatePetProfile = async (req, res) => {
 // Get Pet Profile
 exports.getPetProfile = async (req, res) => {
   try {
-    if (!isPetOwner(req.user)) return res.status(403).json({ message: 'Only pet owners can access pet profiles' });
+    // Role check is now handled by requirePetOwnerAccess middleware
+    if (!hasPetOwnerAccess(req.user)) {
+      return res.status(403).json({ message: 'Pet Owner access required to view pet profiles' });
+    }
     const pet = await Pet.findOne({ _id: req.params.id, owner: req.user.id });
     if (!pet) return res.status(404).json({ message: 'Pet not found' });
     res.status(200).json({ message: 'Pet profile fetched successfully', pet });
@@ -63,7 +70,10 @@ exports.getPetProfile = async (req, res) => {
 // Get All Pets for the authenticated Pet Owner
 exports.getAllPets = async (req, res) => {
   try {
-    if (!isPetOwner(req.user)) return res.status(403).json({ message: 'Only pet owners can access their pets' });
+    // Role check is now handled by requirePetOwnerAccess middleware
+    if (!hasPetOwnerAccess(req.user)) {
+      return res.status(403).json({ message: 'Pet Owner access required to view pets' });
+    }
     const pets = await Pet.find({ owner: req.user.id });
     res.status(200).json({ message: 'Pets fetched successfully', pets });
   } catch (error) {

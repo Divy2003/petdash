@@ -9,6 +9,8 @@ const Review = require('../models/Review');
 const Appointment = require('../models/Appointment');
 const Order = require('../models/Order');
 const { seedAdoptions } = require('./adoptionSeeder');
+const { seedCourses } = require('./courseSeed');
+const { migrateRoleSwitching } = require('../migrations/migrateRoleSwitching');
 
 // Sample data
 const sampleUsers = [
@@ -18,10 +20,6 @@ const sampleUsers = [
     password: 'admin123',
     userType: 'Business',
     phoneNumber: '+1234567888',
-    streetName: '1 Admin Plaza',
-    zipCode: '10001',
-    city: 'New York',
-    state: 'NY',
     profileImage: 'uploads/admin.jpg',
     shopImage: 'uploads/admin-shop.jpg',
     shopOpenTime: '00:00',
@@ -45,10 +43,6 @@ const sampleUsers = [
     password: 'password123',
     userType: 'Pet Owner',
     phoneNumber: '+1234567890',
-    streetName: '123 Main St',
-    zipCode: '12345',
-    city: 'New York',
-    state: 'NY',
     profileImage: 'uploads/profile1.jpg',
     addresses: [
       {
@@ -79,10 +73,6 @@ const sampleUsers = [
     password: 'password123',
     userType: 'Pet Owner',
     phoneNumber: '+1234567891',
-    streetName: '456 Oak Ave',
-    zipCode: '12346',
-    city: 'Los Angeles',
-    state: 'CA',
     profileImage: 'uploads/profile2.jpg',
     addresses: [
       {
@@ -103,10 +93,6 @@ const sampleUsers = [
     password: 'password123',
     userType: 'Business',
     phoneNumber: '+1234567892',
-    streetName: '789 Business Blvd',
-    zipCode: '12347',
-    city: 'Chicago',
-    state: 'IL',
     shopImage: 'uploads/shop1.jpg',
     shopOpenTime: '08:00',
     shopCloseTime: '18:00',
@@ -129,10 +115,6 @@ const sampleUsers = [
     password: 'password123',
     userType: 'Business',
     phoneNumber: '+1234567893',
-    streetName: '321 Pet Lane',
-    zipCode: '12348',
-    city: 'Miami',
-    state: 'FL',
     shopImage: 'uploads/shop2.jpg',
     shopOpenTime: '09:00',
     shopCloseTime: '17:00',
@@ -165,10 +147,6 @@ const sampleUsers = [
     password: 'password123',
     userType: 'Business',
     phoneNumber: '+1234567894',
-    streetName: '654 Health St',
-    zipCode: '12349',
-    city: 'Seattle',
-    state: 'WA',
     shopImage: 'uploads/shop3.jpg',
     shopOpenTime: '07:00',
     shopCloseTime: '19:00',
@@ -899,7 +877,6 @@ const seedOrders = async (users, products) => {
 // Main seeder function
 const runSeeder = async () => {
   try {
-    console.log('🌱 Starting database seeding...\n');
 
     // Seed in order due to dependencies
     const users = await seedUsers();
@@ -912,6 +889,12 @@ const runSeeder = async () => {
     const appointments = await seedAppointments(users, pets, services);
     const orders = await seedOrders(users, products);
     await seedAdoptions();
+    const courses = await seedCourses();
+
+    // Initialize role switching for all users
+    console.log('🔄 Initializing role switching...');
+    await migrateRoleSwitching();
+    console.log('✅ Role switching initialized');
 
     console.log('\n🎉 Database seeding completed successfully!');
     console.log('📊 Summary:');
@@ -925,6 +908,8 @@ const runSeeder = async () => {
     console.log(`   - Appointments: ${appointments.length}`);
     console.log(`   - Orders: ${orders.length}`);
     console.log(`   - Adoptions: Sample adoption listings created`);
+    console.log(`   - Courses: ${courses.length}`);
+    console.log(`   - Role Switching: Initialized for all users`);
 
   } catch (error) {
     console.error('❌ Error during database seeding:', error);

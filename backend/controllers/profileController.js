@@ -5,9 +5,27 @@ exports.getProfile = async (req, res) => {
     const user = await User.findById(req.user.id).select('-password -resetPasswordToken -resetPasswordExpires');
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    // Include primary address in the response
+    // Include primary address and role information in the response
     const profile = user.toObject();
     profile.primaryAddress = user.primaryAddress;
+    profile.currentRole = user.currentRole || user.userType;
+    profile.availableRoles = user.getAvailableRoles();
+    profile.canSwitchRoles = user.userType !== 'Admin';
+
+    // Add role-specific data visibility
+    profile.roleSpecificData = {
+      petOwner: {
+        hasAccess: user.currentRole === 'Pet Owner' || user.availableRoles.includes('Pet Owner'),
+        // Pet owner specific fields are always visible if user has access
+      },
+      business: {
+        hasAccess: user.currentRole === 'Business' || user.availableRoles.includes('Business'),
+        // Business specific fields
+        shopImage: profile.shopImage,
+        shopOpenTime: profile.shopOpenTime,
+        shopCloseTime: profile.shopCloseTime
+      }
+    };
 
     res.status(200).json({
       message: 'Profile fetched successfully',
@@ -15,6 +33,93 @@ exports.getProfile = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching profile', error: error.message });
+  }
+};
+
+// Get shared data across roles (pets, services, appointments, etc.)
+exports.getSharedData = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const currentRole = user.currentRole || user.userType;
+    const availableRoles = user.availableRoles || [user.userType];
+
+    const sharedData = {
+      currentRole,
+      availableRoles,
+      canSwitchRoles: user.userType !== 'Admin'
+    };
+
+    // Get Pet Owner data if user has access
+    if (currentRole === 'Pet Owner' || availableRoles.includes('Pet Owner')) {
+      try {
+        const Pet = require('../models/Pet');
+        const Appointment = require('../models/Appointment');
+
+        const pets = await Pet.find({ owner: userId }).select('name species breed profileImage');
+        const customerAppointments = await Appointment.find({ customer: userId })
+          .populate('service', 'title price')
+          .populate('business', 'name')
+          .sort({ appointmentDate: -1 })
+          .limit(5);
+
+        sharedData.petOwnerData = {
+          pets: pets || [],
+          recentAppointments: customerAppointments || [],
+          totalPets: pets ? pets.length : 0,
+          totalAppointments: customerAppointments ? customerAppointments.length : 0
+        };
+      } catch (error) {
+        console.error('Error fetching pet owner data:', error);
+        sharedData.petOwnerData = { pets: [], recentAppointments: [], totalPets: 0, totalAppointments: 0 };
+      }
+    }
+
+    // Get Business data if user has access
+    if (currentRole === 'Business' || availableRoles.includes('Business')) {
+      try {
+        const Service = require('../models/Service');
+        const Appointment = require('../models/Appointment');
+
+        const services = await Service.find({ business: userId }).select('title price category');
+        const businessAppointments = await Appointment.find({ business: userId })
+          .populate('customer', 'name')
+          .populate('service', 'title')
+          .sort({ appointmentDate: -1 })
+          .limit(5);
+
+        sharedData.businessData = {
+          services: services || [],
+          recentAppointments: businessAppointments || [],
+          totalServices: services ? services.length : 0,
+          totalAppointments: businessAppointments ? businessAppointments.length : 0,
+          businessProfile: {
+            shopImage: user.shopImage,
+            shopOpenTime: user.shopOpenTime,
+            shopCloseTime: user.shopCloseTime
+          }
+        };
+      } catch (error) {
+        console.error('Error fetching business data:', error);
+        sharedData.businessData = {
+          services: [],
+          recentAppointments: [],
+          totalServices: 0,
+          totalAppointments: 0,
+          businessProfile: {}
+        };
+      }
+    }
+
+    res.status(200).json({
+      message: 'Shared data fetched successfully',
+      data: sharedData
+    });
+  } catch (error) {
+    console.error('Get shared data error:', error);
+    res.status(500).json({ message: 'Error fetching shared data', error: error.message });
   }
 };
 
@@ -30,8 +135,9 @@ exports.updateProfile = async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    // Business fields only for business users
-    if (user.userType === 'Business') {
+    // Business fields only for business users or users with business role access
+    const currentRole = user.currentRole || user.userType;
+    if (currentRole === 'Business' || user.availableRoles.includes('Business')) {
       allowedFields.push('shopImage', 'shopOpenTime', 'shopCloseTime');
     }
 
@@ -42,38 +148,6 @@ exports.updateProfile = async (req, res) => {
         updateFields[field] = req.body[field];
       }
     });
-
-    // Handle legacy address fields for backward compatibility
-    if (req.body.streetName || req.body.city || req.body.state || req.body.zipCode) {
-      // If legacy address fields are provided, update the primary address or create one
-      const primaryAddress = user.addresses.find(addr => addr.isPrimary && addr.isActive);
-
-      if (primaryAddress) {
-        // Update existing primary address
-        if (req.body.streetName) primaryAddress.streetName = req.body.streetName;
-        if (req.body.city) primaryAddress.city = req.body.city;
-        if (req.body.state) primaryAddress.state = req.body.state;
-        if (req.body.zipCode) primaryAddress.zipCode = req.body.zipCode;
-      } else {
-        // Create new primary address if none exists
-        const newAddress = {
-          label: 'Primary',
-          streetName: req.body.streetName || user.streetName || '',
-          city: req.body.city || user.city || '',
-          state: req.body.state || user.state || '',
-          zipCode: req.body.zipCode || user.zipCode || '',
-          isPrimary: true,
-          isActive: true
-        };
-        user.addresses.push(newAddress);
-      }
-
-      // Update legacy fields for backward compatibility
-      updateFields.streetName = req.body.streetName || primaryAddress?.streetName;
-      updateFields.city = req.body.city || primaryAddress?.city;
-      updateFields.state = req.body.state || primaryAddress?.state;
-      updateFields.zipCode = req.body.zipCode || primaryAddress?.zipCode;
-    }
 
     // Handle profile image upload (if using file upload)
     if (req.file) {
