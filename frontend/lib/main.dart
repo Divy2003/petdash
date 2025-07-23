@@ -5,6 +5,8 @@ import 'package:petcare/provider/auth_provider/loginprovider.dart';
 import 'package:petcare/provider/auth_provider/registerprovider.dart';
 import 'package:petcare/provider/auth_provider/forgot_password_provider.dart';
 import 'package:petcare/provider/appointment_provider/appointment_booking_provider.dart';
+import 'package:petcare/provider/category_provider.dart';
+import 'package:petcare/provider/business_provider.dart';
 
 import 'package:petcare/utlis/theme/Theme.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +27,8 @@ void main() async {
         ChangeNotifierProvider.value(value: loginProvider),
         ChangeNotifierProvider(create: (_) => ForgotPasswordProvider()),
         ChangeNotifierProvider(create: (_) => AppointmentBookingProvider()),
+        ChangeNotifierProvider(create: (_) => CategoryProvider()),
+        ChangeNotifierProvider(create: (_) => BusinessProvider()),
       ],
       child: const MyApp(),
     ),

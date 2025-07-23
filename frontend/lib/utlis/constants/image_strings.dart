@@ -31,6 +31,7 @@ class AppImages{
   static const String storeLogo1 = "assets/homeimage/store/store logo 1.png";
   static const String storeLogo2 = "assets/homeimage/store/store logo 2.png";
   static const String person = "assets/homeimage/store/person.png";
+  static const String products = "assets/homeimage/store/products.png";
 
   //dog
   static const String dog1 = "assets/Dog/Dog1.png";

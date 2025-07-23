@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:petcare/features/screen/personal/profile/profileScreen.dart';
 import 'package:petcare/features/screen/shop/home/homescreen.dart';
+import 'package:petcare/features/screen/shop/serchscreen/searchscreen.dart';
 
 import 'package:petcare/utlis/constants/colors.dart';
 
@@ -19,7 +20,7 @@ class _CurvedNavScreenState extends State<CurvedNavScreen> {
 
   final List<Widget> _screens = [
     HomeScreen(),
-    Center(child: Text('Cart')),
+    SearchScreen(),
     Center(child: Text('Cart')),
     ProfileScreen(),
   ];

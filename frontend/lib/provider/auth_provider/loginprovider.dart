@@ -12,26 +12,37 @@ class LoginProvider with ChangeNotifier {
   String? _token;
   String? get token => _token;
 
-  // Initialize token from shared preferences
+  String? _userType;
+  String? get userType => _userType;
+
+  // Initialize token and user type from shared preferences
   Future<void> initToken() async {
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString('auth_token');
+    _userType = prefs.getString('user_type');
     notifyListeners();
   }
 
-  // Save token to shared preferences
-  Future<void> saveToken(String token) async {
+  // Save token and user type to shared preferences
+  Future<void> saveToken(String token, {String? userType}) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', token);
     _token = token;
+
+    if (userType != null) {
+      await prefs.setString('user_type', userType);
+      _userType = userType;
+    }
     notifyListeners();
   }
 
-  // Clear token (for logout)
+  // Clear token and user type (for logout)
   Future<void> clearToken() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('auth_token');
+    await prefs.remove('user_type');
     _token = null;
+    _userType = null;
     notifyListeners();
   }
 
@@ -56,9 +67,9 @@ class LoginProvider with ChangeNotifier {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(responseBody);
-        // Store the token
+        // Store the token and user type
         if (data['token'] != null) {
-          await saveToken(data['token']);
+          await saveToken(data['token'], userType: data['user']?['userType']);
         }
         _isLoading = false;
         notifyListeners();

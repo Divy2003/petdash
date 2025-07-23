@@ -11,8 +11,13 @@ import 'ServicesSubDeatils.dart';
 
 class ServiceDetails extends StatefulWidget {
   final String providerName;
+  final String? businessId;
 
-  const ServiceDetails({super.key, required this.providerName});
+  const ServiceDetails({
+    super.key,
+    required this.providerName,
+    this.businessId,
+  });
 
   @override
   State<ServiceDetails> createState() => _ServiceDetailsState();

@@ -20,7 +20,7 @@ class ServiceCard extends StatelessWidget {
     return Container(
       height: 129,
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 32),
+      padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 30),
       decoration: BoxDecoration(
         color: AppColors.cart,
         borderRadius: BorderRadius.circular(16),

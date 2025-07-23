@@ -1,8 +1,8 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:petcare/features/screen/auth/login/widgets/requestpasswordreset.dart';
 import 'package:petcare/features/screen/auth/register/registerScreen.dart';
+import 'package:petcare/features/screen/business/profile/BusinessProfileScreen.dart';
 import 'package:petcare/utlis/constants/colors.dart';
 import 'package:petcare/utlis/constants/image_strings.dart';
 import 'package:petcare/utlis/constants/size.dart';
@@ -61,18 +61,29 @@ class _LoginFormState extends State<LoginForm> {
 
     final error = await provider.login(email, password);
 
-    if (error == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login successful")),
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => CurvedNavScreen()),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error)),
-      );
+    if (mounted) {
+      if (error == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Login successful")),
+        );
+
+        // Navigate based on user type
+        if (provider.userType == "Business") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => BusinessProfileScreen()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => CurvedNavScreen()),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error)),
+        );
+      }
     }
   }
 

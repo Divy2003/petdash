@@ -94,6 +94,7 @@ flutter:
     - assets/profile/p1.png
     - assets/profile/p2.png
     - assets/profile/p3.png
+    - assets/homeimage/store/products.png
 
 
   fonts:

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:petcare/common/widgets/Tile/profilemenutile.dart';
+import 'package:petcare/features/screen/auth/login/loginscreen.dart';
 import 'package:petcare/features/screen/personal/profile/widgets/editProfile.dart';
 import 'package:petcare/features/screen/personal/profile/widgets/profileheaderwidgets.dart';
+import 'package:petcare/services/user_session_service.dart';
 
 import '../../../../utlis/constants/colors.dart';
 import '../../../../utlis/constants/image_strings.dart';
-import '../../../../utlis/constants/size.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -83,12 +83,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           Divider(height: 1,color: AppColors.divider,),
                           ProfileMenuTile(
+                            icon: Icons.swap_horiz,
+                            title: 'Switch to Business Account',
+                            onTap: () {
+                              UserSessionService.showAccountSwitchDialog(context);
+                            },
+                          ),
+                          Divider(height: 1,color: AppColors.divider,),
+                          ProfileMenuTile(
                             icon: Icons.logout_rounded,
                             title: "Logout",
                             isLogout: true,// Automatically sets color to red
                             onTap: () {
                               showDialog(
-
                                 context: context,
                                 barrierDismissible: false, // Don't close on tap outside
                                 builder: (BuildContext context) {
@@ -140,7 +147,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 const SizedBox(width: 10),
                                                 Expanded(
                                                   child: ElevatedButton(
-                                                    onPressed: (){},
+                                                    onPressed: (){
+                                                      Navigator.pop(context);
+                                                      UserSessionService.logout(context);
+                                                      Navigator.pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(builder: (_) =>  LoginScreen()),
+                                                            (route) => false,
+                                                      );
+                                                    },
                                                     style: ElevatedButton.styleFrom(
                                                       backgroundColor: AppColors.primary,
                                                       shape: RoundedRectangleBorder(

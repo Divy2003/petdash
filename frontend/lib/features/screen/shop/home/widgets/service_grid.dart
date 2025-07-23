@@ -1,59 +1,154 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../utlis/constants/image_strings.dart';
+import 'package:provider/provider.dart';
 import '../../../../../utlis/constants/size.dart';
+import '../../../../../utlis/constants/colors.dart';
+import '../../../../../provider/category_provider.dart';
+import '../../../../../services/category_service.dart';
 import '../../Service/ServicesList.dart';
 import 'service_tile.dart';
 
 
-class ServiceGrid extends StatelessWidget {
+class ServiceGrid extends StatefulWidget {
   const ServiceGrid({super.key});
 
-  final List<Map<String, dynamic>> serviceList = const [
-    {
-      'title': 'Sitting',
-      'color': Color(0x807DC1CF),
-      'icon': AppImages.sitting,
-    },
-    {
-      'title': 'Health',
-      'color': Color(0xA31976D2),
-      'icon': AppImages.health,
-    },
-    {
-      'title': 'Boarding',
-      'color': Color(0x80F0546C),
-      'icon': AppImages.boarding,
-    },
-    {
-      'title': 'Training',
-      'color': Color(0x80FFC107),
-      'icon': AppImages.training,
-    },
-    {
-      'title': 'Grooming',
-      'color': Color(0x99FFC107),
-      'icon': AppImages.grooming,
-    },
-    {
-      'title': 'Walking',
-      'color': Color(0x804CD964),
-      'icon': AppImages.walking,
-    },
-  ];
+  @override
+  State<ServiceGrid> createState() => _ServiceGridState();
+}
+
+class _ServiceGridState extends State<ServiceGrid> {
+
+  @override
+  void initState() {
+    super.initState();
+    // Load categories when widget initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CategoryProvider>().loadCategories();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    return Consumer<CategoryProvider>(
+      builder: (context, categoryProvider, child) {
+        if (categoryProvider.isLoading) {
+          return _buildLoadingGrid();
+        }
+
+        if (categoryProvider.error != null) {
+          return _buildErrorGrid(categoryProvider);
+        }
+
+        if (categoryProvider.hasCategories) {
+          return _buildCategoryGrid(categoryProvider.categories);
+        }
+
+        // Fallback to hardcoded data if no categories
+        return _buildFallbackGrid(categoryProvider);
+      },
+    );
+  }
+
+  Widget _buildLoadingGrid() {
     return GridView.count(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       crossAxisCount: 2,
       crossAxisSpacing: AppSizes.gridViewSpacing,
       mainAxisSpacing: AppSizes.gridViewSpacing,
-      children: serviceList.map((service) {
+      children: List.generate(6, (index) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.grey.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
+          ),
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildErrorGrid(CategoryProvider categoryProvider) {
+    return Container(
+      padding: EdgeInsets.all(AppSizes.md),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 48,
+            color: AppColors.error,
+          ),
+          SizedBox(height: AppSizes.sm),
+          Text(
+            'Failed to load services',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: AppColors.error,
+            ),
+          ),
+          SizedBox(height: AppSizes.xs),
+          Text(
+            categoryProvider.error ?? 'Unknown error',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: AppColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: AppSizes.md),
+          ElevatedButton(
+            onPressed: () {
+              categoryProvider.clearError();
+              categoryProvider.loadCategories();
+            },
+            child: const Text('Retry'),
+          ),
+          SizedBox(height: AppSizes.sm),
+          TextButton(
+            onPressed: () => _buildFallbackGrid(categoryProvider),
+            child: const Text('Use Offline Mode'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryGrid(categories) {
+    return GridView.count(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      crossAxisCount: 2,
+      crossAxisSpacing: AppSizes.gridViewSpacing,
+      mainAxisSpacing: AppSizes.gridViewSpacing,
+      children: categories.map<Widget>((category) {
         return GestureDetector(
-          onTap: (){
-            Get.to(() => ServicesList());
+          onTap: () {
+            Get.to(() => ServicesList(category: category));
+          },
+          child: ServiceTile(
+            title: category.name,
+            color: Color(CategoryService.getColorForCategory(category.name)),
+            iconPath: CategoryService.getLocalIconForCategory(category.name),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildFallbackGrid(CategoryProvider categoryProvider) {
+    final fallbackCategories = categoryProvider.getFallbackCategories();
+
+    return GridView.count(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      crossAxisCount: 2,
+      crossAxisSpacing: AppSizes.gridViewSpacing,
+      mainAxisSpacing: AppSizes.gridViewSpacing,
+      children: fallbackCategories.map<Widget>((service) {
+        return GestureDetector(
+          onTap: () {
+            Get.to(() => ServicesList(categoryName: service['title']));
           },
           child: ServiceTile(
             title: service['title'],

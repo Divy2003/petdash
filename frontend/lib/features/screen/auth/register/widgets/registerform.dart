@@ -1,12 +1,11 @@
 
 
-import 'dart:convert';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:petcare/features/screen/auth/login/loginscreen.dart';
+import 'package:petcare/features/screen/business/profile/BusinessProfileScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../common/widgets/Button/primarybutton.dart';
@@ -14,6 +13,7 @@ import '../../../../../provider/auth_provider/registerprovider.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/image_strings.dart';
 import '../../../../../utlis/constants/size.dart';
+import '../../../Navigation.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -42,21 +42,43 @@ class _RegisterFormState extends State<RegisterForm> {
     final provider = Provider.of<RegisterProvider>(context, listen: false);
 
     if (_formKey.currentState!.validate()) {
+      // Check if user type is selected
+      if (provider.selectedType == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please select a user type")),
+        );
+        return;
+      }
+
       final error = await provider.registerUser(
         name: nameController.text,
         email: emailController.text,
         password: passwordController.text,
       );
 
-      if (error == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Signup successful")),
-        );
-        Get.to(() => const LoginScreen());
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error)),
-        );
+      if (mounted) {
+        if (error == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Signup successful")),
+          );
+
+          // Debug print
+          print("Registration successful! User type: ${provider.selectedType}");
+
+          // Navigate based on user type directly to dashboard
+          if (provider.selectedType == UserType.business) {
+            print("Navigating to Business Dashboard");
+            Get.offAll(() => const BusinessProfileScreen());
+          } else {
+            print("Navigating to Pet Owner Dashboard");
+            Get.offAll(() => const CurvedNavScreen());
+          }
+        } else {
+          print("Registration error: $error");
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error)),
+          );
+        }
       }
     }
   }
