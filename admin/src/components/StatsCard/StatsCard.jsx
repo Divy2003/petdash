@@ -1,3 +1,5 @@
+import './StatsCard.css';
+
 const StatsCard = ({ title, value, change, icon: Icon, color, loading }) => {
   const colorClasses = {
     blue: 'bg-blue-100 text-blue-600',
@@ -8,23 +10,23 @@ const StatsCard = ({ title, value, change, icon: Icon, color, loading }) => {
   };
 
   return (
-    <div className="card">
-      <div className="card-body">
-        <div className="flex items-center justify-between">
+    <div className="statscard-card">
+      <div className="statscard-body">
+        <div className="statscard-row">
           <div className="flex-1">
-            <p className="text-sm font-medium text-gray-600">{title}</p>
+            <p className="statscard-title">{title}</p>
             {loading ? (
               <div className="mt-2">
-                <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
+                <div className="statscard-loader"></div>
               </div>
             ) : (
               <>
-                <p className="text-2xl font-bold text-gray-900 mt-2">{value}</p>
-                <p className="text-sm text-gray-500 mt-1">{change}</p>
+                <p className="statscard-value">{value}</p>
+                <p className="statscard-change">{change}</p>
               </>
             )}
           </div>
-          <div className={`p-3 rounded-lg ${colorClasses[color] || colorClasses.blue}`}>
+          <div className={`statscard-icon statscard-${color || 'blue'}`}>
             <Icon className="w-6 h-6" />
           </div>
         </div>

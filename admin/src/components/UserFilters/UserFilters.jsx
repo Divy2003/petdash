@@ -1,3 +1,5 @@
+import './UserFilters.css';
+
 const UserFilters = ({ filters, onFilterChange }) => {
   const handleFilterChange = (key, value) => {
     onFilterChange({ [key]: value });
@@ -12,13 +14,13 @@ const UserFilters = ({ filters, onFilterChange }) => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div className="userfilters-section">
+      <div className="userfilters-grid">
         {/* User Type Filter */}
         <div>
-          <label className="form-label">User Type</label>
+          <label className="userfilters-label">User Type</label>
           <select
-            className="form-select"
+            className="userfilters-select"
             value={filters.userType || ''}
             onChange={(e) => handleFilterChange('userType', e.target.value)}
           >
@@ -31,9 +33,9 @@ const UserFilters = ({ filters, onFilterChange }) => {
 
         {/* Status Filter */}
         <div>
-          <label className="form-label">Status</label>
+          <label className="userfilters-label">Status</label>
           <select
-            className="form-select"
+            className="userfilters-select"
             value={filters.status || ''}
             onChange={(e) => handleFilterChange('status', e.target.value)}
           >
@@ -45,9 +47,9 @@ const UserFilters = ({ filters, onFilterChange }) => {
 
         {/* Role Switching Filter */}
         <div>
-          <label className="form-label">Role Switching</label>
+          <label className="userfilters-label">Role Switching</label>
           <select
-            className="form-select"
+            className="userfilters-select"
             value={filters.canSwitchRoles || ''}
             onChange={(e) => handleFilterChange('canSwitchRoles', e.target.value)}
           >
@@ -59,9 +61,9 @@ const UserFilters = ({ filters, onFilterChange }) => {
 
         {/* Items per page */}
         <div>
-          <label className="form-label">Items per page</label>
+          <label className="userfilters-label">Items per page</label>
           <select
-            className="form-select"
+            className="userfilters-select"
             value={filters.limit || 10}
             onChange={(e) => handleFilterChange('limit', parseInt(e.target.value))}
           >
@@ -74,10 +76,10 @@ const UserFilters = ({ filters, onFilterChange }) => {
       </div>
 
       {/* Clear Filters */}
-      <div className="flex justify-end">
+      <div className="userfilters-actions">
         <button
           onClick={clearFilters}
-          className="btn btn-secondary btn-sm"
+          className="userfilters-btn-clear"
         >
           Clear Filters
         </button>

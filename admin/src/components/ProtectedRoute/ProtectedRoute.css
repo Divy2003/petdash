@@ -1,0 +1,28 @@
+/* ProtectedRoute - Tailwind to CSS migration */
+
+.protectedroute-outer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9fafb;
+}
+
+.protectedroute-card {
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.protectedroute-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #dc2626;
+  margin-bottom: 0.5rem;
+}
+
+.protectedroute-desc {
+  color: #6b7280;
+}

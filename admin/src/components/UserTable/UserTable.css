@@ -1,0 +1,125 @@
+/* UserTable - Tailwind to CSS migration */
+
+.usertable-container {
+  overflow-x: auto;
+}
+
+.usertable-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.usertable-table th,
+.usertable-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.usertable-table th {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #374151;
+}
+
+.usertable-row {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.usertable-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.usertable-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.usertable-avatar-img {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.usertable-name {
+  font-weight: 500;
+  color: #111827;
+}
+
+.usertable-email {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.usertable-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.usertable-badge-admin {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+.usertable-badge-petowner {
+  background: #d1fae5;
+  color: #065f46;
+}
+.usertable-badge-business {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+.usertable-badge-active {
+  background: #d1fae5;
+  color: #065f46;
+}
+.usertable-badge-inactive {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.usertable-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.usertable-action-btn {
+  background: none;
+  border: none;
+  color: #2563eb;
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.usertable-action-btn:hover {
+  background: #e0e7ff;
+  color: #1e40af;
+}
+
+.usertable-empty,
+.usertable-loading {
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.usertable-spinner {
+  margin: 0 auto 1rem auto;
+}

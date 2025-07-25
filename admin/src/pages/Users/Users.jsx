@@ -14,6 +14,7 @@ import { openRoleManagement } from '../../redux/slices/uiSlice';
 import UserTable from '../../components/UserTable/UserTable';
 import UserFilters from '../../components/UserFilters/UserFilters';
 import RoleManagementModal from '../../components/RoleManagementModal/RoleManagementModal';
+import './Users.css';
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -45,23 +46,23 @@ const Users = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="users-page">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="users-header">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Users</h1>
-          <p className="text-gray-600">Manage users and their roles</p>
+          <h1 className="users-header-title">Users</h1>
+          <p className="users-header-desc">Manage users and their roles</p>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="users-header-actions">
           <button
             onClick={handleRefresh}
             disabled={loading}
-            className="btn btn-secondary"
+            className="users-btn-secondary"
           >
             <FiRefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </button>
-          <button className="btn btn-primary">
+          <button className="users-btn-primary">
             <FiPlus className="w-4 h-4" />
             Add User
           </button>
@@ -69,17 +70,17 @@ const Users = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="card">
-        <div className="card-body">
-          <div className="flex flex-col sm:flex-row gap-4">
+      <div className="users-card">
+        <div className="users-card-body">
+          <div className="users-search-row">
             {/* Search */}
-            <div className="flex-1">
-              <div className="relative">
-                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <div className="users-search-input-container">
+              <div className="users-search-input-container">
+                <FiSearch className="users-search-icon" />
                 <input
                   type="text"
                   placeholder="Search users by name or email..."
-                  className="form-input pl-10"
+                  className="users-search-input"
                   value={filters.search}
                   onChange={(e) => handleSearch(e.target.value)}
                 />
@@ -89,7 +90,7 @@ const Users = () => {
             {/* Filter Toggle */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="btn btn-secondary"
+              className="users-btn-secondary"
             >
               <FiFilter className="w-4 h-4" />
               Filters
@@ -110,7 +111,7 @@ const Users = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="card">
+        <div className="users-card">
           <div className="card-body text-center">
             <div className="text-2xl font-bold text-blue-600">
               {pagination.totalUsers || 0}
@@ -118,7 +119,7 @@ const Users = () => {
             <div className="text-sm text-gray-600">Total Users</div>
           </div>
         </div>
-        <div className="card">
+        <div className="users-card">
           <div className="card-body text-center">
             <div className="text-2xl font-bold text-green-600">
               {users.filter(u => u.userType === 'Pet Owner').length}
@@ -126,7 +127,7 @@ const Users = () => {
             <div className="text-sm text-gray-600">Pet Owners</div>
           </div>
         </div>
-        <div className="card">
+        <div className="users-card">
           <div className="card-body text-center">
             <div className="text-2xl font-bold text-purple-600">
               {users.filter(u => u.userType === 'Business').length}
@@ -134,7 +135,7 @@ const Users = () => {
             <div className="text-sm text-gray-600">Businesses</div>
           </div>
         </div>
-        <div className="card">
+        <div className="users-card">
           <div className="card-body text-center">
             <div className="text-2xl font-bold text-orange-600">
               {users.filter(u => u.canSwitchRoles).length}
@@ -145,7 +146,7 @@ const Users = () => {
       </div>
 
       {/* Users Table */}
-      <div className="card">
+      <div className="users-card">
         <div className="card-header">
           <h3 className="text-lg font-semibold text-gray-900">
             Users ({pagination.totalUsers || 0})
@@ -164,7 +165,7 @@ const Users = () => {
         {/* Pagination */}
         {pagination.totalPages > 1 && (
           <div className="card-footer">
-            <div className="flex items-center justify-between">
+            <div className="users-header">
               <div className="text-sm text-gray-600">
                 Showing {((pagination.currentPage - 1) * filters.limit) + 1} to{' '}
                 {Math.min(pagination.currentPage * filters.limit, pagination.totalUsers)} of{' '}

@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import './ProtectedRoute.css';
 import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children }) => {
@@ -11,10 +12,10 @@ const ProtectedRoute = ({ children }) => {
   // Check if user is admin
   if (!user || user.userType !== 'Admin') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="card p-6 text-center">
-          <h2 className="text-xl font-semibold text-red-600 mb-2">Access Denied</h2>
-          <p className="text-gray-600">You need admin privileges to access this area.</p>
+      <div className="protectedroute-outer">
+        <div className="protectedroute-card">
+          <h2 className="protectedroute-title">Access Denied</h2>
+          <p className="protectedroute-desc">You need admin privileges to access this area.</p>
         </div>
       </div>
     );

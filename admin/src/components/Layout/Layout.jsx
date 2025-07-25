@@ -19,6 +19,8 @@ import {
 import { logout } from '../../redux/slices/authSlice';
 import DeleteConfirmModal from '../DeleteConfirmModal/DeleteConfirmModal';
 
+import './Layout.css';
+
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -75,22 +77,22 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
+    <div className="layout-root">
       {/* Sidebar */}
-      <div className="w-64 h-screen flex flex-col bg-white shadow-lg">
+      <div className="layout-sidebar">
         {/* Sidebar Header */}
-        <div className="flex items-center h-16 px-6 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-blue-700">
-          <div className="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-            <span className="text-white font-bold text-lg">🐾</span>
+        <div className="layout-sidebar-header">
+          <div className="layout-logo">
+            <span className="layout-logo-icon">🐾</span>
           </div>
-          <div className="ml-3">
-            <span className="text-white font-bold text-xl">PetPatch</span>
-            <div className="text-blue-100 text-xs">Admin Panel</div>
+          <div className="layout-title">
+            <span className="layout-title-main">PetPatch</span>
+            <div className="layout-title-sub">Admin Panel</div>
           </div>
         </div>
-        {/* Navigation */}
-        <nav className="mt-6 px-4 flex-1 overflow-y-auto">
-          <div className="space-y-2">
+         {/* Navigation */}
+        <nav className="layout-nav">
+          <div className="layout-nav-list">
             {menuItems.map((item) => {
               const Icon = item.icon;
               const active = isActiveRoute(item.path);
@@ -98,13 +100,9 @@ const Layout = ({ children }) => {
                 <button
                   key={item.path}
                   onClick={() => navigate(item.path)}
-                  className={`w-full group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
-                    active
-                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:shadow-sm'
-                  }`}
+                  className={`layout-nav-btn${active ? ' active' : ''}`}
                 >
-                  <Icon className="w-5 h-5 mr-3" />
+                  <Icon className="layout-nav-icon" />
                   <span>{item.label}</span>
                 </button>
               );

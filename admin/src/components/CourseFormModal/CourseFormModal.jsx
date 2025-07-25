@@ -5,6 +5,8 @@ import { toast } from 'react-hot-toast';
 import { closeCourseForm } from '../../redux/slices/coursesSlice';
 import { createCourse, updateCourse } from '../../redux/slices/coursesSlice';
 
+import './CourseFormModal.css';
+
 const CourseFormModal = () => {
   const dispatch = useDispatch();
   const { courseForm, loading } = useSelector((state) => state.courses);
@@ -168,39 +170,39 @@ const CourseFormModal = () => {
           {/* Header */}
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium text-gray-900">
+              <h3 className="courseformmodal-title">
                 {mode === 'edit' ? 'Edit Course' : 'Create New Course'}
               </h3>
               <button
                 onClick={handleClose}
-                className="text-gray-400 hover:text-gray-600"
+                className="courseformmodal-btn-primary"
               >
                 <FiX className="w-6 h-6" />
               </button>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="courseformmodal-form">
               {/* Basic Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="courseformmodal-grid">
                 <div>
-                  <label className="form-label">Title *</label>
+                  <label className="courseformmodal-label">Title *</label>
                   <input
                     type="text"
                     name="title"
                     value={formData.title}
                     onChange={handleChange}
-                    className="form-input"
+                    className="courseformmodal-input"
                     required
                   />
                 </div>
                 <div>
-                  <label className="form-label">Category</label>
+                  <label className="courseformmodal-label">Category</label>
                   <select
                     name="category"
                     value={formData.category}
                     onChange={handleChange}
-                    className="form-select"
+                    className="courseformmodal-select"
                   >
                     {categories.map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
@@ -210,88 +212,88 @@ const CourseFormModal = () => {
               </div>
 
               <div>
-                <label className="form-label">Short Description</label>
+                <label className="courseformmodal-label">Short Description</label>
                 <input
                   type="text"
                   name="shortDescription"
                   value={formData.shortDescription}
                   onChange={handleChange}
-                  className="form-input"
+                  className="courseformmodal-input"
                   placeholder="Brief description for course cards"
                 />
               </div>
 
               <div>
-                <label className="form-label">Description *</label>
+                <label className="courseformmodal-label">Description *</label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  className="form-textarea"
+                  className="courseformmodal-textarea"
                   rows={4}
                   required
                 />
               </div>
 
               {/* Pricing and Duration */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="courseformmodal-grid">
                 <div>
-                  <label className="form-label">Price ($)</label>
+                  <label className="courseformmodal-label">Price ($)</label>
                   <input
                     type="number"
                     name="price"
                     value={formData.price}
                     onChange={handleChange}
-                    className="form-input"
+                    className="courseformmodal-input"
                     min="0"
                     step="0.01"
                   />
                 </div>
                 <div>
-                  <label className="form-label">Original Price ($)</label>
+                  <label className="courseformmodal-label">Original Price ($)</label>
                   <input
                     type="number"
                     name="originalPrice"
                     value={formData.originalPrice}
                     onChange={handleChange}
-                    className="form-input"
+                    className="courseformmodal-input"
                     min="0"
                     step="0.01"
                   />
                 </div>
                 <div>
-                  <label className="form-label">Duration (minutes)</label>
+                  <label className="courseformmodal-label">Duration (minutes)</label>
                   <input
                     type="number"
                     name="duration"
                     value={formData.duration}
                     onChange={handleChange}
-                    className="form-input"
+                    className="courseformmodal-input"
                     min="0"
                   />
                 </div>
                 <div>
-                  <label className="form-label">Completion Time</label>
+                  <label className="courseformmodal-label">Completion Time</label>
                   <input
                     type="text"
                     name="estimatedCompletionTime"
                     value={formData.estimatedCompletionTime}
                     onChange={handleChange}
-                    className="form-input"
+                    className="courseformmodal-input"
                     placeholder="e.g., 2-3 weeks"
                   />
                 </div>
               </div>
 
               {/* Difficulty and Type */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="courseformmodal-grid">
                 <div>
-                  <label className="form-label">Difficulty</label>
+                  <label className="courseformmodal-label">Difficulty</label>
                   <select
                     name="difficulty"
                     value={formData.difficulty}
                     onChange={handleChange}
-                    className="form-select"
+                    className="courseformmodal-select"
                   >
                     {difficulties.map(diff => (
                       <option key={diff} value={diff}>{diff}</option>
@@ -299,24 +301,24 @@ const CourseFormModal = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="form-label">Difficulty Level (1-5)</label>
+                  <label className="courseformmodal-label">Difficulty Level (1-5)</label>
                   <input
                     type="number"
                     name="difficultyLevel"
                     value={formData.difficultyLevel}
                     onChange={handleChange}
-                    className="form-input"
+                    className="courseformmodal-input"
                     min="1"
                     max="5"
                   />
                 </div>
                 <div>
-                  <label className="form-label">Training Type</label>
+                  <label className="courseformmodal-label">Training Type</label>
                   <select
                     name="trainingType"
                     value={formData.trainingType}
                     onChange={handleChange}
-                    className="form-select"
+                    className="courseformmodal-select"
                   >
                     <option value="online">Online</option>
                     <option value="offline">Offline</option>
@@ -326,20 +328,20 @@ const CourseFormModal = () => {
 
               {/* Cover Image */}
               <div>
-                <label className="form-label">Cover Image URL</label>
+                <label className="courseformmodal-label">Cover Image URL</label>
                 <input
                   type="url"
                   name="coverImage"
                   value={formData.coverImage}
                   onChange={handleChange}
-                  className="form-input"
+                  className="courseformmodal-input"
                   placeholder="https://example.com/image.jpg"
                 />
               </div>
 
               {/* Checkboxes */}
               <div className="flex items-center space-x-6">
-                <label className="flex items-center">
+                <label className="courseformmodal-checkbox">
                   <input
                     type="checkbox"
                     name="isFeatured"
@@ -349,7 +351,7 @@ const CourseFormModal = () => {
                   />
                   Featured Course
                 </label>
-                <label className="flex items-center">
+                <label className="courseformmodal-checkbox">
                   <input
                     type="checkbox"
                     name="isPopular"
@@ -362,7 +364,7 @@ const CourseFormModal = () => {
               </div>
 
               {/* Note about steps and badges */}
-              <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="courseformmodal-note">
                 <p className="text-sm text-blue-700">
                   <strong>Note:</strong> Course steps and badges can be added after creating the course. 
                   This form covers the basic course information.
@@ -376,10 +378,10 @@ const CourseFormModal = () => {
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="courseformmodal-btn-primary"
             >
               {loading ? (
-                <div className="flex items-center">
+                <div className="courseformmodal-btn-secondary">
                   <div className="spinner mr-2"></div>
                   {mode === 'edit' ? 'Updating...' : 'Creating...'}
                 </div>

@@ -245,30 +245,30 @@ const CategoryFormModal = () => {
         <div className="modal-body">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Information */}
-            <div className="space-y-4">
-              <h4 className="text-md font-semibold text-gray-900 border-b pb-2">Basic Information</h4>
+            <div className="category-modal-section">
+              <h4 className="category-modal-section-title">Basic Information</h4>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="category-modal-meta-grid">
                 <div>
-                  <label className="form-label">Name *</label>
+                  <label className="category-modal-label">Name *</label>
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="form-input"
+                    className="category-modal-input"
                     placeholder="e.g., Pet Sitting"
                     required
                   />
                 </div>
                 <div>
-                  <label className="form-label">Short Description</label>
+                  <label className="category-modal-label">Short Description</label>
                   <input
                     type="text"
                     name="shortDescription"
                     value={formData.shortDescription}
                     onChange={handleChange}
-                    className="form-input"
+                    className="category-modal-input"
                     placeholder="Brief one-liner"
                     maxLength={100}
                   />
@@ -276,12 +276,12 @@ const CategoryFormModal = () => {
               </div>
 
               <div>
-                <label className="form-label">Description *</label>
+                <label className="category-modal-label">Description *</label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  className="form-textarea"
+                  className="category-modal-textarea"
                   rows={3}
                   placeholder="Detailed description of this category"
                   required
@@ -290,18 +290,18 @@ const CategoryFormModal = () => {
             </div>
 
             {/* Visual Elements */}
-            <div className="space-y-4">
-              <h4 className="text-md font-semibold text-gray-900 border-b pb-2">Visual Elements</h4>
+            <div className="category-modal-section">
+              <h4 className="category-modal-section-title">Visual Elements</h4>
 
               <div>
-                <label className="form-label">Icon</label>
+                <label className="category-modal-label">Icon</label>
                 <div className="space-y-3">
                   <input
                     type="text"
                     name="icon"
                     value={formData.icon}
                     onChange={handleChange}
-                    className="form-input"
+                    className="category-modal-input"
                     placeholder="Enter emoji or icon"
                   />
                   <div className="grid grid-cols-10 gap-2">
@@ -321,9 +321,9 @@ const CategoryFormModal = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="category-modal-meta-grid">
                 <div>
-                  <label className="form-label">Background Color</label>
+                  <label className="category-modal-label">Background Color</label>
                   <input
                     type="color"
                     name="color"
@@ -333,7 +333,7 @@ const CategoryFormModal = () => {
                   />
                 </div>
                 <div>
-                  <label className="form-label">Text Color</label>
+                  <label className="category-modal-label">Text Color</label>
                   <input
                     type="color"
                     name="textColor"
@@ -344,41 +344,41 @@ const CategoryFormModal = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="category-modal-meta-grid">
                 <div>
-                  <label className="form-label">Category Image</label>
-                  <div className="space-y-2">
+                  <label className="category-modal-label">Category Image</label>
+                  <div className="category-modal-tags-list">
                     {imagePreview ? (
-                      <div className="relative">
+                      <div className="category-modal-image-relative">
                         <img
                           src={imagePreview}
                           alt="Category preview"
-                          className="w-full h-32 object-cover rounded-lg border"
+                          className="category-modal-image-preview"
                           onError={(e) => handleImageError(e, 'category')}
                         />
                         <button
                           type="button"
                           onClick={() => removeImage('main')}
-                          className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                          className="category-modal-remove-image-btn"
                         >
                           <FiX className="w-4 h-4" />
                         </button>
                       </div>
                     ) : (
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                      <div className="category-modal-upload-box">
                         <input
                           type="file"
                           accept="image/*"
                           onChange={(e) => handleImageUpload(e.target.files[0], 'main')}
-                          className="hidden"
+                          className="category-modal-upload-input"
                           id="main-image-upload"
                         />
                         <label
                           htmlFor="main-image-upload"
-                          className="cursor-pointer text-gray-500 hover:text-gray-700"
+                          className="category-modal-upload-label"
                         >
-                          <div className="text-2xl mb-2">📷</div>
-                          <div className="text-sm">Click to upload image</div>
+                          <div className="category-modal-upload-icon">📷</div>
+                          <div className="category-modal-upload-text">Click to upload image</div>
                         </label>
                       </div>
                     )}
@@ -387,46 +387,46 @@ const CategoryFormModal = () => {
                       name="image"
                       value={formData.image}
                       onChange={handleChange}
-                      className="form-input"
+                      className="category-modal-input"
                       placeholder="Or enter image URL"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="form-label">Thumbnail Image</label>
-                  <div className="space-y-2">
+                  <label className="category-modal-label">Thumbnail Image</label>
+                  <div className="category-modal-tags-list">
                     {thumbnailPreview ? (
-                      <div className="relative">
+                      <div className="category-modal-image-relative">
                         <img
                           src={thumbnailPreview}
                           alt="Thumbnail preview"
-                          className="w-full h-32 object-cover rounded-lg border"
+                          className="category-modal-image-preview"
                           onError={(e) => handleImageError(e, 'category')}
                         />
                         <button
                           type="button"
                           onClick={() => removeImage('thumbnail')}
-                          className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                          className="category-modal-remove-image-btn"
                         >
                           <FiX className="w-4 h-4" />
                         </button>
                       </div>
                     ) : (
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                      <div className="category-modal-upload-box">
                         <input
                           type="file"
                           accept="image/*"
                           onChange={(e) => handleImageUpload(e.target.files[0], 'thumbnail')}
-                          className="hidden"
+                          className="category-modal-upload-input"
                           id="thumbnail-image-upload"
                         />
                         <label
                           htmlFor="thumbnail-image-upload"
-                          className="cursor-pointer text-gray-500 hover:text-gray-700"
+                          className="category-modal-upload-label"
                         >
-                          <div className="text-2xl mb-2">🖼️</div>
-                          <div className="text-sm">Click to upload thumbnail</div>
+                          <div className="category-modal-upload-icon">🖼️</div>
+                          <div className="category-modal-upload-text">Click to upload thumbnail</div>
                         </label>
                       </div>
                     )}
@@ -435,7 +435,7 @@ const CategoryFormModal = () => {
                       name="thumbnailImage"
                       value={formData.thumbnailImage}
                       onChange={handleChange}
-                      className="form-input"
+                      className="category-modal-input"
                       placeholder="Or enter thumbnail URL"
                     />
                   </div>
@@ -443,42 +443,42 @@ const CategoryFormModal = () => {
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h4 className="text-md font-semibold text-gray-900 border-b pb-2">Settings</h4>
+            <div className="category-modal-section">
+              <h4 className="category-modal-section-title">Settings</h4>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="category-modal-settings-grid">
                 <div>
-                  <label className="form-label">Display Order</label>
+                  <label className="category-modal-label">Display Order</label>
                   <input
                     type="number"
                     name="order"
                     value={formData.order}
                     onChange={handleChange}
-                    className="form-input"
+                    className="category-modal-input"
                     min="0"
                     placeholder="0"
                   />
                 </div>
-                <div className="flex items-center justify-center">
-                  <label className="flex items-center space-x-2">
+                <div className="category-modal-setting-row">
+                  <label className="category-modal-tag-row">
                     <input
                       type="checkbox"
                       name="isActive"
                       checked={formData.isActive}
                       onChange={handleChange}
-                      className="rounded"
+                      className="category-modal-checkbox"
                     />
                     <span className="text-sm font-medium">Active Category</span>
                   </label>
                 </div>
-                <div className="flex items-center justify-center">
-                  <label className="flex items-center space-x-2">
+                <div className="category-modal-setting-row">
+                  <label className="category-modal-tag-row">
                     <input
                       type="checkbox"
                       name="isFeatured"
                       checked={formData.isFeatured}
                       onChange={handleChange}
-                      className="rounded"
+                      className="category-modal-checkbox"
                     />
                     <span className="text-sm font-medium">Featured Category</span>
                   </label>
@@ -486,29 +486,29 @@ const CategoryFormModal = () => {
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h4 className="text-md font-semibold text-gray-900 border-b pb-2">SEO & Metadata</h4>
+            <div className="category-modal-section">
+              <h4 className="category-modal-section-title">SEO & Metadata</h4>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="category-modal-meta-grid">
                 <div>
-                  <label className="form-label">Meta Title</label>
+                  <label className="category-modal-label">Meta Title</label>
                   <input
                     type="text"
                     name="metaTitle"
                     value={formData.metaTitle}
                     onChange={handleChange}
-                    className="form-input"
+                    className="category-modal-input"
                     placeholder="SEO title (max 60 chars)"
                     maxLength={60}
                   />
                 </div>
                 <div>
-                  <label className="form-label">Meta Description</label>
+                  <label className="category-modal-label">Meta Description</label>
                   <textarea
                     name="metaDescription"
                     value={formData.metaDescription}
                     onChange={handleChange}
-                    className="form-textarea"
+                    className="category-modal-textarea"
                     rows={2}
                     placeholder="SEO description (max 160 chars)"
                     maxLength={160}
@@ -517,22 +517,22 @@ const CategoryFormModal = () => {
               </div>
 
               <div>
-                <label className="form-label">Tags</label>
-                <div className="space-y-2">
+                <label className="category-modal-label">Tags</label>
+                <div className="category-modal-tags-list">
                   {formData.tags.map((tag, index) => (
-                    <div key={index} className="flex items-center space-x-2">
+                    <div key={index} className="category-modal-tag-row">
                       <input
                         type="text"
                         value={tag}
                         onChange={(e) => handleTagChange(index, e.target.value)}
-                        className="form-input flex-1"
+                        className="category-modal-tag-input"
                         placeholder="Enter tag"
                       />
                       {formData.tags.length > 1 && (
                         <button
                           type="button"
                           onClick={() => removeTag(index)}
-                          className="p-2 text-red-500 hover:text-red-700"
+                          className="category-modal-btn-remove-tag"
                         >
                           <FiMinus className="w-4 h-4" />
                         </button>
@@ -542,7 +542,7 @@ const CategoryFormModal = () => {
                   <button
                     type="button"
                     onClick={addTag}
-                    className="text-sm text-blue-600 hover:text-blue-800"
+                    className="category-modal-btn-add-tag"
                   >
                     <FiPlus className="w-4 h-4 inline mr-1" />
                     Add Tag
@@ -554,11 +554,11 @@ const CategoryFormModal = () => {
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <div className="category-modal-footer">
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="category-modal-btn-primary"
           >
             {loading ? (
               <div className="flex items-center">
@@ -572,7 +572,7 @@ const CategoryFormModal = () => {
           <button
             onClick={handleClose}
             disabled={loading}
-            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+            className="category-modal-btn-secondary"
           >
             Cancel
           </button>

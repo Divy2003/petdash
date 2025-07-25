@@ -1,0 +1,82 @@
+/* CourseFormModal - Tailwind to CSS migration */
+
+.courseformmodal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.courseformmodal-section {
+  margin-bottom: 2rem;
+}
+
+.courseformmodal-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .courseformmodal-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.courseformmodal-label {
+  display: block;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.courseformmodal-input,
+.courseformmodal-select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  color: #111827;
+  background: #fff;
+}
+
+.courseformmodal-input:focus,
+.courseformmodal-select:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.courseformmodal-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.courseformmodal-btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.courseformmodal-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f3f4f6;
+  color: #374151;
+  font-weight: 500;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.courseformmodal-btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+/* Add more as needed for modal, image upload, etc. */
