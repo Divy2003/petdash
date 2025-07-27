@@ -149,9 +149,17 @@ exports.updateProfile = async (req, res) => {
       }
     });
 
-    // Handle profile image upload (if using file upload)
-    if (req.file) {
-      updateFields.profileImage = req.file.path;
+    // Handle file uploads
+    if (req.files) {
+      // Handle profile image upload
+      if (req.files.profileImage) {
+        updateFields.profileImage = `/uploads/${req.files.profileImage[0].filename}`;
+      }
+      
+      // Handle shop image upload (for business users)
+      if (req.files.shopImage) {
+        updateFields.shopImage = `/uploads/${req.files.shopImage[0].filename}`;
+      }
     }
 
     const updatedUser = await User.findByIdAndUpdate(

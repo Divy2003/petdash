@@ -116,6 +116,12 @@ exports.getBusinessProfile = async (req, res) => {
 
     // Group services by category
     const servicesByCategory = services.reduce((acc, service) => {
+      // Skip services without a category or with invalid category data
+      if (!service || !service.category || !service.category.name) {
+        console.warn(`Skipping service ${service._id} - Invalid or missing category`);
+        return acc;
+      }
+      
       const categoryName = service.category.name;
       if (!acc[categoryName]) {
         acc[categoryName] = {
