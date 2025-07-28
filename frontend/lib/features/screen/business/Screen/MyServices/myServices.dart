@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:petcare/common/widgets/Button/primarybutton.dart';
 import 'package:petcare/utlis/constants/colors.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
@@ -48,73 +48,89 @@ class _MyServicesState extends State<MyServices> {
       appBar: CustomAppBar(title: 'My Services'),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
           child: Column(
             children: [
               PrimaryButton(
                 title: 'Add New Service',
                 onPressed: () {
-                  Get.to(() => AddNewServices());
+                  Get.to(() => const AddNewServices());
                 },
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
               ListView.builder(
                 shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(), // IMPORTANT
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: services.length,
                 itemBuilder: (context, index) {
                   final service = services[index];
                   return Card(
                     elevation: 3,
-                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    margin: EdgeInsets.symmetric(vertical: 8.h),
                     color: AppColors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
                     ),
                     child: Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 16,vertical: 14),
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              Text(
-                                service['title'],
-                                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.w600,
+                              Expanded(
+                                child: Text(
+                                  service['title'],
+                                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    fontSize: 14.sp,
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                              const Spacer(),
                               InkWell(
                                 onTap: () {
                                   Get.to(() => EditServicesDetails(service: service));
                                 },
-                                  child: Icon(Icons.edit_outlined, color: AppColors.primary,size: 14,)),
-                              SizedBox(width: 10,),
-                              Icon(Icons.delete, color: Color(0xFFFB2828),size: 14,),
+                                child: Icon(
+                                  Icons.edit_outlined,
+                                  color: AppColors.primary,
+                                  size: AppSizes.iconSm,
+                                ),
+                              ),
+                              SizedBox(width: 10.w),
+                              Icon(
+                                Icons.delete,
+                                color: const Color(0xFFFB2828),
+                                size: AppSizes.iconSm,
+                              ),
                             ],
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8.h),
                           Text(
                             service['description'],
                             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              fontSize: 13.sp,
                               color: AppColors.primary,
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12.h),
                           Row(
                             children: [
                               Text(
                                 "Starting from ${service['price']}",
                                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                  color : Color(0xFF4552CB),
+                                  fontSize: 14.sp,
+                                  color: AppColors.dottedColor,
                                   fontWeight: FontWeight.w600,
                                 ),
-
                               ),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.arrow_forward,  color : Color(0xFF4552CB), size: 24),
+                              SizedBox(width: 8.w),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: AppColors.dottedColor,
+                                size: AppSizes.iconMd,
+                              ),
                             ],
                           ),
                         ],

@@ -1,14 +1,15 @@
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/size.dart';
+import '../../widgets/custom_text_field.dart';
 
 class EditServicesDetails extends StatefulWidget {
   const EditServicesDetails({super.key, required this.service});
@@ -72,138 +73,109 @@ class _EditServicesDetailsState extends State<EditServicesDetails> {
     }
   }
 
-  Widget buildLabel(String label) => Text(
-    label,
-   style: Theme.of(context).textTheme.titleMedium!.copyWith(
-      color: AppColors.primary,
-    ),
-  );
-
-  InputDecoration buildInputDecoration() {
-    return InputDecoration(
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-        borderSide: BorderSide(
-          color: AppColors.textPrimaryColor,
-          width: 2,
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-        borderSide: BorderSide(
-          color: AppColors.textPrimaryColor,
-          width: 2,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: widget.service['title']),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(AppSizes.defaultPadding),
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
-              buildLabel('Title'),
-              const SizedBox(height: 8),
-              TextFormField(
+              CustomTextField(
+                label: 'Title',
                 controller: titleController,
                 focusNode: titleFocus,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(descriptionFocus),
-                decoration: buildInputDecoration(),
+                onFieldSubmitted: () => FocusScope.of(context).requestFocus(descriptionFocus),
               ),
+              SizedBox(height: AppSizes.spaceBtwInputFields),
 
-              const SizedBox(height: 16),
-              buildLabel('Description'),
-              const SizedBox(height: 8),
-              TextFormField(
+              CustomTextField(
+                label: 'Description',
                 controller: descriptionController,
                 focusNode: descriptionFocus,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(includedFocus),
+                onFieldSubmitted: () => FocusScope.of(context).requestFocus(includedFocus),
                 maxLines: 2,
-                decoration: buildInputDecoration(),
               ),
+              SizedBox(height: AppSizes.spaceBtwInputFields),
 
-              const SizedBox(height: 16),
-              buildLabel('Service Included'),
-              const SizedBox(height: 8),
-              TextFormField(
+              CustomTextField(
+                label: 'Service Included',
                 controller: includedController,
                 focusNode: includedFocus,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(notesFocus),
+                onFieldSubmitted: () => FocusScope.of(context).requestFocus(notesFocus),
                 maxLines: 4,
-                decoration: buildInputDecoration(),
               ),
+              SizedBox(height: AppSizes.spaceBtwInputFields),
 
-              const SizedBox(height: 16),
-              buildLabel('Notes'),
-              const SizedBox(height: 8),
-              TextFormField(
+              CustomTextField(
+                label: 'Notes',
                 controller: notesController,
                 focusNode: notesFocus,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(priceFocus),
-                decoration: buildInputDecoration(),
+                onFieldSubmitted: () => FocusScope.of(context).requestFocus(priceFocus),
               ),
+              SizedBox(height: AppSizes.spaceBtwInputFields),
 
-              const SizedBox(height: 16),
-              buildLabel('Price'),
-              const SizedBox(height: 8),
-              TextFormField(
+              CustomTextField(
+                label: 'Price',
                 controller: priceController,
                 focusNode: priceFocus,
                 keyboardType: TextInputType.number,
-                decoration: buildInputDecoration(),
               ),
+              SizedBox(height: AppSizes.spaceBtwSections),
 
-              const SizedBox(height: 24),
-              buildLabel('Upload Images'),
-              const SizedBox(height: 12),
+              Text(
+                'Upload Images',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              SizedBox(height: AppSizes.sm),
+
               GestureDetector(
                 onTap: pickImages,
                 child: DottedBorder(
                   borderType: BorderType.RRect,
-                  radius: Radius.circular(10),
+                  radius: Radius.circular(AppSizes.borderRadiusMd),
                   dashPattern: [6, 4],
                   color: AppColors.dottedColor,
                   child: Container(
-                    height: 100,
+                    height: 100.h,
                     width: double.infinity,
                     alignment: Alignment.center,
                     child: Text(
-                        'Attach Images',
+                      'Attach Images',
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.dottedColor,
                       ),
                     ),
                   ),
-                )
+                ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: AppSizes.sm),
 
               if (_images.isNotEmpty)
                 Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: 8.w,
+                  runSpacing: 8.h,
                   children: _images
-                      .map((file) => Image.file(file, width: 60, height: 60, fit: BoxFit.cover))
+                      .map((file) => ClipRRect(
+                    borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
+                    child: Image.file(file,
+                        width: 60.w, height: 60.w, fit: BoxFit.cover),
+                  ))
                       .toList(),
                 ),
 
-              const SizedBox(height: 30),
+              SizedBox(height: AppSizes.spaceBtwSections),
 
               PrimaryButton(
                 title: 'Update Service',
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // TODO: Add update logic here
                     Get.back();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Service Updated")),

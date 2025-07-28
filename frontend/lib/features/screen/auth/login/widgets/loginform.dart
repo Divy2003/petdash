@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:petcare/features/screen/auth/login/widgets/requestpasswordreset.dart';
 import 'package:petcare/features/screen/auth/register/registerScreen.dart';
-import 'package:petcare/features/screen/business/profile/BusinessProfileScreen.dart';
+import 'package:petcare/features/screen/business/BusinessProfileScreen.dart';
 import 'package:petcare/utlis/constants/colors.dart';
 import 'package:petcare/utlis/constants/image_strings.dart';
 import 'package:petcare/utlis/constants/size.dart';
@@ -67,17 +68,14 @@ class _LoginFormState extends State<LoginForm> {
           SnackBar(content: Text("Login successful")),
         );
 
-        // Navigate based on user type
+        // Add a small delay to ensure the snackbar is shown
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        // Navigate based on user type using Get.offAll for consistency
         if (provider.userType == "Business") {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => BusinessProfileScreen()),
-          );
+          Get.offAll(() => const BusinessProfileScreen());
         } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => CurvedNavScreen()),
-          );
+          Get.offAll(() => const CurvedNavScreen());
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

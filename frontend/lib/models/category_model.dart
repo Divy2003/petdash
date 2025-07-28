@@ -3,6 +3,7 @@ class CategoryModel {
   final String name;
   final String description;
   final String? icon;
+  final String? image;
   final bool isActive;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -12,6 +13,7 @@ class CategoryModel {
     required this.name,
     required this.description,
     this.icon,
+    this.image,
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
@@ -23,6 +25,7 @@ class CategoryModel {
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       icon: json['icon'],
+      image: json['image'],
       isActive: json['isActive'] ?? true,
       createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       updatedAt: DateTime.parse(json['updatedAt'] ?? DateTime.now().toIso8601String()),
@@ -35,6 +38,7 @@ class CategoryModel {
       'name': name,
       'description': description,
       'icon': icon,
+      'image': image,
       'isActive': isActive,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),

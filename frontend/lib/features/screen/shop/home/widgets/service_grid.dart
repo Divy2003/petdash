@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import '../../../../../utlis/app_config/app_config.dart';
 import '../../../../../utlis/constants/size.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../provider/category_provider.dart';
 import '../../../../../services/category_service.dart';
+
 import '../../Service/ServicesList.dart';
 import 'service_tile.dart';
-
 
 class ServiceGrid extends StatefulWidget {
   const ServiceGrid({super.key});
@@ -17,11 +18,9 @@ class ServiceGrid extends StatefulWidget {
 }
 
 class _ServiceGridState extends State<ServiceGrid> {
-
   @override
   void initState() {
     super.initState();
-    // Load categories when widget initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CategoryProvider>().loadCategories();
     });
@@ -43,7 +42,6 @@ class _ServiceGridState extends State<ServiceGrid> {
           return _buildCategoryGrid(categoryProvider.categories);
         }
 
-        // Fallback to hardcoded data if no categories
         return _buildFallbackGrid(categoryProvider);
       },
     );
@@ -122,6 +120,8 @@ class _ServiceGridState extends State<ServiceGrid> {
       crossAxisSpacing: AppSizes.gridViewSpacing,
       mainAxisSpacing: AppSizes.gridViewSpacing,
       children: categories.map<Widget>((category) {
+        final imageUrl = '${AppConfig.baseFileUrl}${category.image}';
+
         return GestureDetector(
           onTap: () {
             Get.to(() => ServicesList(category: category));
@@ -129,7 +129,8 @@ class _ServiceGridState extends State<ServiceGrid> {
           child: ServiceTile(
             title: category.name,
             color: Color(CategoryService.getColorForCategory(category.name)),
-            iconPath: CategoryService.getLocalIconForCategory(category.name),
+            iconPath: imageUrl,
+            isNetwork: true,
           ),
         );
       }).toList(),
@@ -154,6 +155,7 @@ class _ServiceGridState extends State<ServiceGrid> {
             title: service['title'],
             color: service['color'],
             iconPath: service['icon'],
+            isNetwork: false,
           ),
         );
       }).toList(),

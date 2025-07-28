@@ -60,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen>
           // Logo centered
             Padding(
             padding: EdgeInsets.only(
-              top: 150,
+              top: 200,
               bottom: 250,
               left: 10,
               right: 10,

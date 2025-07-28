@@ -26,12 +26,12 @@ class AppImages{
 
  // store
 
-  static const String store1 = "assets/homeimage/store/store1.png";
-  static const String store2 = "assets/homeimage/store/store 2.png";
-  static const String storeLogo1 = "assets/homeimage/store/store logo 1.png";
-  static const String storeLogo2 = "assets/homeimage/store/store logo 2.png";
-  static const String person = "assets/homeimage/store/person.png";
-  static const String products = "assets/homeimage/store/products.png";
+  static const String store1 = "assets/store/store1.png";
+  static const String store2 = "assets/store/store 2.png";
+  static const String storeLogo1 = "assets/store/store logo 1.png";
+  static const String storeLogo2 = "assets/store/store logo 2.png";
+  static const String person = "assets/person/person.png";
+  static const String products = "assets/products/products1.png";
 
   //dog
   static const String dog1 = "assets/Dog/Dog1.png";
@@ -44,4 +44,13 @@ class AppImages{
   static const String foot1 = "assets/profile/p1.png";
   static const String foot2 = "assets/profile/p2.png";
   static const String foot3 = "assets/profile/p3.png";
+
+
+  static const String products1 = "assets/products/products1.png";
+  static const String products2 = "assets/products/products2.png";
+  static const String products3 = "assets/products/products3.png";
+  static const String products4 = "assets/products/products4.png";
+
+  static const String masterCard = "assets/cards/Mastercard.png";
+  static const String visa = "assets/cards/visacard.jpg";
 }

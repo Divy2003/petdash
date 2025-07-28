@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:petcare/features/screen/business/profile/BusinessProfileScreen.dart';
+import 'package:petcare/features/screen/business/BusinessProfileScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../features/screen/Navigation.dart';
+import '../utlis/constants/colors.dart';
+import '../utlis/constants/size.dart';
 
 class UserSessionService {
   static const String _userTypeKey = 'user_type';
@@ -30,13 +32,13 @@ class UserSessionService {
       await prefs.setString(_userTypeKey, newUserType);
       
       // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Switched to ${newUserType} account'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('Switched to ${newUserType} account'),
+      //     backgroundColor: AppColors.textPrimaryColor,
+      //     duration: Duration(seconds: 2),
+      //   ),
+      // );
       
       // Navigate to appropriate screen
       Get.offAll(() => targetScreen);
@@ -46,7 +48,7 @@ class UserSessionService {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to switch account: ${e.toString()}'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
           duration: Duration(seconds: 3),
         ),
       );
@@ -80,18 +82,18 @@ class UserSessionService {
       
       // Navigate to welcome screen or login
       // You can import and navigate to your welcome screen here
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Logged out successfully'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('Logged out successfully'),
+      //     backgroundColor: AppColors.white,
+      //   ),
+      // );
       
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Logout failed: ${e.toString()}'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
     }
@@ -110,26 +112,30 @@ class UserSessionService {
             final targetType = currentType == "Business" ? "Pet Owner" : "Business";
             
             return AlertDialog(
+              backgroundColor: AppColors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
               ),
               title: Text(
                 'Switch Account',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: AppColors.primary,
                 ),
               ),
               content: Text(
                 'Switch from $currentType to $targetType account?',
-                style: TextStyle(fontSize: 16),
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: AppColors.primary,
+                ),
               ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
                     'Cancel',
-                    style: TextStyle(color: Colors.grey[600]),
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
                 ElevatedButton(
@@ -138,14 +144,16 @@ class UserSessionService {
                     switchAccountType(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
                     ),
                   ),
                   child: Text(
                     'Switch',
-                    style: TextStyle(color: Colors.white),
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
               ],

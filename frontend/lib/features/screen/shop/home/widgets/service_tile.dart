@@ -7,12 +7,14 @@ class ServiceTile extends StatelessWidget {
   final String title;
   final Color color;
   final String iconPath;
+  final bool isNetwork;
 
   const ServiceTile({
     super.key,
     required this.title,
     required this.color,
     required this.iconPath,
+    this.isNetwork = false,
   });
 
   @override
@@ -25,7 +27,16 @@ class ServiceTile extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(iconPath, height: 60.h),
+          isNetwork
+              ? Image.network(
+            iconPath,
+            height: 60.h,
+            errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, size: 60.h),
+          )
+              : Image.asset(
+            iconPath,
+            height: 60.h,
+          ),
           SizedBox(height: AppSizes.sm),
           Text(
             title,

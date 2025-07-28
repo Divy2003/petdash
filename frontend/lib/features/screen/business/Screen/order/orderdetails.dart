@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:petcare/utlis/constants/image_strings.dart';
-import 'package:petcare/utlis/constants/size.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../common/widgets/Button/secondarybutton.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utlis/constants/colors.dart';
+import '../../../../../utlis/constants/image_strings.dart';
+import '../../../../../utlis/constants/size.dart';
 import 'ordercancle.dart';
-
 
 class OrderDetails extends StatefulWidget {
   const OrderDetails({super.key});
@@ -22,19 +21,16 @@ class _OrderDetailsState extends State<OrderDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-          title: 'Order ID: 45ADS3456',
-      ),
-
+      appBar: CustomAppBar(title: 'Order ID: 45ADS3456'),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
             /// Product Card
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                 border: Border.all(color: AppColors.textPrimaryColor),
@@ -44,11 +40,11 @@ class _OrderDetailsState extends State<OrderDetails> {
                 children: [
                   Image.asset(
                     AppImages.products,
-                    width: 70,
-                    height: 100,
+                    width: 70.w,
+                    height: 100.h,
                     fit: BoxFit.cover,
                   ),
-                  SizedBox(width: 12),
+                  SizedBox(width: 12.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,17 +52,17 @@ class _OrderDetailsState extends State<OrderDetails> {
                         Text(
                           'Royal Canin Medium Breed Adult Dry Dog Food.',
                           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: AppColors.primary,
+                            color: AppColors.primary,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 8.h),
                         Text(
                           '\$69.74  *  2',
                           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: AppColors.primary,
                           ),
                         ),
-                        SizedBox(height: 6),
+                        SizedBox(height: 6.h),
                         Text(
                           'Total: \$138.74',
                           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
@@ -81,26 +77,26 @@ class _OrderDetailsState extends State<OrderDetails> {
               ),
             ),
 
-            SizedBox(height: 16),
+            SizedBox(height: 16.h),
 
-            /// Payment status
+            /// Payment Status
             Text(
               'Payment status: Paid',
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF1D9031),
+                color: const Color(0xFF1D9031),
               ),
             ),
 
-            SizedBox(height: 16),
+            SizedBox(height: 16.h),
 
-            /// Address & Info box
+            /// Address & Info Card
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 16,vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                 border: Border.all(color: AppColors.textPrimaryColor),
               ),
               child: Column(
@@ -108,11 +104,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                 children: [
                   Row(
                     children: [
-                      Icon(
-                          Icons.location_on_outlined,
-                          color: AppColors.primary
-                      ),
-                      SizedBox(width: 6),
+                      const Icon(Icons.location_on_outlined, color: AppColors.primary),
+                      SizedBox(width: 6.w),
                       Expanded(
                         child: Text(
                           '2464 Royal Ln. Mesa, New Jersey 45463',
@@ -124,10 +117,10 @@ class _OrderDetailsState extends State<OrderDetails> {
                       ),
                     ],
                   ),
-                  Divider(height: 20),
+                  const Divider(height: 20),
                   _infoRow('Customer Name:', 'Maria Lee'),
                   _infoRow('Contact Number:', '+01 2345679034'),
-                  Divider(height: 20),
+                  const Divider(height: 20),
                   _infoRow('Seller Details:', 'Dogs and Care'),
                   _infoRow('Contact Number:', '+01 2345679034'),
                   _infoRow('Email Address:', 'Dogsandcare@info.com'),
@@ -135,27 +128,35 @@ class _OrderDetailsState extends State<OrderDetails> {
               ),
             ),
 
-            SizedBox(height: 24),
+            SizedBox(height: 24.h),
 
-            /// Buttons
-            SecondaryButton(title: 'Cancel Order',onPressed: (){
-              Get.to(() => CancelledOrderDetails());
-            },),
-            SizedBox(height: 12),
-            PrimaryButton(title: 'Track Order',onPressed: (){},),
+            /// Action Buttons
+            SecondaryButton(
+              title: 'Cancel Order',
+              onPressed: () {
+                Get.to(() => const CancelledOrderDetails());
+              },
+            ),
+            SizedBox(height: 12.h),
+            PrimaryButton(
+              title: 'Track Order',
+              onPressed: () {
+                // Add your tracking logic here
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
-  /// Helper: Info rows inside the card
+  /// Info Row Widget
   Widget _infoRow(String title, String value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6.0),
+      padding: EdgeInsets.only(bottom: 6.h),
       child: RichText(
         text: TextSpan(
-          text: title + ' ',
+          text: '$title ',
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
             color: AppColors.primary,
             fontWeight: FontWeight.w500,

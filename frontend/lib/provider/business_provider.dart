@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/business_model.dart';
 import '../models/category_model.dart';
 import '../services/business_service.dart';
+import '../utlis/constants/image_strings.dart';
 
 class BusinessProvider with ChangeNotifier {
   List<BusinessModel> _businesses = [];
@@ -130,32 +131,32 @@ class BusinessProvider with ChangeNotifier {
         'name': 'Plush Paws',
         'distance': '.03 miles away',
         'rating': 5.0,
-        'image': 'assets/images/stores/store1.png',
-        'logo': 'assets/images/stores/logo1.png',
+        'image': AppImages.store1,
+        'logo': AppImages.storeLogo1,
         'openTime': 'Open at 8 AM–10PM',
       },
       {
         'name': 'Mr.aladyn',
         'distance': '25 miles away',
         'rating': 4.9,
-        'image': 'assets/images/stores/store2.png',
-        'logo': 'assets/images/stores/logo2.png',
+        'image': AppImages.store1,
+        'logo': AppImages.storeLogo1,
         'openTime': 'Open at 9 AM–9PM',
       },
       {
         'name': 'Pet Patch USA',
         'distance': '1 mile away',
         'rating': 4.7,
-        'image': 'assets/images/stores/store1.png',
-        'logo': 'assets/images/stores/logo1.png',
+        'image': AppImages.store1,
+        'logo': AppImages.storeLogo1,
         'openTime': 'Open at 10 AM–8PM',
       },
       {
         'name': 'Petido',
         'distance': '1.5 miles away',
         'rating': 4.6,
-        'image': 'assets/images/stores/store2.png',
-        'logo': 'assets/images/stores/logo2.png',
+        'image': AppImages.store1,
+        'logo': AppImages.storeLogo1,
         'openTime': 'Open at 8 AM–10PM',
       },
     ];

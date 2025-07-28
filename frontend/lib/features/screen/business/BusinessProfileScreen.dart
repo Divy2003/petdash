@@ -7,14 +7,18 @@ import 'package:petcare/features/screen/personal/profile/widgets/editProfile.dar
 import 'package:petcare/features/screen/personal/profile/widgets/profileheaderwidgets.dart';
 import 'package:petcare/services/user_session_service.dart';
 
-import '../../../../utlis/constants/colors.dart';
-import '../../../../utlis/constants/image_strings.dart';
-import '../../shop/Service/ServicesList.dart';
-import '../Screen/Appoinments/appoinments.dart';
-import '../Screen/MyClients/myClients.dart';
-import '../Screen/MyProducts/myproducts.dart';
-import '../Screen/MyServices/myServices.dart';
-import '../Screen/order/orderScreen.dart';
+import '../../../utlis/constants/colors.dart';
+import '../../../utlis/constants/image_strings.dart';
+import '../../../utlis/constants/size.dart';
+import 'Screen/Appoinments/appoinments.dart';
+import 'Screen/MyArticles/MyArticles.dart';
+import 'Screen/MyClients/myClients.dart';
+import 'Screen/MyPaymentsMethod/MyPaymentMethods.dart';
+import 'Screen/MyProducts/myproducts.dart';
+import 'Screen/MyServices/myServices.dart';
+import 'Screen/Reports/StatisticsScreen.dart';
+import 'Screen/Subscription/Subscription.dart';
+import 'Screen/order/orderScreen.dart';
 
 class BusinessProfileScreen extends StatefulWidget {
   const BusinessProfileScreen({super.key});
@@ -42,73 +46,69 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(AppSizes.sm),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.r),
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
                     border: Border.all(color: AppColors.secondary),
                   ),
                   child: Column(
                     children: [
                       ProfileMenuTile(
-                        icon: Icons.business,
+                        icon: Icons.shopping_bag,
                         title: 'My Products',
-                        onTap: () {
-                          Get.to(() => MyProducts());
-                        },
+                        onTap: () => Get.to(() => MyProducts()),
                       ),
-                      Divider(height: 1, color: AppColors.divider),
+                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
                       ProfileMenuTile(
-                        icon: Icons.schedule,
+                        icon: Icons.calendar_today,
                         title: 'Appointments',
-                        onTap: () {
-                          Get.to(() => AppointmentScreen());
-                        },
+                        onTap: () => Get.to(() => AppointmentScreen()),
                       ),
-                      Divider(height: 1, color: AppColors.divider),
+                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
                       ProfileMenuTile(
-                        icon: Icons.room_service,
+                        icon: Icons.receipt_long,
                         title: 'Orders',
-                        onTap: () {
-                          Get.to(() => OrderScreen());
-                        },
+                        onTap: () => Get.to(() => OrderScreen()),
                       ),
-                      Divider(height: 1, color: AppColors.divider),
+                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
                       ProfileMenuTile(
-                        icon: Icons.shopping_bag_outlined,
+                        icon: Icons.miscellaneous_services,
                         title: 'My Services',
-                        onTap: () {
-                          Get.to(() => MyServices());
-                        },
+                        onTap: () => Get.to(() => MyServices()),
                       ),
-                      Divider(height: 1, color: AppColors.divider),
+                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
                       ProfileMenuTile(
-                        icon: Icons.analytics,
+                        icon: Icons.group,
                         title: 'My Clients',
-                        onTap: () {
-                          Get.to(() => MyClients());
-                        },
+                        onTap: () => Get.to(() => MyClients()),
                       ),
-                      Divider(height: 1, color: AppColors.divider),
+                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
                       ProfileMenuTile(
-                        icon: Icons.account_balance_wallet_outlined,
+                        icon: Icons.article_outlined,
                         title: 'My Articles',
-                        onTap: () {},
+                        onTap: () => Get.to(() => MyArticles()),
                       ),
-                      Divider(height: 1, color: AppColors.divider),
+                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
                       ProfileMenuTile(
-                        icon: Icons.settings,
+                        icon: Icons.bar_chart,
                         title: 'Reports',
-                        onTap: () {},
+                        onTap: () => Get.to(() => StatisticsScreen()),
                       ),
-                      Divider(height: 1, color: AppColors.divider),
+                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
                       ProfileMenuTile(
-                        icon: Icons.help_sharp,
-                        title: 'Payments',
-                        onTap: () {},
+                        icon: Icons.credit_card,
+                        title: 'PaymentsMethod',
+                        onTap: () => Get.to(() => MyPaymentMethodsScreen()),
                       ),
-                      Divider(height: 1, color: AppColors.divider),
+                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
+                      ProfileMenuTile(
+                        icon: Icons.subscriptions,
+                        title: 'Subscription',
+                        onTap: () => Get.to(() => SubscriptionScreen()),
+                      ),
+                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.swap_horiz,
                         title: 'Switch to Service Account',
@@ -116,7 +116,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                           UserSessionService.showAccountSwitchDialog(context);
                         },
                       ),
-                      Divider(height: 1, color: AppColors.divider),
+                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.logout,
                         title: 'Logout',
@@ -128,9 +128,11 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                             builder: (BuildContext context) {
                               return Dialog(
                                 backgroundColor: AppColors.white,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
+                                ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
+                                  padding: EdgeInsets.all(AppSizes.lg),
                                   child: IntrinsicHeight(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -142,7 +144,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                                             color: AppColors.primary,
                                           ),
                                         ),
-                                        const SizedBox(height: 10),
+                                        SizedBox(height: AppSizes.sm),
                                         Text(
                                           'Are you sure you want to logout?',
                                           textAlign: TextAlign.center,
@@ -150,7 +152,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                                             color: AppColors.primary,
                                           ),
                                         ),
-                                        const SizedBox(height: 20),
+                                        SizedBox(height: AppSizes.md),
                                         Row(
                                           children: [
                                             Expanded(
@@ -159,8 +161,11 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                                                 style: OutlinedButton.styleFrom(
                                                   side: BorderSide(color: AppColors.primary),
                                                   shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(30)),
-                                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                                    borderRadius: BorderRadius.circular(AppSizes.buttonRadius),
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: AppSizes.buttonHeight,
+                                                  ),
                                                 ),
                                                 child: Text(
                                                   'Cancel',
@@ -170,7 +175,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                                                 ),
                                               ),
                                             ),
-                                            const SizedBox(width: 10),
+                                            SizedBox(width: AppSizes.sm),
                                             Expanded(
                                               child: ElevatedButton(
                                                 onPressed: () {
@@ -179,14 +184,17 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                                                   Navigator.pushAndRemoveUntil(
                                                     context,
                                                     MaterialPageRoute(builder: (_) => LoginScreen()),
-                                                    (route) => false,
+                                                        (route) => false,
                                                   );
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   backgroundColor: AppColors.primary,
                                                   shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(30)),
-                                                  padding: EdgeInsets.symmetric(vertical: 12),
+                                                    borderRadius: BorderRadius.circular(AppSizes.buttonRadius),
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: AppSizes.buttonHeight,
+                                                  ),
                                                 ),
                                                 child: Text(
                                                   'Logout',

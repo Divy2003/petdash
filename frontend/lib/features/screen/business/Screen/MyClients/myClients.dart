@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:petcare/common/widgets/Button/primarybutton.dart';
 import 'package:petcare/common/widgets/appbar/appbar.dart';
+
+import '../../../../../utlis/constants/colors.dart';
+import 'AddNewClients.dart';
+import 'EditClients.dart';
 
 class MyClients extends StatefulWidget {
   const MyClients({super.key});
@@ -26,44 +32,63 @@ class _MyClientsState extends State<MyClients> {
     return Scaffold(
       appBar: CustomAppBar(title: 'My Clients'),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             PrimaryButton(
               title: 'Add New Client',
-              onPressed: () {},
+              onPressed: () {
+                Get.to(() => const AddNewClients());
+              },
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("${clients.length} Users Found",
-                    style: TextStyle(color: Colors.grey)),
+                Text(
+                  "${clients.length} Users Found",
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
                 Row(
-                  children: const [
-                    Icon(Icons.sort, size: 18),
-                    SizedBox(width: 4),
-                    Text("Sort", style: TextStyle(fontSize: 14)),
+                  children: [
+                    Icon(Icons.sort, size: 18.sp),
+                    SizedBox(width: 4.w),
+                    Text("Sort", style: TextStyle(fontSize: 14.sp)),
                   ],
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10.h),
             Expanded(
               child: ListView.separated(
                 itemCount: clients.length,
-                separatorBuilder: (context, index) =>
-                    Divider(thickness: 1, color: Colors.grey.shade300),
+                separatorBuilder: (context, index) => Divider(
+                  thickness: 1,
+                  color: Colors.grey.shade300,
+                ),
                 itemBuilder: (context, index) {
                   final client = clients[index];
                   return ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: CircleAvatar(
+                      radius: 22.r,
                       backgroundImage: NetworkImage(client['image']!),
                     ),
-                    title: Text(client['name'] ?? ''),
-                    subtitle: Text(client['pet'] ?? ''),
+                    title: Text(
+                      client['name'] ?? '',
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    subtitle: Text(
+                      client['pet'] ?? '',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -77,20 +102,22 @@ class _MyClientsState extends State<MyClients> {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
-                              padding:
-                              const EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 10.w),
                             ),
-                            child: const Text("Delete"),
+                            child: Text(
+                              "Delete",
+                              style: TextStyle(fontSize: 12.sp),
+                            ),
                           )
                         else ...[
                           IconButton(
-                            icon: const Icon(Icons.edit, size: 18),
+                            icon: Icon(Icons.edit, size: 18.sp),
                             onPressed: () {
-                              // Handle edit
+                              Get.to(() => const EditClientDetails());
                             },
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete_outline, size: 18),
+                            icon: Icon(Icons.delete_outline, size: 18.sp),
                             onPressed: () {
                               setState(() {
                                 deletingIndex = index;

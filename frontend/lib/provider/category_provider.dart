@@ -79,32 +79,32 @@ class CategoryProvider with ChangeNotifier {
       {
         'title': 'Sitting',
         'color': const Color(0x807DC1CF),
-        'icon': 'assets/images/services/sitting.png',
+        'icon': 'assets/homeimage/sitting.png',
       },
       {
         'title': 'Health',
         'color': const Color(0xA31976D2),
-        'icon': 'assets/images/services/health.png',
+        'icon': 'assets/homeimage/health.png',
       },
       {
         'title': 'Boarding',
         'color': const Color(0x80F0546C),
-        'icon': 'assets/images/services/boarding.png',
+        'icon': 'assets/homeimage/boarding.png',
       },
       {
         'title': 'Training',
         'color': const Color(0x80FFC107),
-        'icon': 'assets/images/services/training.png',
+        'icon': 'assets/homeimage/traning.png',
       },
       {
         'title': 'Grooming',
         'color': const Color(0x99FFC107),
-        'icon': 'assets/images/services/grooming.png',
+        'icon': 'assets/homeimage/groming.png',
       },
       {
         'title': 'Walking',
         'color': const Color(0x804CD964),
-        'icon': 'assets/images/services/walking.png',
+        'icon': 'assets/homeimage/walking.png',
       },
     ];
   }

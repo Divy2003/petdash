@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/screen/Navigation.dart';
 import '../../features/screen/auth/welcomeScreen.dart';
 
-import '../../features/screen/business/profile/BusinessProfileScreen.dart';
+import '../../features/screen/business/BusinessProfileScreen.dart';
 
 class NavigationHelper {
   static Future<Widget> getInitialScreen() async {

@@ -1,13 +1,14 @@
 import 'dart:io';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/size.dart';
+import '../../widgets/custom_text_field.dart';
 
 class AddNewServices extends StatefulWidget {
   const AddNewServices({super.key});
@@ -15,7 +16,6 @@ class AddNewServices extends StatefulWidget {
   @override
   State<AddNewServices> createState() => _AddNewServicesState();
 }
-
 
 class _AddNewServicesState extends State<AddNewServices> {
   final TextEditingController _titleController = TextEditingController();
@@ -36,29 +36,51 @@ class _AddNewServicesState extends State<AddNewServices> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Add New Service'),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 14),
+          padding: EdgeInsets.symmetric(
+              horizontal: 16.w, vertical: 14.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildTextField("Title", _titleController),
-              SizedBox(height: 16),
-              buildTextField("Description", _descController),
-              SizedBox(height: 16),
-              buildTextField("Service Included", _serviceIncludedController, maxLines: 4),
-              SizedBox(height: 16),
-              buildTextField("Notes", _notesController),
-              SizedBox(height: 16),
-              Text("Prices", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              SizedBox(height: 8),
+              CustomTextField(
+                label: 'Title',
+                controller: _titleController,
+                maxLines: 1,
+              ),
+              SizedBox(height: AppSizes.spaceBtwInputFields),
+              CustomTextField(
+                label: 'Description',
+                controller: _descController,
+                maxLines: 3,
+              ),
+              SizedBox(height: AppSizes.spaceBtwInputFields),
+              CustomTextField(
+                label: 'Service Included',
+                controller: _serviceIncludedController,
+                maxLines: 3,
+              ),
+              SizedBox(height: AppSizes.spaceBtwInputFields),
+              CustomTextField(
+                label: 'Notes',
+                controller: _notesController,
+                maxLines: 1,
+              ),
+              SizedBox(height: AppSizes.spaceBtwInputFields),
+              Text("Prices",
+                  style:Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  )
+              ),
+              SizedBox(height: 8.h),
               Row(
                 children: [
-                  Text("Cats"),
+                  Text("Cats", style: TextStyle(fontSize: 14.sp)),
                   Switch(
                     value: isCat,
                     onChanged: (value) {
@@ -68,7 +90,7 @@ class _AddNewServicesState extends State<AddNewServices> {
                     },
                   ),
                   Spacer(),
-                  Text("Dogs"),
+                  Text("Dogs", style: TextStyle(fontSize: 14.sp)),
                   Switch(
                     value: isDog,
                     onChanged: (value) {
@@ -81,76 +103,50 @@ class _AddNewServicesState extends State<AddNewServices> {
               ),
               if (isCat) priceSelector("Cats"),
               if (isDog) priceSelector("Dogs"),
-              SizedBox(height: 16),
-              Text("Upload Images", style: TextStyle(fontWeight: FontWeight.bold)),
-              SizedBox(height: 8),
+              SizedBox(height: AppSizes.spaceBtwSections),
+              Text("Upload Images", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp)),
+              SizedBox(height: 8.h),
               GestureDetector(
-                  onTap: pickImages,
-                  child: DottedBorder(
-                    borderType: BorderType.RRect,
-                    radius: Radius.circular(10),
-                    dashPattern: [6, 4],
-                    color: AppColors.dottedColor,
-                    child: Container(
-                      height: 100,
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Attach Images',
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: AppColors.dottedColor,
-                        ),
+                onTap: pickImages,
+                child: DottedBorder(
+                  borderType: BorderType.RRect,
+                  radius: Radius.circular(10.r),
+                  dashPattern: [6, 4],
+                  color: AppColors.dottedColor,
+                  child: Container(
+                    height: 100.h,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Attach Images',
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColors.dottedColor,
+                        fontSize: 14.sp,
                       ),
                     ),
-                  )
+                  ),
+                ),
               ),
-              const SizedBox(height: 10),
-
+              SizedBox(height: 10.h),
               if (_images.isNotEmpty)
                 Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: 8.w,
+                  runSpacing: 8.h,
                   children: _images
-                      .map((file) => Image.file(file, width: 60, height: 60, fit: BoxFit.cover))
+                      .map((file) => Image.file(
+                    file,
+                    width: 60.w,
+                    height: 60.h,
+                    fit: BoxFit.cover,
+                  ))
                       .toList(),
                 ),
-
-              SizedBox(height: 24),
-              PrimaryButton(title: 'Save',onPressed: (){},),
+              SizedBox(height: AppSizes.spaceBtwSections),
+              PrimaryButton(title: 'Save', onPressed: () {}),
             ],
           ),
         ),
       ),
-    );
-
-  }
-  Widget buildTextField(String label, TextEditingController controller, {int maxLines = 1}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label),
-        SizedBox(height: 8),
-        TextFormField(
-          controller: controller,
-          maxLines: maxLines,
-          decoration:InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-              borderSide: BorderSide(
-                color: AppColors.textPrimaryColor,
-                width: 2,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-              borderSide: BorderSide(
-                color: AppColors.textPrimaryColor,
-                width: 2,
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -158,8 +154,8 @@ class _AddNewServicesState extends State<AddNewServices> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontWeight: FontWeight.w600)),
-        SizedBox(height: 8),
+        Text(label, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15.sp)),
+        SizedBox(height: 8.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -168,7 +164,7 @@ class _AddNewServicesState extends State<AddNewServices> {
             sizeButton("Large"),
           ],
         ),
-        SizedBox(height: 16),
+        SizedBox(height: AppSizes.spaceBtwInputFields),
       ],
     );
   }
@@ -176,15 +172,14 @@ class _AddNewServicesState extends State<AddNewServices> {
   Widget sizeButton(String size) {
     return Expanded(
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 4),
-        padding: EdgeInsets.symmetric(vertical: 12),
+        margin: EdgeInsets.symmetric(horizontal: 4.w),
+        padding: EdgeInsets.symmetric(vertical: 12.h),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade400),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
         ),
-        child: Center(child: Text(size)),
+        child: Center(child: Text(size, style: TextStyle(fontSize: 13.sp))),
       ),
     );
   }
-
 }

@@ -4,34 +4,64 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1353c25d-7094-4b07-9800-038a75bcafb3" name="Changes" comment="business">
-      <change afterPath="$PROJECT_DIR$/frontend/lib/common/widgets/Button/dotborder.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyClients/myClients.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyProducts/myproducts.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/addnewServices.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/editServicesdetails.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/myServices.dart" afterDir="false" />
+    <list default="true" id="1353c25d-7094-4b07-9800-038a75bcafb3" name="Changes" comment="businessProfiles1">
+      <change afterPath="$PROJECT_DIR$/frontend/assets/cards/Mastercard.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/assets/cards/visacard.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/assets/products/products1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/assets/products/products2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/assets/products/products3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/assets/products/products4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyArticles/EditArticlesdetails.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyArticles/MyArticles.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyArticles/widgets/myarticlescard.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyClients/AddNewClients.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyClients/EditClients.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyPaymentsMethod/MyPaymentMethods.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyPaymentsMethod/addNewPayment.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyProducts/AddNewProducts.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyProducts/editNewProducts.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Reports/StatisticsScreen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Subscription/Subscription.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/widgets/ImagePicker.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/widgets/custom_text_field.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/Screen/MyPet/mypets.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/AugmentWebviewStateStore.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AugmentWebviewStateStore.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/homeimage/store/person.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/assets/person/person.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/homeimage/store/products.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/assets/products/products.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/homeimage/store/store 2.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/assets/store/store 2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/homeimage/store/store logo 1.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/assets/store/store logo 1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/homeimage/store/store logo 2.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/assets/store/store logo 2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/homeimage/store/store1.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/assets/store/store1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/common/widgets/Button/dotborder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyArticles/AddNewArticles.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/common/widgets/Button/primarybutton.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/common/widgets/Button/primarybutton.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/common/widgets/Button/secondarybutton.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/common/widgets/Button/secondarybutton.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/loginform.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/loginform.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/new_password_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/new_password_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/otp_verification_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/otp_verification_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/requestpasswordreset.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/widgets/requestpasswordreset.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/register/widgets/registerform.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/register/widgets/registerform.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Appoinments/AppointmentsDetails.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Appoinments/AppointmentsDetails.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Appoinments/appoinments.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/Appoinments/appoinments.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/splashScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/splashScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyClients/myClients.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyClients/myClients.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyProducts/myproducts.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyProducts/myproducts.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/addnewServices.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/addnewServices.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/editServicesdetails.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/editServicesdetails.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/myServices.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/myServices.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/orderScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/orderScreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/ordercancle.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/ordercancle.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/orderdetails.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/orderdetails.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/widgets/ordercard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/order/widgets/ordercard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/profile/BusinessProfileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/profile/BusinessProfileScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/widgets/editProfile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/widgets/editProfile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/ServiceDetails.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/ServiceDetails.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/ServicesList.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/ServicesList.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/profile/BusinessProfileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/BusinessProfileScreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/appointmentbook/widgets/Notes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/appointmentbook/widgets/Notes.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/appointmentbook/widgets/couponcode.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/appointmentbook/widgets/couponcode.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/appointmentbook/widgets/dateAndTimePicker.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/Service/appointmentbook/widgets/dateAndTimePicker.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/utlis/constants/colors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/utlis/constants/colors.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/home/widgets/service_grid.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/home/widgets/service_grid.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/home/widgets/service_tile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/home/widgets/service_tile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/models/category_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/models/category_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/provider/auth_provider/registerprovider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/provider/auth_provider/registerprovider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/provider/business_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/provider/business_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/provider/category_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/provider/category_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/user_session_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/user_session_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/utlis/app_config/app_config.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/utlis/app_config/app_config.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/utlis/constants/image_strings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/utlis/constants/image_strings.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/utlis/constants/size.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/utlis/constants/size.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/utlis/helpers/navigation_helper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/utlis/helpers/navigation_helper.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pubspec.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pubspec.yaml" afterDir="false" />
     </list>
@@ -103,18 +133,23 @@
     &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
     &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/flutter project/petdash/petdash/frontend/assets/homeimage/store&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/flutter project/petdash/petdash/frontend/assets/cards&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;dart.settings&quot;,
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\flutter project\petdash\petdash\frontend\assets\cards" />
+      <recent name="D:\flutter project\petdash\petdash\frontend\assets\products" />
       <recent name="D:\flutter project\petdash\petdash\frontend\assets\homeimage\store" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\flutter project\petdash\petdash\frontend\lib\features\screen\business\Screen\order" />
-      <recent name="D:\flutter project\petdash\petdash\frontend\lib\features\screen\business\Screen\widgets" />
+      <recent name="D:\flutter project\petdash\petdash\frontend\lib\features\screen\business\Screen\MyPaymentsMethod" />
+      <recent name="D:\flutter project\petdash\petdash\frontend\lib\features\screen\business\Screen\MyArticles" />
+      <recent name="D:\flutter project\petdash\petdash\frontend\assets" />
+      <recent name="D:\flutter project\petdash\petdash\frontend\assets\person" />
+      <recent name="D:\flutter project\petdash\petdash\frontend\assets\products" />
     </key>
   </component>
   <component name="RunManager">
@@ -147,13 +182,23 @@
       <option name="project" value="LOCAL" />
       <updated>1753264348225</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="businessProfiles">
+      <option name="closed" value="true" />
+      <created>1753273797889</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1753273797890</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="second" />
     <MESSAGE value="business" />
-    <option name="LAST_COMMIT_MESSAGE" value="business" />
+    <MESSAGE value="businessProfiles" />
+    <MESSAGE value="businessProfiles1" />
+    <option name="LAST_COMMIT_MESSAGE" value="businessProfiles1" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

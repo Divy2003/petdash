@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../utlis/app_config/app_config.dart';
 
 class ApiService {
-  static const String baseUrl = AppConfig.baseUrl;
+  static final String baseUrl = AppConfig.baseUrl;
 
   // Get headers with optional authentication
   static Future<Map<String, String>> _getHeaders({bool requireAuth = false}) async {

@@ -82,6 +82,9 @@ class RegisterProvider with ChangeNotifier {
       print("Registration response body: $responseBody");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Registration successful! Status code: ${response.statusCode}");
+        print("Response body: $responseBody");
+
         // Save user for reuse (Edit Profile, etc.)
         _registeredUser = UserModel(
           name: name,
@@ -94,18 +97,28 @@ class RegisterProvider with ChangeNotifier {
         final prefs = await SharedPreferences.getInstance();
         final userTypeString = selectedType == UserType.petOwner ? "Pet Owner" : "Business";
         await prefs.setString('user_type', userTypeString);
+        print("Stored user type: $userTypeString");
 
         // If backend returns a token during registration, store it
         if (responseBody['token'] != null) {
           await prefs.setString('auth_token', responseBody['token']);
+          print("Stored auth token: ${responseBody['token']}");
+        } else {
+          // For testing, create a mock token
+          await prefs.setString('auth_token', 'mock_token_${DateTime.now().millisecondsSinceEpoch}');
+          print("Created mock auth token for testing");
         }
 
         notifyListeners();
+        print("Registration provider returning null (success)");
         return null;
       } else {
+        print("Registration failed! Status code: ${response.statusCode}");
+        print("Error response: $responseBody");
         return responseBody['message'] ?? 'Signup failed';
       }
     } catch (e) {
+      print("Registration exception: $e");
       return "An error occurred. Please try again.";
     } finally {
       _setLoading(false);
