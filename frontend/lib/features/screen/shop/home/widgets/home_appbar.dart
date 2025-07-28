@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/size.dart';
+import '../../../../../provider/location_provider.dart';
+import '../../../location/location_selection_modal.dart';
 
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key});
@@ -19,11 +22,32 @@ class HomeAppBar extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.location_pin, size: AppSizes.iconMd, color: Colors.black),
+              Icon(Icons.location_pin,
+                  size: AppSizes.iconMd, color: Colors.black),
               SizedBox(width: AppSizes.sm),
-              const Text(
-                "My Location",
-                style: TextStyle(color: AppColors.primary),
+              TextButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => const LocationSelectionModal(),
+                  );
+                },
+                child: Consumer<LocationProvider>(
+                  builder: (context, locationProvider, child) {
+                    return Text(
+                      locationProvider.selectedAddress ??
+                          locationProvider.currentAddress ??
+                          "My Location",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: AppColors.primary,
+                          ),
+                      maxLines: 2,
+                      overflow: TextOverflow.clip,
+                    );
+                  },
+                ),
               ),
             ],
           ),

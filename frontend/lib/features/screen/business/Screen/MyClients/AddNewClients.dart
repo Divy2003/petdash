@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:petcare/utlis/constants/colors.dart';
 import '../../../../../common/widgets/Button/primarybutton.dart';
+import '../../../../../utlis/constants/size.dart';
 import '../../widgets/custom_text_field.dart';
 
 class AddNewClients extends StatefulWidget {
@@ -92,7 +93,10 @@ class _AddNewClientsState extends State<AddNewClients> {
     return Scaffold(
       appBar: AppBar(title: Text("Upload Client", style: TextStyle(fontSize: 18.sp))),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.defaultPaddingHorizontal,
+          vertical: AppSizes.defaultPaddingVertical,
+        ),
         child: Column(
           children: [
             Row(

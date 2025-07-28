@@ -14,8 +14,8 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const HomeAppBar(),
-            SizedBox(height: AppSizes.spaceBtwSections),
+            HomeAppBar(),
+            SizedBox(height: AppSizes.spaceBtwSections/2),
             const HomeHeaderBanner(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: AppSizes.md),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../utlis/constants/size.dart';
 
 class StatisticsScreen extends StatelessWidget {
   const StatisticsScreen({super.key});
@@ -13,7 +14,8 @@ class StatisticsScreen extends StatelessWidget {
       appBar: CustomAppBar(title: 'Statistics'),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding:  EdgeInsets.symmetric( horizontal: AppSizes.defaultPaddingHorizontal,
+            vertical: AppSizes.defaultPaddingVertical,),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

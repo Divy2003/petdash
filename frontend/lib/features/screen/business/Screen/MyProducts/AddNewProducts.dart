@@ -68,8 +68,8 @@ class _AddNewProductsState extends State<AddNewProducts> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: AppSizes.md,
-            vertical: AppSizes.sm,
+            horizontal: AppSizes.defaultPaddingHorizontal,
+            vertical: AppSizes.defaultPaddingVertical,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

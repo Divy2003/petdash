@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/image_strings.dart';
 import '../../../../../utlis/constants/size.dart';
+import '../../../personal/profile/Screen/MyPet/AddAnotherPet.dart';
 
 
 class HomeHeaderBanner extends StatelessWidget {
@@ -41,7 +44,9 @@ class HomeHeaderBanner extends StatelessWidget {
           bottom: 10.h,
           left: 100.w,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.to(() => const AddOrEditPetScreen());
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor:  AppColors.primary,
               padding: EdgeInsets.symmetric(

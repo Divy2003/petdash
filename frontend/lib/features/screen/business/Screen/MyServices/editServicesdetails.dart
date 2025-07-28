@@ -78,7 +78,10 @@ class _EditServicesDetailsState extends State<EditServicesDetails> {
     return Scaffold(
       appBar: CustomAppBar(title: widget.service['title']),
       body: Padding(
-        padding: EdgeInsets.all(AppSizes.defaultPadding),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.defaultPaddingHorizontal,
+          vertical: AppSizes.defaultPaddingVertical,
+        ),
         child: Form(
           key: _formKey,
           child: ListView(

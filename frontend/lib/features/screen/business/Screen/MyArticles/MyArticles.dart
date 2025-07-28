@@ -56,8 +56,8 @@ class _MyArticlesState extends State<MyArticles> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: 16.w,
-            vertical: 16.h,
+            horizontal: AppSizes.defaultPaddingHorizontal,
+            vertical: AppSizes.defaultPaddingVertical,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

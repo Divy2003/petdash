@@ -44,7 +44,8 @@ class _AddNewServicesState extends State<AddNewServices> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: 16.w, vertical: 14.h),
+            horizontal: AppSizes.defaultPaddingHorizontal,
+            vertical: AppSizes.defaultPaddingVertical,),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

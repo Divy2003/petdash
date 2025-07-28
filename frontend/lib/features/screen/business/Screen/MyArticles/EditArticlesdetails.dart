@@ -51,8 +51,8 @@ class _EditArticlesDetailsState extends State<EditArticlesDetails> {
       appBar: CustomAppBar(title: 'Edit Articles'),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
-          horizontal: AppSizes.md,
-          vertical: AppSizes.sm,
+          horizontal: AppSizes.defaultPaddingHorizontal,
+          vertical: AppSizes.defaultPaddingVertical,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

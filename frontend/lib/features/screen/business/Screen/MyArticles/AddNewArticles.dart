@@ -52,8 +52,8 @@ class _AddNewArticlesState extends State<AddNewArticles> {
       appBar: CustomAppBar(title: 'Add New Articles'),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
-          horizontal: AppSizes.defaultPadding,
-          vertical: AppSizes.defaultPadding,
+          horizontal: AppSizes.defaultPaddingHorizontal,
+          vertical: AppSizes.defaultPaddingVertical,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -23,7 +23,8 @@ class _OrderDetailsState extends State<OrderDetails> {
     return Scaffold(
       appBar: CustomAppBar(title: 'Order ID: 45ADS3456'),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        padding: EdgeInsets.symmetric( horizontal: AppSizes.defaultPaddingHorizontal,
+          vertical: AppSizes.defaultPaddingVertical,),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

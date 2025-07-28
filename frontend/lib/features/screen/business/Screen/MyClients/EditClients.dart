@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:petcare/utlis/constants/colors.dart';
 import '../../../../../common/widgets/Button/primarybutton.dart';
+import '../../../../../utlis/constants/size.dart';
 import '../../widgets/custom_text_field.dart';
 
 class EditClientDetails extends StatefulWidget {
@@ -92,7 +93,10 @@ class _EditClientDetailsState extends State<EditClientDetails> {
     return Scaffold(
       appBar: AppBar(title: const Text("Edit Client")),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.defaultPaddingHorizontal,
+          vertical: AppSizes.defaultPaddingVertical,
+        ),
         child: Column(
           children: [
             Row(

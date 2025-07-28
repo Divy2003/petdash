@@ -15,7 +15,8 @@ class AppSizes {
   static double iconLg = 32.0.r;
 
   // Paddings
-  static double defaultPadding = 16.0.w;
+  static double defaultPaddingHorizontal = 16.0.w;
+  static double defaultPaddingVertical = 14.0.h;
 
 
   // Font sizes

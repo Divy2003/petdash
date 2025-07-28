@@ -9,6 +9,9 @@ import 'package:petcare/services/user_session_service.dart';
 
 import '../../../../utlis/constants/colors.dart';
 import '../../../../utlis/constants/image_strings.dart';
+import '../../../../utlis/constants/size.dart';
+import 'Screen/MyPet/mypets.dart';
+import 'Screen/Save Address/saveAddressScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -33,15 +36,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Get.to(() => EditProfile());
             },
           ),
-          SizedBox(height: 40.h),
+          SizedBox(height: AppSizes.defaultSpace*2),
           Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(AppSizes.sm),
                     child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16.r),
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                       border: Border.all(color: AppColors.secondary),
                     ),
                       child: Column(
@@ -49,13 +52,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ProfileMenuTile(
                               icon: Icons.pets,
                               title: 'My Pets',
-                              onTap: (){},
+                              onTap: (){
+                                Get.to(() => MyPetsScreen());
+                              },
                           ),
                           Divider(height: 1,color: AppColors.divider,),
                           ProfileMenuTile(
                             icon: Icons.account_balance_wallet_outlined,
                             title: 'Saved Addresses',
-                            onTap: (){},
+                            onTap: (){
+                              Get.to(() => SaveAddressScreen());
+                            },
                           ),
                           Divider(height: 1,color: AppColors.divider,),
                           ProfileMenuTile(

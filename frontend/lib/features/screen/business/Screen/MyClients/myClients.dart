@@ -5,6 +5,7 @@ import 'package:petcare/common/widgets/Button/primarybutton.dart';
 import 'package:petcare/common/widgets/appbar/appbar.dart';
 
 import '../../../../../utlis/constants/colors.dart';
+import '../../../../../utlis/constants/size.dart';
 import 'AddNewClients.dart';
 import 'EditClients.dart';
 
@@ -32,7 +33,9 @@ class _MyClientsState extends State<MyClients> {
     return Scaffold(
       appBar: CustomAppBar(title: 'My Clients'),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.defaultPaddingHorizontal,
+          vertical: AppSizes.defaultPaddingVertical,),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

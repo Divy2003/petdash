@@ -69,7 +69,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         title: 'Subscription',
       ),
       body: Padding(
-        padding: EdgeInsets.all(AppSizes.md),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.defaultPaddingHorizontal,
+          vertical: AppSizes.defaultPaddingVertical,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

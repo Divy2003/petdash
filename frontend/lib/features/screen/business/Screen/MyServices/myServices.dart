@@ -48,7 +48,8 @@ class _MyServicesState extends State<MyServices> {
       appBar: CustomAppBar(title: 'My Services'),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          padding: EdgeInsets.symmetric( horizontal: AppSizes.defaultPaddingHorizontal,
+            vertical: AppSizes.defaultPaddingVertical,),
           child: Column(
             children: [
               PrimaryButton(

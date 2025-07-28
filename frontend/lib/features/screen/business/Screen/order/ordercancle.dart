@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:petcare/common/widgets/appbar/appbar.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/image_strings.dart';
+import '../../../../../utlis/constants/size.dart';
 import '../../BusinessProfileScreen.dart';
 
 class CancelledOrderDetails extends StatelessWidget {
@@ -14,7 +15,10 @@ class CancelledOrderDetails extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(title: 'Order ID: 45ADS3456'),
       body: Padding(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.defaultPaddingHorizontal,
+          vertical: AppSizes.defaultPaddingVertical,
+        ),
         child: Column(
           children: [
             /// Product Info
