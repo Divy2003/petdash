@@ -100,7 +100,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                       ProfileMenuTile(
                         icon: Icons.credit_card,
                         title: 'PaymentsMethod',
-                        onTap: () => Get.to(() => MyPaymentMethodsScreen()),
+                        onTap: () => Get.to(() => MyCardScreen()),
                       ),
                       Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
                       ProfileMenuTile(

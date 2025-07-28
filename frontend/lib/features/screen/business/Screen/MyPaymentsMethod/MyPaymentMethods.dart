@@ -1,100 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
-import '../../../../../common/widgets/Button/primarybutton.dart';
+import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../common/widgets/progessIndicator/threedotindicator.dart';
+import '../../../../../utlis/constants/colors.dart';
+import '../../../../../utlis/constants/image_strings.dart';
+import '../../../../../utlis/constants/size.dart';
+import '../../model/cardModel.dart';
 import 'addNewPayment.dart';
 
+class MyCardScreen extends StatefulWidget {
+  @override
+  State<MyCardScreen> createState() => _MyCardScreenState();
+}
 
-class MyPaymentMethodsScreen extends StatelessWidget {
-  final List<Map<String, String>> cards = [
-    {
-      'type': 'Visa',
-      'holder': 'Wade Warren',
-      'number': '4111111111111111',
-      'isDefault': 'true',
-    },
-    {
-      'type': 'MasterCard',
-      'holder': 'Jenny Wilson',
-      'number': '5142816465262563',
-      'isDefault': 'false',
-    },
-  ];
+class _MyCardScreenState extends State<MyCardScreen> {
+  List<CardModel> cards = [];
+
+  void _addCard(CardModel card) {
+    setState(() {
+      cards.add(card);
+    });
+  }
+
+  void _deleteCard(String id) {
+    setState(() {
+      cards.removeWhere((card) => card.id == id);
+    });
+  }
+
+  Widget _getCardLogo(String brand) {
+    switch (brand.toLowerCase()) {
+      case 'visa':
+        return Image.asset(AppImages.visa, width: 40);
+      case 'mastercard':
+        return Image.asset(AppImages.masterCard, width: 40);
+      default:
+        return const Icon(Icons.credit_card_outlined);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("My Payment Methods"),
-        leading: BackButton(),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Currently using", style: Theme.of(context).textTheme.titleMedium),
-            SizedBox(height: 16),
-            ...cards.map((card) => PaymentCardWidget(card: card)).toList(),
-            Spacer(),
-            PrimaryButton(
-              title: "Add New Card",
-              onPressed: () {
-                Get.to(() => AddNewCardScreen());
-                // Add new card logic
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class PaymentCardWidget extends StatelessWidget {
-  final Map<String, String> card;
-
-  const PaymentCardWidget({required this.card});
-
-  String getMaskedNumber(String number) {
-    return '**** **** **** ${number.substring(number.length - 4)}';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isVisa = card['type'] == 'Visa';
-    return Container(
-      margin: EdgeInsets.only(bottom: 16),
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          colors: isVisa ? [Colors.blue.shade700, Colors.blueAccent] : [Colors.deepPurple.shade800, Colors.purpleAccent],
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      appBar: CustomAppBar(title: 'My Payment Methods'),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
         children: [
-          if (card['isDefault'] == 'true')
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
+          // Card List
+          ...cards.map(
+                (card) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(AppSizes.borderRadiusSm),
+                ),
+                child: ListTile(
+                  leading: _getCardLogo(card.brand),
+                  title: Text("**** **** **** ${card.last4}",
+                      style: const TextStyle(color: Colors.white)),
+                  subtitle: Text("exp. date ${card.exp}",
+                      style: const TextStyle(color: Colors.white70)),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete, color: AppColors.error),
+                    onPressed: () => _deleteCard(card.id),
+                  ),
+                ),
               ),
-              child: Text("Default", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
-          SizedBox(height: 16),
-          Text(
-            card['holder'] ?? '',
-            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
-          SizedBox(height: 8),
-          Text(
-            getMaskedNumber(card['number']!),
-            style: TextStyle(color: Colors.white70),
+
+          const SizedBox(height: 10),
+
+          // Add New Card
+          InkWell(
+            onTap: () {
+              Get.to(() => AddCardScreen(onSave: _addCard));
+            },
+            child: Container(
+              height: 54,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
+                border: Border.all(color: AppColors.primary),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.add, color: AppColors.primary),
+                    const SizedBox(width: 8),
+                    Text("Add New Card",
+                        style: TextStyle(color: AppColors.primary)),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),

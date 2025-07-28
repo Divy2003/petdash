@@ -10,8 +10,10 @@ import 'package:petcare/services/user_session_service.dart';
 import '../../../../utlis/constants/colors.dart';
 import '../../../../utlis/constants/image_strings.dart';
 import '../../../../utlis/constants/size.dart';
+import 'Screen/MyOrder/myorderScreen.dart';
 import 'Screen/MyPet/mypets.dart';
 import 'Screen/Save Address/saveAddressScreen.dart';
+import 'Screen/Support/supportScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -74,7 +76,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ProfileMenuTile(
                             icon: Icons.shopping_bag_outlined,
                             title: 'My order',
-                            onTap: (){},
+                            onTap: (){
+                              Get.to(() => MyOrdersScreen());
+                            },
                           ),
                           Divider(height: 1,color: AppColors.divider,),
                           ProfileMenuTile(
@@ -87,6 +91,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             icon: Icons.help_sharp,
                             title: 'Help',
                             onTap: (){},
+                          ),
+                          Divider(height: 1,color: AppColors.divider,),
+                          ProfileMenuTile(
+                            icon: Icons.support_agent_outlined,
+                            title: 'Support',
+                            onTap: (){
+                              Get.to(() => SupportScreen());
+                            },
                           ),
                           Divider(height: 1,color: AppColors.divider,),
                           ProfileMenuTile(
