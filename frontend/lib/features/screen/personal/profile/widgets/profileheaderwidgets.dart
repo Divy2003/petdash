@@ -5,8 +5,6 @@ import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/image_strings.dart';
 import '../../../../../utlis/constants/size.dart';
 
-
-
 class ProfileHeaderWidget extends StatelessWidget {
   final String name;
   final String location;
@@ -55,7 +53,9 @@ class ProfileHeaderWidget extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.white, width: 5.w),
               image: DecorationImage(
-                image: AssetImage(imagePath),
+                image: imagePath.startsWith('http')
+                    ? NetworkImage(imagePath) as ImageProvider
+                    : AssetImage(imagePath),
                 fit: BoxFit.cover,
               ),
             ),
@@ -74,27 +74,29 @@ class ProfileHeaderWidget extends StatelessWidget {
                   Text(
                     name,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
                   ),
                   if (onEdit != null)
                     IconButton(
                       onPressed: onEdit,
-                      icon: Icon(Icons.edit, size: AppSizes.iconSm, color: AppColors.white),
+                      icon: Icon(Icons.edit,
+                          size: AppSizes.iconSm, color: AppColors.white),
                     ),
                 ],
               ),
               Row(
                 children: [
-                  Icon(Icons.location_on_outlined, size: AppSizes.iconSm, color: AppColors.white),
+                  Icon(Icons.location_on_outlined,
+                      size: AppSizes.iconSm, color: AppColors.white),
                   SizedBox(width: 5.w),
                   Text(
                     location,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ],
               )

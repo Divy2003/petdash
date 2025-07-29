@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:petcare/common/widgets/Tile/profilemenutile.dart';
 import 'package:petcare/features/screen/auth/login/loginscreen.dart';
+import 'package:petcare/features/screen/business/profiles/Createprofile.dart';
 import 'package:petcare/features/screen/personal/profile/widgets/editProfile.dart';
 import 'package:petcare/features/screen/personal/profile/widgets/profileheaderwidgets.dart';
 import 'package:petcare/services/user_session_service.dart';
@@ -59,6 +60,14 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                         icon: Icons.shopping_bag,
                         title: 'My Products',
                         onTap: () => Get.to(() => MyProducts()),
+                      ),
+                      Divider(
+                          height: AppSizes.dividerHeight,
+                          color: AppColors.divider),
+                      ProfileMenuTile(
+                        icon: Icons.calendar_today,
+                        title: 'Create Profile',
+                        onTap: () => Get.to(() => CreateProfile()),
                       ),
                       Divider(
                           height: AppSizes.dividerHeight,

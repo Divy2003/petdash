@@ -5,20 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1353c25d-7094-4b07-9800-038a75bcafb3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/lib/services/api_test_service.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/profiles/Createprofile.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/AugmentWebviewStateStore.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AugmentWebviewStateStore.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/routes/serviceRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/routes/serviceRoutes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/loginscreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/loginscreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/BusinessProfileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/BusinessProfileScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/addnewServices.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/addnewServices.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/editServicesdetails.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/editServicesdetails.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/myServices.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/myServices.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/home/widgets/home_appbar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/home/widgets/home_appbar.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/services/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/utlis/app_config/app_config.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/utlis/app_config/app_config.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/profileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/profileScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/widgets/editProfile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/widgets/editProfile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/widgets/profileheaderwidgets.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/widgets/profileheaderwidgets.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
