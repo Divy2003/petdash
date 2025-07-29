@@ -26,7 +26,12 @@ exports.createService = async (req, res) => {
 
     const serviceData = { ...otherData, category, business: req.user.id };
     if (req.files && req.files.length > 0) {
-      serviceData.images = req.files.map(file => file.path);
+      serviceData.images = req.files.map(file => {
+        // Convert Windows backslashes to forward slashes and ensure it starts with /uploads
+        const normalizedPath = file.path.replace(/\\/g, '/');
+        const uploadsIndex = normalizedPath.indexOf('uploads/');
+        return uploadsIndex !== -1 ? '/' + normalizedPath.substring(uploadsIndex) : '/' + normalizedPath;
+      });
     }
     // Parse availableFor if sent as JSON string
     if (typeof serviceData.availableFor === 'string') serviceData.availableFor = JSON.parse(serviceData.availableFor);
@@ -62,7 +67,12 @@ exports.updateService = async (req, res) => {
     }
 
     if (req.files && req.files.length > 0) {
-      updateFields.images = req.files.map(file => file.path);
+      updateFields.images = req.files.map(file => {
+        // Convert Windows backslashes to forward slashes and ensure it starts with /uploads
+        const normalizedPath = file.path.replace(/\\/g, '/');
+        const uploadsIndex = normalizedPath.indexOf('uploads/');
+        return uploadsIndex !== -1 ? '/' + normalizedPath.substring(uploadsIndex) : '/' + normalizedPath;
+      });
     }
     if (typeof updateFields.availableFor === 'string') updateFields.availableFor = JSON.parse(updateFields.availableFor);
 
