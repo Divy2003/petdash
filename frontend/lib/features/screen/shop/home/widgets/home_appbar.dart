@@ -6,9 +6,14 @@ import '../../../../../utlis/constants/size.dart';
 import '../../../../../provider/location_provider.dart';
 import '../../../location/location_selection_modal.dart';
 
-class HomeAppBar extends StatelessWidget {
+class HomeAppBar extends StatefulWidget {
   const HomeAppBar({super.key});
 
+  @override
+  State<HomeAppBar> createState() => _HomeAppBarState();
+}
+
+class _HomeAppBarState extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,36 +25,35 @@ class HomeAppBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Icon(Icons.location_pin,
-                  size: AppSizes.iconMd, color: Colors.black),
-              SizedBox(width: AppSizes.sm),
-              TextButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (context) => const LocationSelectionModal(),
+          Icon(Icons.location_pin,
+              size: AppSizes.iconMd, color: AppColors.primary),
+          SizedBox(width: AppSizes.sm),
+          Expanded(
+            child: TextButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const LocationSelectionModal(),
+                );
+              },
+              child: Consumer<LocationProvider>(
+                builder: (context, locationProvider, child) {
+                  return Text(
+                    locationProvider.selectedAddress ??
+                        locationProvider.currentAddress ??
+                        "My Location",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: AppColors.primary,
+                        ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
                   );
                 },
-                child: Consumer<LocationProvider>(
-                  builder: (context, locationProvider, child) {
-                    return Text(
-                      locationProvider.selectedAddress ??
-                          locationProvider.currentAddress ??
-                          "My Location",
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: AppColors.primary,
-                          ),
-                      maxLines: 2,
-                      overflow: TextOverflow.clip,
-                    );
-                  },
-                ),
               ),
-            ],
+            ),
           ),
           Stack(
             children: [

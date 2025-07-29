@@ -7,7 +7,8 @@ class ApiService {
   static final String baseUrl = AppConfig.baseUrl;
 
   // Get headers with optional authentication
-  static Future<Map<String, String>> _getHeaders({bool requireAuth = false}) async {
+  static Future<Map<String, String>> _getHeaders(
+      {bool requireAuth = false}) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
@@ -31,7 +32,7 @@ class ApiService {
   }) async {
     try {
       String url = '$baseUrl$endpoint';
-      
+
       if (queryParams != null && queryParams.isNotEmpty) {
         final uri = Uri.parse(url);
         final newUri = uri.replace(queryParameters: queryParams);
@@ -59,6 +60,44 @@ class ApiService {
         Uri.parse('$baseUrl$endpoint'),
         headers: headers,
         body: json.encode(data),
+      );
+
+      return _handleResponse(response);
+    } catch (e) {
+      throw ApiException('Network error: ${e.toString()}');
+    }
+  }
+
+  // Generic PUT request
+  static Future<Map<String, dynamic>> put(
+    String endpoint,
+    Map<String, dynamic> data, {
+    bool requireAuth = false,
+  }) async {
+    try {
+      final headers = await _getHeaders(requireAuth: requireAuth);
+      final response = await http.put(
+        Uri.parse('$baseUrl$endpoint'),
+        headers: headers,
+        body: json.encode(data),
+      );
+
+      return _handleResponse(response);
+    } catch (e) {
+      throw ApiException('Network error: ${e.toString()}');
+    }
+  }
+
+  // Generic DELETE request
+  static Future<Map<String, dynamic>> delete(
+    String endpoint, {
+    bool requireAuth = false,
+  }) async {
+    try {
+      final headers = await _getHeaders(requireAuth: requireAuth);
+      final response = await http.delete(
+        Uri.parse('$baseUrl$endpoint'),
+        headers: headers,
       );
 
       return _handleResponse(response);

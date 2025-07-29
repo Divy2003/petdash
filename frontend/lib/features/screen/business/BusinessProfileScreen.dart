@@ -60,55 +60,73 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                         title: 'My Products',
                         onTap: () => Get.to(() => MyProducts()),
                       ),
-                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
+                      Divider(
+                          height: AppSizes.dividerHeight,
+                          color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.calendar_today,
                         title: 'Appointments',
                         onTap: () => Get.to(() => AppointmentScreen()),
                       ),
-                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
+                      Divider(
+                          height: AppSizes.dividerHeight,
+                          color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.receipt_long,
                         title: 'Orders',
                         onTap: () => Get.to(() => OrderScreen()),
                       ),
-                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
+                      Divider(
+                          height: AppSizes.dividerHeight,
+                          color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.miscellaneous_services,
                         title: 'My Services',
                         onTap: () => Get.to(() => MyServices()),
                       ),
-                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
+                      Divider(
+                          height: AppSizes.dividerHeight,
+                          color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.group,
                         title: 'My Clients',
                         onTap: () => Get.to(() => MyClients()),
                       ),
-                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
+                      Divider(
+                          height: AppSizes.dividerHeight,
+                          color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.article_outlined,
                         title: 'My Articles',
                         onTap: () => Get.to(() => MyArticles()),
                       ),
-                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
+                      Divider(
+                          height: AppSizes.dividerHeight,
+                          color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.bar_chart,
                         title: 'Reports',
                         onTap: () => Get.to(() => StatisticsScreen()),
                       ),
-                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
+                      Divider(
+                          height: AppSizes.dividerHeight,
+                          color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.credit_card,
                         title: 'PaymentsMethod',
                         onTap: () => Get.to(() => MyCardScreen()),
                       ),
-                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
+                      Divider(
+                          height: AppSizes.dividerHeight,
+                          color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.subscriptions,
                         title: 'Subscription',
                         onTap: () => Get.to(() => SubscriptionScreen()),
                       ),
-                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
+                      Divider(
+                          height: AppSizes.dividerHeight,
+                          color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.swap_horiz,
                         title: 'Switch to Service Account',
@@ -116,7 +134,9 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                           UserSessionService.showAccountSwitchDialog(context);
                         },
                       ),
-                      Divider(height: AppSizes.dividerHeight, color: AppColors.divider),
+                      Divider(
+                          height: AppSizes.dividerHeight,
+                          color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.logout,
                         title: 'Logout',
@@ -129,49 +149,66 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                               return Dialog(
                                 backgroundColor: AppColors.white,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
+                                  borderRadius: BorderRadius.circular(
+                                      AppSizes.cardRadiusLg),
                                 ),
                                 child: Padding(
                                   padding: EdgeInsets.all(AppSizes.lg),
                                   child: IntrinsicHeight(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
                                       children: [
                                         Text(
                                           'Logout',
                                           textAlign: TextAlign.center,
-                                          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                                            color: AppColors.primary,
-                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(
+                                                color: AppColors.primary,
+                                              ),
                                         ),
                                         SizedBox(height: AppSizes.sm),
                                         Text(
                                           'Are you sure you want to logout?',
                                           textAlign: TextAlign.center,
-                                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                            color: AppColors.primary,
-                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(
+                                                color: AppColors.primary,
+                                              ),
                                         ),
                                         SizedBox(height: AppSizes.md),
                                         Row(
                                           children: [
                                             Expanded(
                                               child: OutlinedButton(
-                                                onPressed: () => Navigator.pop(context),
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
                                                 style: OutlinedButton.styleFrom(
-                                                  side: BorderSide(color: AppColors.primary),
+                                                  side: BorderSide(
+                                                      color: AppColors.primary),
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(AppSizes.buttonRadius),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            AppSizes
+                                                                .buttonRadius),
                                                   ),
                                                   padding: EdgeInsets.symmetric(
-                                                    vertical: AppSizes.buttonHeight,
+                                                    vertical:
+                                                        AppSizes.buttonHeight,
                                                   ),
                                                 ),
                                                 child: Text(
                                                   'Cancel',
-                                                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                                    color: AppColors.black,
-                                                  ),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium!
+                                                      .copyWith(
+                                                        color: AppColors.black,
+                                                      ),
                                                 ),
                                               ),
                                             ),
@@ -180,27 +217,38 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-                                                  UserSessionService.logout(context);
+                                                  UserSessionService.logout(
+                                                      context);
                                                   Navigator.pushAndRemoveUntil(
                                                     context,
-                                                    MaterialPageRoute(builder: (_) => LoginScreen()),
-                                                        (route) => false,
+                                                    MaterialPageRoute(
+                                                        builder: (_) =>
+                                                            LoginScreen()),
+                                                    (route) => false,
                                                   );
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: AppColors.primary,
+                                                  backgroundColor:
+                                                      AppColors.primary,
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(AppSizes.buttonRadius),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            AppSizes
+                                                                .buttonRadius),
                                                   ),
                                                   padding: EdgeInsets.symmetric(
-                                                    vertical: AppSizes.buttonHeight,
+                                                    vertical:
+                                                        AppSizes.buttonHeight,
                                                   ),
                                                 ),
                                                 child: Text(
                                                   'Logout',
-                                                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                                    color: AppColors.white,
-                                                  ),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium!
+                                                      .copyWith(
+                                                        color: AppColors.white,
+                                                      ),
                                                 ),
                                               ),
                                             ),

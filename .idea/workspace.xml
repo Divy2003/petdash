@@ -5,17 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1353c25d-7094-4b07-9800-038a75bcafb3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/lib/services/api_test_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/AugmentWebviewStateStore.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AugmentWebviewStateStore.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/common/widgets/progessIndicator/threedotindicator.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/common/widgets/progessIndicator/threedotindicator.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/routes/serviceRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/routes/serviceRoutes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/loginscreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/auth/login/loginscreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/BusinessProfileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/BusinessProfileScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyPaymentsMethod/MyPaymentMethods.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyPaymentsMethod/MyPaymentMethods.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyPaymentsMethod/addNewPayment.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyPaymentsMethod/addNewPayment.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/model/cardModel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/model/cardModel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/Screen/MyOrder/myorderScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/Screen/MyOrder/myorderScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/Screen/MyOrder/orderDetailsScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/Screen/MyOrder/orderDetailsScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/Screen/Support/addNewSupport.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/Screen/Support/addNewSupport.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/Screen/Support/supportScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/Screen/Support/supportScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/profileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/personal/profile/profileScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/addnewServices.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/addnewServices.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/editServicesdetails.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/editServicesdetails.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/myServices.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/business/Screen/MyServices/myServices.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/features/screen/shop/home/widgets/home_appbar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/features/screen/shop/home/widgets/home_appbar.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/utlis/app_config/app_config.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/utlis/app_config/app_config.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,25 +74,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Flutter.petdash.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/flutter project/petdash/petdash/frontend/assets/cards&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;dart.settings&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Flutter.petdash.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "dev",
+    "io.flutter.reload.alreadyRun": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/flutter project/petdash/petdash/frontend/assets/cards",
+    "settings.editor.selected.configurable": "device.mirroring",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\flutter project\petdash\petdash\frontend\assets\cards" />

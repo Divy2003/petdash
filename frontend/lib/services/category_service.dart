@@ -1,3 +1,5 @@
+import 'package:petcare/utlis/constants/image_strings.dart';
+
 import '../models/category_model.dart';
 import 'api_service.dart';
 
@@ -6,12 +8,14 @@ class CategoryService {
   static Future<List<CategoryModel>> getPublicCategories() async {
     try {
       final response = await ApiService.get('/category/public');
-      
+
       if (response['categories'] != null) {
         final List<dynamic> categoriesJson = response['categories'];
-        return categoriesJson.map((json) => CategoryModel.fromJson(json)).toList();
+        return categoriesJson
+            .map((json) => CategoryModel.fromJson(json))
+            .toList();
       }
-      
+
       return [];
     } catch (e) {
       throw Exception('Failed to fetch categories: ${e.toString()}');
@@ -21,12 +25,13 @@ class CategoryService {
   // Get single category by ID (requires authentication)
   static Future<CategoryModel?> getCategoryById(String categoryId) async {
     try {
-      final response = await ApiService.get('/category/$categoryId', requireAuth: true);
-      
+      final response =
+          await ApiService.get('/category/$categoryId', requireAuth: true);
+
       if (response['category'] != null) {
         return CategoryModel.fromJson(response['category']);
       }
-      
+
       return null;
     } catch (e) {
       throw Exception('Failed to fetch category: ${e.toString()}');
@@ -38,25 +43,25 @@ class CategoryService {
     switch (categoryName.toLowerCase()) {
       case 'pet sitting':
       case 'sitting':
-        return 'assets/images/services/sitting.png';
+        return AppImages.sitting;
       case 'veterinary':
       case 'health':
       case 'medical':
-        return 'assets/images/services/health.png';
+        return AppImages.sitting;
       case 'pet boarding':
       case 'boarding':
-        return 'assets/images/services/boarding.png';
+        return AppImages.sitting;
       case 'pet training':
       case 'training':
-        return 'assets/images/services/training.png';
+        return AppImages.sitting;
       case 'pet grooming':
       case 'grooming':
-        return 'assets/images/services/grooming.png';
+        return AppImages.sitting;
       case 'dog walking':
       case 'walking':
-        return 'assets/images/services/walking.png';
+        return AppImages.sitting;
       default:
-        return 'assets/images/services/default.png';
+        return AppImages.sitting;
     }
   }
 

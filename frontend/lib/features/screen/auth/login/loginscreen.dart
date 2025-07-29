@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Welcome Back!',
+                'Welcome \n Back!',
                 style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                   color: AppColors.secondary,
                 ),
