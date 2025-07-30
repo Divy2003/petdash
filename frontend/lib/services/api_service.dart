@@ -108,13 +108,34 @@ class ApiService {
 
   // Handle HTTP response
   static Map<String, dynamic> _handleResponse(http.Response response) {
-    final responseBody = json.decode(response.body);
+    print('📊 Response Status: ${response.statusCode}');
+    print('📄 Response Body (first 200 chars): ${response.body.length > 200 ? response.body.substring(0, 200) : response.body}');
 
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return responseBody;
-    } else {
+    // Check if response is HTML (error page)
+    if (response.body.trim().startsWith('<!DOCTYPE') || response.body.trim().startsWith('<html')) {
       throw ApiException(
-        responseBody['message'] ?? 'Request failed',
+        'Server returned HTML instead of JSON. Server may be down or endpoint incorrect. Status: ${response.statusCode}',
+        statusCode: response.statusCode,
+      );
+    }
+
+    try {
+      final responseBody = json.decode(response.body);
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return responseBody;
+      } else {
+        throw ApiException(
+          responseBody['message'] ?? 'Request failed',
+          statusCode: response.statusCode,
+        );
+      }
+    } catch (e) {
+      if (e is ApiException) {
+        rethrow;
+      }
+      throw ApiException(
+        'Invalid JSON response from server: ${e.toString()}',
         statusCode: response.statusCode,
       );
     }

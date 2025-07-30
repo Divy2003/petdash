@@ -25,64 +25,19 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  ProfileModel? _profile;
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadProfile();
-  }
-
-  Future<void> _loadProfile() async {
-    try {
-      final profileData = await ProfileService.getProfile();
-      final profile = ProfileModel.fromJson(profileData);
-
-      setState(() {
-        _profile = profile;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to load profile: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
-
-  Future<void> _refreshProfile() async {
-    setState(() {
-      _isLoading = true;
-    });
-    await _loadProfile();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
+      body: Column(
               children: [
                 // cart user
                 ProfileHeaderWidget(
-                  name: _profile?.name ?? 'User',
-                  location: _profile?.displayAddress ?? 'No address set',
-                  imagePath: _profile?.profileImage ?? AppImages.person,
-                  onEdit: () async {
-                    final result = await Get.to(() => EditProfile());
-                    if (result == true) {
-                      // Refresh profile data if edit was successful
-                      _refreshProfile();
-                    }
+                  name: 'User Name',
+                  location: 'New York, USA',
+                  imagePath:  AppImages.person,
+                  onEdit: ()  {
+                     Get.to(() => EditProfile());
                   },
                 ),
                 SizedBox(height: AppSizes.defaultSpace * 2),
