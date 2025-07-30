@@ -109,14 +109,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
             borderSide: BorderSide(
-              color: AppColors.borderColor,
+              color: AppColors.textPrimaryColor,
               width: 2,
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
             borderSide: BorderSide(
-              color: AppColors.borderColor,
+              color: AppColors.textPrimaryColor,
               width: 2,
             ),
           ),
@@ -184,7 +184,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 Text(
                   'Enter the 6-digit code sent to ${provider.email ?? 'your email'}',
                   style: TextStyle(
-                    color: AppColors.borderColor,
+                    color: AppColors.textPrimaryColor,
                     fontFamily: 'Encode Sans Expanded',
                     fontWeight: FontWeight.w400,
                     fontSize: AppSizes.fontSizeMd,

@@ -38,12 +38,21 @@ dependencies:
   flutter_screenutil: ^5.9.3
   google_fonts: ^6.2.1
   curved_labeled_navigation_bar: ^2.0.6
-
+  intl: ^0.18.1
+  image_picker: ^1.0.5
+  dotted_border: ^2.0.0
+  fl_chart: ^0.71.0
+  iconsax_flutter: ^1.0.1
 
   #auth
   http: ^1.4.0
   provider: ^6.1.5
-
+  shared_preferences: ^2.2.2
+  url_launcher: ^6.2.6
+  google_maps_flutter: ^2.12.3
+  geolocator: ^11.0.0
+  permission_handler: ^12.0.1
+  geocoding: ^4.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -70,6 +79,14 @@ flutter:
     - assets/auth_images/welcome.png
     - assets/auth_images/google.png
     - assets/auth_images/facebook.png
+    - assets/homeimage/
+    - assets/Dog/
+    - assets/profile/
+    - assets/products/
+    - assets/store/
+    - assets/person/
+    - assets/cards/
+
 
   fonts:
     - family: Playfair Display

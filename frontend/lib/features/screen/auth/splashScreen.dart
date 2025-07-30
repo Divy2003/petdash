@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
-import 'package:petcare/features/screen/auth/welcomeScreen.dart';
+import 'package:petcare/utlis/helpers/navigation_helper.dart';
 
 import '../../../utlis/constants/image_strings.dart';
 
@@ -21,9 +21,15 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(seconds: 5), () {
-        // Debug print
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WelcomeScreen(),));
+      Future.delayed(Duration(seconds: 5), () async {
+        // Get the appropriate initial screen based on user session
+        final initialScreen = await NavigationHelper.getInitialScreen();
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => initialScreen),
+          );
+        }
       });
       // Safe to load data or open route after first render
     });
@@ -54,8 +60,10 @@ class _SplashScreenState extends State<SplashScreen>
           // Logo centered
             Padding(
             padding: EdgeInsets.only(
-              top: 150,
+              top: 200,
               bottom: 250,
+              left: 10,
+              right: 10,
             ),
               child: Image.asset(
                 AppImages.logo,

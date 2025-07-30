@@ -25,11 +25,9 @@ class PrimaryButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           title ?? '',
-          style: const TextStyle(
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(
             color: AppColors.white,
-            fontFamily: 'Encode Sans Expanded',
-            fontWeight: FontWeight.w700,
-            fontSize: AppSizes.fontSizeLg,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),

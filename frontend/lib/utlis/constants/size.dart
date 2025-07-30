@@ -10,9 +10,14 @@ class AppSizes {
 
   // Icon sizes
   static double iconXs = 12.0.r;
-  static double iconSm = 16.0.r;
+  static double iconSm = 18.0.r;
   static double iconMd = 24.0.r;
   static double iconLg = 32.0.r;
+
+  // Paddings
+  static double defaultPaddingHorizontal = 16.0.w;
+  static double defaultPaddingVertical = 14.0.h;
+
 
   // Font sizes
   static const double fontSizeXs = 12.0;
@@ -35,7 +40,7 @@ class AppSizes {
   static double imageThumbSize = 80.0.w;
 
   // Default spacing between sections
-  static double defaultSpace = 24.0.h;
+  static double defaultSpace = 20.0.h;
   static double spaceBtwItems = 16.0.h;
   static double spaceBtwSections = 32.0.h;
 
