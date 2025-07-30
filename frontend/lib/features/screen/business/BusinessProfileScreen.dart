@@ -65,7 +65,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                           height: AppSizes.dividerHeight,
                           color: AppColors.divider),
                       ProfileMenuTile(
-                        icon: Icons.calendar_today,
+                        icon: Icons.supervised_user_circle,
                         title: 'Create Profile',
                         onTap: () => Get.to(() => CreateProfile()),
                       ),
