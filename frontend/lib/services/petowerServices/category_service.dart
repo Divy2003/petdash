@@ -1,7 +1,7 @@
 import 'package:petcare/utlis/constants/image_strings.dart';
 
-import '../models/category_model.dart';
-import 'api_service.dart';
+import '../../models/category_model.dart';
+import '../api_service.dart';
 
 class CategoryService {
   // Get all active categories for public display

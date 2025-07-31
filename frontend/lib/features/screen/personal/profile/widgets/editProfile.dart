@@ -8,7 +8,7 @@ import '../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/size.dart';
-import '../../../../../services/profile_service.dart';
+import '../../../../../services/BusinessServices/profile_service.dart';
 import '../../../../../models/profile_model.dart';
 
 class EditProfile extends StatefulWidget {

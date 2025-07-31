@@ -1,5 +1,5 @@
-import '../models/business_model.dart';
-import 'api_service.dart';
+import '../../models/business_model.dart';
+import '../api_service.dart';
 
 class BusinessService {
   // Get businesses by category

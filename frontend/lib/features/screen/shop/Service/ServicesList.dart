@@ -37,7 +37,9 @@ class _ServicesListState extends State<ServicesList> {
     // Load businesses when widget initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.category != null) {
-        context.read<BusinessProvider>().loadBusinessesByCategory(widget.category!);
+        context
+            .read<BusinessProvider>()
+            .loadBusinessesByCategory(widget.category!);
       }
     });
   }
@@ -61,13 +63,15 @@ class _ServicesListState extends State<ServicesList> {
                 Expanded(
                   child: Row(
                     children: [
-                      Icon(Icons.sort, size: AppSizes.iconMd, color: AppColors.textPrimaryColor),
+                      Icon(Icons.sort,
+                          size: AppSizes.iconMd,
+                          color: AppColors.textPrimaryColor),
                       SizedBox(width: AppSizes.xs),
                       Text(
                         'Sort',
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.secondary,
-                        ),
+                              color: AppColors.secondary,
+                            ),
                       ),
                     ],
                   ),
@@ -81,13 +85,15 @@ class _ServicesListState extends State<ServicesList> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.filter_list, size: AppSizes.iconMd, color: AppColors.textPrimaryColor),
+                      Icon(Icons.filter_list,
+                          size: AppSizes.iconMd,
+                          color: AppColors.textPrimaryColor),
                       SizedBox(width: AppSizes.xs),
                       Text(
                         'Filter',
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.secondary,
-                        ),
+                              color: AppColors.secondary,
+                            ),
                       ),
                     ],
                   ),
@@ -157,15 +163,15 @@ class _ServicesListState extends State<ServicesList> {
           Text(
             'Failed to load businesses',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: AppColors.error,
-            ),
+                  color: AppColors.error,
+                ),
           ),
           SizedBox(height: AppSizes.sm),
           Text(
             businessProvider.error ?? 'Unknown error',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppColors.textSecondary,
-            ),
+                  color: AppColors.textSecondary,
+                ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: AppSizes.lg),
@@ -200,9 +206,9 @@ class _ServicesListState extends State<ServicesList> {
         return GestureDetector(
           onTap: () {
             Get.to(() => ServiceDetails(
-              providerName: business.name,
-              businessId: business.id,
-            ));
+                  providerName: business.name,
+                  businessId: business.id,
+                ));
           },
           child: _buildBusinessCard(business),
         );
@@ -303,10 +309,11 @@ class _ServicesListState extends State<ServicesList> {
                         SizedBox(width: 4.w),
                         Text(
                           business.ratingDisplay,
-                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: AppColors.white,
-                            fontSize: AppSizes.fontSizeSm.sp,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: AppColors.white,
+                                    fontSize: AppSizes.fontSizeSm.sp,
+                                  ),
                         ),
                       ],
                     ),
@@ -320,7 +327,7 @@ class _ServicesListState extends State<ServicesList> {
             padding: EdgeInsets.all(AppSizes.md),
             child: Row(
               children: [
-                // Logo placeholder
+                // Business Logo
                 Container(
                   width: 40.w,
                   height: 40.h,
@@ -328,11 +335,7 @@ class _ServicesListState extends State<ServicesList> {
                     borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
                     color: AppColors.primary.withOpacity(0.1),
                   ),
-                  child: Icon(
-                    Icons.business,
-                    color: AppColors.primary,
-                    size: 20,
-                  ),
+                  child: _buildBusinessLogo(business),
                 ),
                 SizedBox(width: AppSizes.sm),
 
@@ -344,18 +347,18 @@ class _ServicesListState extends State<ServicesList> {
                       Text(
                         business.name,
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: AppSizes.fontSizeMd.sp,
-                          color: AppColors.secondary,
-                        ),
+                              fontWeight: FontWeight.w600,
+                              fontSize: AppSizes.fontSizeMd.sp,
+                              color: AppColors.secondary,
+                            ),
                       ),
                       SizedBox(height: 4.h),
                       Text(
                         business.openStatus,
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: AppColors.textPrimaryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
+                              color: AppColors.textPrimaryColor,
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
                     ],
                   ),
@@ -365,8 +368,8 @@ class _ServicesListState extends State<ServicesList> {
                 Text(
                   business.distanceDisplay,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: AppColors.textPrimaryColor,
-                  ),
+                        color: AppColors.textPrimaryColor,
+                      ),
                 ),
               ],
             ),
@@ -428,9 +431,9 @@ class _ServicesListState extends State<ServicesList> {
                       Text(
                         provider['rating'].toString(),
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: AppColors.white,
-                          fontSize: AppSizes.fontSizeSm.sp,
-                        ),
+                              color: AppColors.white,
+                              fontSize: AppSizes.fontSizeSm.sp,
+                            ),
                       ),
                     ],
                   ),
@@ -466,18 +469,18 @@ class _ServicesListState extends State<ServicesList> {
                       Text(
                         provider['name'],
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: AppSizes.fontSizeMd.sp,
-                          color: AppColors.secondary,
-                        ),
+                              fontWeight: FontWeight.w600,
+                              fontSize: AppSizes.fontSizeMd.sp,
+                              color: AppColors.secondary,
+                            ),
                       ),
                       SizedBox(height: 4.h),
                       Text(
                         provider['openTime'],
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: AppColors.textPrimaryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
+                              color: AppColors.textPrimaryColor,
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
                     ],
                   ),
@@ -487,14 +490,62 @@ class _ServicesListState extends State<ServicesList> {
                 Text(
                   provider['distance'],
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: AppColors.textPrimaryColor,
-                  ),
+                        color: AppColors.textPrimaryColor,
+                      ),
                 ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildBusinessLogo(business) {
+    // Try to get shop image from the business data
+    String? logoUrl;
+
+    // Prefer shopImage for logo, fallback to profileImage
+    if (business.shopImage != null && business.shopImage!.isNotEmpty) {
+      logoUrl = business.shopImage;
+    } else if (business.profileImage != null &&
+        business.profileImage!.isNotEmpty) {
+      logoUrl = business.profileImage;
+    }
+
+    if (logoUrl != null && logoUrl.isNotEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
+        child: Image.network(
+          logoUrl,
+          width: 40.w,
+          height: 40.h,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Icon(
+              Icons.business,
+              color: AppColors.primary,
+              size: 20,
+            );
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    // Fallback to icon
+    return Icon(
+      Icons.business,
+      color: AppColors.primary,
+      size: 20,
     );
   }
 }

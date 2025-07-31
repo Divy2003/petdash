@@ -5,6 +5,7 @@ class BusinessModel {
   final String? phone;
   final String? description;
   final String? profileImage;
+  final String? shopImage;
   final BusinessAddress? address;
   final List<String> categories;
   final double? rating;
@@ -20,6 +21,7 @@ class BusinessModel {
     this.phone,
     this.description,
     this.profileImage,
+    this.shopImage,
     this.address,
     required this.categories,
     this.rating,
@@ -30,20 +32,117 @@ class BusinessModel {
   });
 
   factory BusinessModel.fromJson(Map<String, dynamic> json) {
+    // Handle profile image
+    String? profileImagePath = json['profileImage'];
+    String? fullProfileImageUrl;
+
+    if (profileImagePath != null && profileImagePath.isNotEmpty) {
+      if (profileImagePath.startsWith('http')) {
+        fullProfileImageUrl = profileImagePath;
+      } else {
+        String cleanPath = profileImagePath.startsWith('/')
+            ? profileImagePath.substring(1)
+            : profileImagePath;
+        fullProfileImageUrl = 'http://localhost:5000/$cleanPath';
+      }
+    }
+
+    // Handle shop image (for logo)
+    String? shopImagePath = json['shopImage'];
+    String? fullShopImageUrl;
+
+    if (shopImagePath != null && shopImagePath.isNotEmpty) {
+      if (shopImagePath.startsWith('http')) {
+        fullShopImageUrl = shopImagePath;
+      } else {
+        String cleanPath = shopImagePath.startsWith('/')
+            ? shopImagePath.substring(1)
+            : shopImagePath;
+        fullShopImageUrl = 'http://localhost:5000/$cleanPath';
+      }
+    }
+
+    // Handle business hours from API format
+    BusinessHours? businessHours;
+    if (json['shopOpenTime'] != null && json['shopCloseTime'] != null) {
+      // Create a simple business hours object from shop times
+      Map<String, DayHours> hoursMap = {};
+
+      // Assume the shop is open Monday to Friday with the given times
+      List<String> weekdays = [
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday'
+      ];
+      for (String day in weekdays) {
+        hoursMap[day] = DayHours(
+          isOpen: true,
+          openTime: json['shopOpenTime'],
+          closeTime: json['shopCloseTime'],
+        );
+      }
+
+      // Weekend closed
+      hoursMap['saturday'] = DayHours(isOpen: false);
+      hoursMap['sunday'] = DayHours(isOpen: false);
+
+      businessHours = BusinessHours(hours: hoursMap);
+    } else if (json['businessHours'] != null) {
+      businessHours = BusinessHours.fromJson(json['businessHours']);
+    }
+
+    // Handle address from different possible formats
+    BusinessAddress? address;
+    if (json['address'] != null) {
+      address = BusinessAddress.fromJson(json['address']);
+    } else if (json['addresses'] != null &&
+        json['addresses'] is List &&
+        (json['addresses'] as List).isNotEmpty) {
+      // Use the primary address or first address
+      List<dynamic> addresses = json['addresses'];
+      Map<String, dynamic>? primaryAddress = addresses.firstWhere(
+        (addr) => addr['isPrimary'] == true,
+        orElse: () => addresses.first,
+      );
+      if (primaryAddress != null) {
+        address = BusinessAddress(
+          street: primaryAddress['streetName'] ?? '',
+          city: primaryAddress['city'] ?? '',
+          state: primaryAddress['state'] ?? '',
+          zipCode: primaryAddress['zipCode'] ?? '',
+          country: primaryAddress['country'],
+        );
+      }
+    } else if (json['formattedAddress'] != null) {
+      // Parse formatted address if available
+      String formattedAddr = json['formattedAddress'];
+      List<String> parts = formattedAddr.split(', ');
+      address = BusinessAddress(
+        street: parts.isNotEmpty ? parts[0] : '',
+        city: parts.length > 1 ? parts[1] : '',
+        state: parts.length > 2 ? parts[2] : '',
+        zipCode: '',
+      );
+    }
+
     return BusinessModel(
       id: json['_id'] ?? '',
       name: json['name'] ?? '',
       email: json['email'] ?? '',
-      phone: json['phone'],
+      phone: json['phone'] ?? json['phoneNumber'],
       description: json['description'],
-      profileImage: json['profileImage'],
-      address: json['address'] != null ? BusinessAddress.fromJson(json['address']) : null,
+      profileImage: fullProfileImageUrl,
+      shopImage: fullShopImageUrl,
+      address: address,
       categories: List<String>.from(json['categories'] ?? []),
-      rating: json['rating']?.toDouble(),
-      reviewCount: json['reviewCount']?.toInt(),
-      businessHours: json['businessHours'] != null ? BusinessHours.fromJson(json['businessHours']) : null,
+      rating: (json['rating'] ?? json['averageRating'])?.toDouble(),
+      reviewCount: (json['reviewCount'] ?? json['totalReviews'])?.toInt(),
+      businessHours: businessHours,
       isActive: json['isActive'] ?? true,
-      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
+      createdAt:
+          DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
     );
   }
 
@@ -55,6 +154,7 @@ class BusinessModel {
       'phone': phone,
       'description': description,
       'profileImage': profileImage,
+      'shopImage': shopImage,
       'address': address?.toJson(),
       'categories': categories,
       'rating': rating,
@@ -153,24 +253,32 @@ class BusinessHours {
     final now = DateTime.now();
     final dayName = _getDayName(now.weekday);
     final dayHours = hours[dayName];
-    
+
     if (dayHours == null || !dayHours.isOpen) {
       return 'Closed';
     }
-    
+
     return 'Open ${dayHours.openTime}–${dayHours.closeTime}';
   }
 
   String _getDayName(int weekday) {
     switch (weekday) {
-      case 1: return 'monday';
-      case 2: return 'tuesday';
-      case 3: return 'wednesday';
-      case 4: return 'thursday';
-      case 5: return 'friday';
-      case 6: return 'saturday';
-      case 7: return 'sunday';
-      default: return 'monday';
+      case 1:
+        return 'monday';
+      case 2:
+        return 'tuesday';
+      case 3:
+        return 'wednesday';
+      case 4:
+        return 'thursday';
+      case 5:
+        return 'friday';
+      case 6:
+        return 'saturday';
+      case 7:
+        return 'sunday';
+      default:
+        return 'monday';
     }
   }
 }

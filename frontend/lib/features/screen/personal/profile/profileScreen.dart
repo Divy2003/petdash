@@ -6,7 +6,7 @@ import 'package:petcare/features/screen/auth/login/loginscreen.dart';
 import 'package:petcare/features/screen/personal/profile/widgets/editProfile.dart';
 import 'package:petcare/features/screen/personal/profile/widgets/profileheaderwidgets.dart';
 import 'package:petcare/services/user_session_service.dart';
-import 'package:petcare/services/profile_service.dart';
+import 'package:petcare/services/BusinessServices/profile_service.dart';
 import 'package:petcare/models/profile_model.dart';
 
 import '../../../../utlis/constants/colors.dart';

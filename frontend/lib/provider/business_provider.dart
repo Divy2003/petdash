@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/business_model.dart';
 import '../models/category_model.dart';
-import '../services/business_service.dart';
+import '../services/BusinessServices/business_service.dart';
 import '../utlis/constants/image_strings.dart';
 
 class BusinessProvider with ChangeNotifier {
