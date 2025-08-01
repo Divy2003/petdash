@@ -87,7 +87,7 @@ exports.deleteProduct = async (req, res) => {
     if (product.business.toString() !== req.user.id) {
       return res.status(403).json({ message: 'Not authorized to delete this product' });
     }
-    await product.remove();
+    await Product.deleteOne({ _id: productId });
     res.json({ message: 'Product deleted successfully' });
   } catch (error) {
     console.error('Delete product error:', error);
