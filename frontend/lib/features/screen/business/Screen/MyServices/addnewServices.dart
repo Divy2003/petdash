@@ -3,7 +3,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../common/widgets/Button/primarybutton.dart';
@@ -13,6 +12,7 @@ import '../../../../../utlis/constants/size.dart';
 import '../../../../../provider/services_provider.dart';
 import '../../../../../provider/category_provider.dart';
 import '../../../../../models/service_model.dart';
+import '../../widgets/ImagePicker.dart';
 import '../../widgets/custom_text_field.dart';
 
 class AddNewServices extends StatefulWidget {
@@ -26,92 +26,45 @@ class _AddNewServicesState extends State<AddNewServices> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _serviceIncludedController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _notesController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
 
   bool isCat = true;
   bool isDog = true;
-  final picker = ImagePicker();
-  List<File> _images = [];
+
+  String? _selectedImagePath;
+
   String? _selectedCategoryId;
   List<String> _catSizes = [];
   List<String> _dogSizes = [];
 
-  Future<void> pickImages() async {
-    try {
-      final picked = await picker.pickMultiImage();
-      if (picked.isNotEmpty) {
-        List<File> validImages = [];
-
-        for (var pickedFile in picked) {
-          final file = File(pickedFile.path);
-
-          // Check file extension
-          final extension = pickedFile.path.toLowerCase().split('.').last;
-          if (['jpg', 'jpeg', 'png', 'gif'].contains(extension)) {
-            // Check file size (2MB limit)
-            final fileSize = await file.length();
-            if (fileSize <= 2 * 1024 * 1024) {
-              validImages.add(file);
-            } else {
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('File ${pickedFile.name} is too large (max 2MB)')),
-                );
-              }
-            }
-          } else {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('File ${pickedFile.name} is not a valid image format')),
-              );
-            }
-          }
-        }
-
-        setState(() {
-          _images = validImages;
-        });
-
-        if (validImages.isNotEmpty && mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${validImages.length} image(s) selected')),
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error picking images: $e')),
-        );
-      }
-    }
-  }
-
   Future<void> _saveService(BuildContext context) async {
-    // Basic validation
     if (_titleController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a service title')),
+      Get.snackbar(
+        "Error",
+        'Please enter a service title',
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
       return;
     }
 
     if (_selectedCategoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
+      Get.snackbar(
+        "Error",
+        'Please select a category',
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
       return;
     }
 
-    // Prepare availability data
     final availability = ServiceAvailability(
       cats: isCat ? _catSizes : [],
       dogs: isDog ? _dogSizes : [],
     );
 
-    // Create service request
     final serviceRequest = ServiceRequest(
       categoryId: _selectedCategoryId!,
       title: _titleController.text.trim(),
@@ -132,7 +85,6 @@ class _AddNewServicesState extends State<AddNewServices> {
 
     final servicesProvider = context.read<ServicesProvider>();
 
-    // Show loading indicator
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -143,77 +95,31 @@ class _AddNewServicesState extends State<AddNewServices> {
 
     final success = await servicesProvider.createService(
       serviceRequest,
-      imageFiles: _images.isNotEmpty ? _images : null,
+      imageFiles: (_selectedImagePath != null &&
+          _selectedImagePath!.isNotEmpty)
+          ? [File(_selectedImagePath!)]
+          : null,
     );
 
-    // Close loading dialog
     if (mounted) {
       Navigator.of(context).pop();
     }
 
     if (mounted) {
       if (success) {
-        ScaffoldMessenger.of(this.context).showSnackBar(
-          const SnackBar(content: Text('Service created successfully')),
+        Get.snackbar(
+          "Success",
+          'Service created successfully',
+          backgroundColor: AppColors.success,
+          colorText: AppColors.white,
         );
-        Get.back(); // Go back to services list
+        Get.back();
       } else {
-        ScaffoldMessenger.of(this.context).showSnackBar(
-          SnackBar(
-              content:
-                  Text(servicesProvider.error ?? 'Failed to create service')),
-        );
-      }
-    }
-  }
-
-  Future<void> _testServiceCreation(BuildContext context) async {
-    // Create a simple test service without images
-    final serviceRequest = ServiceRequest(
-      categoryId: _selectedCategoryId ?? '507f1f77bcf86cd799439011', // Default category ID
-      title: _titleController.text.trim().isEmpty ? 'Test Service' : _titleController.text.trim(),
-      description: 'Test service created without images',
-      serviceIncluded: 'Basic service',
-      notes: 'Test notes',
-      price: _priceController.text.trim().isEmpty ? '50' : _priceController.text.trim(),
-      availableFor: ServiceAvailability(
-        cats: ['Small', 'Medium'],
-        dogs: ['Small', 'Medium'],
-      ),
-    );
-
-    final servicesProvider = context.read<ServicesProvider>();
-
-    // Show loading indicator
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-
-    final success = await servicesProvider.createService(
-      serviceRequest,
-      imageFiles: null, // Explicitly no images
-    );
-
-    // Close loading dialog
-    if (mounted) {
-      Navigator.of(context).pop();
-    }
-
-    if (mounted) {
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Test service created successfully!')),
-        );
-        Get.back(); // Go back to services list
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(servicesProvider.error ?? 'Failed to create test service'),
-          ),
+        Get.snackbar(
+          "Error",
+          servicesProvider.error ?? 'Failed to create service',
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
       }
     }
@@ -285,8 +191,8 @@ class _AddNewServicesState extends State<AddNewServices> {
               SizedBox(height: AppSizes.spaceBtwInputFields),
               Text("Prices",
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      )),
+                    fontWeight: FontWeight.bold,
+                  )),
               SizedBox(height: 8.h),
               Row(
                 children: [
@@ -316,56 +222,24 @@ class _AddNewServicesState extends State<AddNewServices> {
               SizedBox(height: AppSizes.spaceBtwSections),
               Text("Upload Images",
                   style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp)),
+                  TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp)),
               SizedBox(height: 8.h),
-              GestureDetector(
-                onTap: pickImages,
-                child: DottedBorder(
-                  borderType: BorderType.RRect,
-                  radius: Radius.circular(10.r),
-                  dashPattern: [6, 4],
-                  color: AppColors.dottedColor,
-                  child: Container(
-                    height: 100.h,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Attach Images',
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: AppColors.dottedColor,
-                            fontSize: 14.sp,
-                          ),
-                    ),
-                  ),
-                ),
+              SingleImagePicker(
+                onImagePicked: (path) {
+                  setState(() {
+                    _selectedImagePath = path;
+                  });
+                },
               ),
-              SizedBox(height: 10.h),
-              if (_images.isNotEmpty)
-                Wrap(
-                  spacing: 8.w,
-                  runSpacing: 8.h,
-                  children: _images
-                      .map((file) => Image.file(
-                            file,
-                            width: 60.w,
-                            height: 60.h,
-                            fit: BoxFit.cover,
-                          ))
-                      .toList(),
-                ),
               SizedBox(height: AppSizes.spaceBtwSections),
               Consumer<ServicesProvider>(
                 builder: (context, servicesProvider, child) {
-                  return Column(
-                    children: [
-                      PrimaryButton(
-                        title: servicesProvider.isCreating ? 'Saving...' : 'Save',
-                        onPressed: servicesProvider.isCreating
-                            ? null
-                            : () => _saveService(context),
-                      ),
-                      // Debug button - remove in production
-                    ],
+                  return PrimaryButton(
+                    title:
+                    servicesProvider.isCreating ? 'Saving...' : 'Save',
+                    onPressed: servicesProvider.isCreating
+                        ? null
+                        : () => _saveService(context),
                   );
                 },
               ),
@@ -399,7 +273,7 @@ class _AddNewServicesState extends State<AddNewServices> {
 
   Widget sizeButton(String size, bool isCatSize) {
     final isSelected =
-        isCatSize ? _catSizes.contains(size) : _dogSizes.contains(size);
+    isCatSize ? _catSizes.contains(size) : _dogSizes.contains(size);
     return Expanded(
       child: GestureDetector(
         onTap: () => _toggleSizeSelection(size, isCatSize),
@@ -413,7 +287,7 @@ class _AddNewServicesState extends State<AddNewServices> {
             ),
             borderRadius: BorderRadius.circular(8.r),
             color: isSelected
-                ? AppColors.primary.withValues(alpha: 0.1)
+                ? AppColors.primary.withOpacity(0.1)
                 : Colors.transparent,
           ),
           child: Center(
@@ -435,7 +309,6 @@ class _AddNewServicesState extends State<AddNewServices> {
     return Consumer<CategoryProvider>(
       builder: (context, categoryProvider, child) {
         if (categoryProvider.categories.isEmpty) {
-          // Load categories if not loaded
           WidgetsBinding.instance.addPostFrameCallback((_) {
             categoryProvider.loadCategories();
           });
@@ -448,8 +321,8 @@ class _AddNewServicesState extends State<AddNewServices> {
             Text(
               'Category',
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 8.h),
             DropdownButtonFormField<String>(
@@ -459,7 +332,7 @@ class _AddNewServicesState extends State<AddNewServices> {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
+                EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
               ),
               hint: const Text('Select a category'),
               items: categoryProvider.categories.map((category) {

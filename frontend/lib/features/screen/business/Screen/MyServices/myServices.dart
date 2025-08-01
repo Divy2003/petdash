@@ -46,12 +46,14 @@ class _MyServicesState extends State<MyServices> {
                 children: [
                   PrimaryButton(
                     title: 'Add New Service',
-                    onPressed: servicesProvider.isCreating ? null : () {
-                      Get.to(() => const AddNewServices())?.then((_) {
-                        // Refresh services when returning from add screen
-                        servicesProvider.refreshServices();
-                      });
-                    },
+                    onPressed: servicesProvider.isCreating
+                        ? null
+                        : () {
+                            Get.to(() => const AddNewServices())?.then((_) {
+                              // Refresh services when returning from add screen
+                              servicesProvider.refreshServices();
+                            });
+                          },
                   ),
                   SizedBox(height: 20.h),
                   // Show last refresh time if available
@@ -156,7 +158,8 @@ class _MyServicesState extends State<MyServices> {
                   // Image count indicator
                   if (service.images.length > 1)
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                       decoration: BoxDecoration(
                         color: AppColors.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12.r),
@@ -235,7 +238,8 @@ class _MyServicesState extends State<MyServices> {
                     InkWell(
                       onTap: servicesProvider.isServiceDeleting(service.id)
                           ? null
-                          : () => _showDeleteDialog(context, service, servicesProvider),
+                          : () => _showDeleteDialog(
+                              context, service, servicesProvider),
                       child: servicesProvider.isServiceDeleting(service.id)
                           ? SizedBox(
                               width: AppSizes.iconSm,
@@ -315,7 +319,8 @@ class _MyServicesState extends State<MyServices> {
             ),
           ),
           SizedBox(height: 16.h),
-          if (servicesProvider.error?.contains('Authentication failed') == true ||
+          if (servicesProvider.error?.contains('Authentication failed') ==
+                  true ||
               servicesProvider.error?.contains('log in again') == true) ...[
             PrimaryButton(
               title: 'Go to Login',
@@ -327,10 +332,12 @@ class _MyServicesState extends State<MyServices> {
           ],
           PrimaryButton(
             title: servicesProvider.isLoading ? 'Loading...' : 'Retry',
-            onPressed: servicesProvider.isLoading ? null : () {
-              servicesProvider.clearError();
-              servicesProvider.refreshServices();
-            },
+            onPressed: servicesProvider.isLoading
+                ? null
+                : () {
+                    servicesProvider.clearError();
+                    servicesProvider.refreshServices();
+                  },
           ),
         ],
       ),
@@ -383,15 +390,18 @@ class _MyServicesState extends State<MyServices> {
                     await servicesProvider.deleteService(service.id);
                 if (mounted) {
                   if (success) {
-                    ScaffoldMessenger.of(this.context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Service deleted successfully')),
+                    Get.snackbar(
+                      "Success",
+                      'Service deleted successfully',
+                      backgroundColor: AppColors.success,
+                      colorText: AppColors.white,
                     );
                   } else {
-                    ScaffoldMessenger.of(this.context).showSnackBar(
-                      SnackBar(
-                          content: Text(servicesProvider.error ??
-                              'Failed to delete service')),
+                    Get.snackbar(
+                      "Error",
+                      servicesProvider.error ?? 'Failed to delete service',
+                      backgroundColor: AppColors.error,
+                      colorText: AppColors.white,
                     );
                   }
                 }
@@ -409,7 +419,8 @@ class _MyServicesState extends State<MyServices> {
       return 'Server configuration error. The API endpoint is returning a web page instead of data. Please check your server setup.';
     } else if (error.contains('No internet connection')) {
       return 'No internet connection. Please check your network and try again.';
-    } else if (error.contains('SocketException') || error.contains('Connection')) {
+    } else if (error.contains('SocketException') ||
+        error.contains('Connection')) {
       return 'Cannot connect to server. Please check if the server is running and your network connection.';
     } else if (error.contains('FormatException')) {
       return 'Server returned invalid data format. This usually means the API endpoint is not configured correctly.';
