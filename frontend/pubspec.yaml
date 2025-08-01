@@ -43,6 +43,8 @@ dependencies:
   dotted_border: ^2.0.0
   fl_chart: ^0.71.0
   iconsax_flutter: ^1.0.1
+  path_provider: ^2.1.2
+  path: ^1.9.0
 
   #auth
   http: ^1.4.0

@@ -2,25 +2,30 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
+class SingleImagePicker extends StatefulWidget {
+  final Function(String path)? onImagePicked;
 
-class MultipleImagePicker extends StatefulWidget {
-  const MultipleImagePicker({Key? key}) : super(key: key);
+  const SingleImagePicker({Key? key, this.onImagePicked}) : super(key: key);
 
   @override
-  State<MultipleImagePicker> createState() => _MultipleImagePickerState();
+  State<SingleImagePicker> createState() => _SingleImagePickerState();
 }
 
-class _MultipleImagePickerState extends State<MultipleImagePicker> {
-  final List<XFile> _images = [];
+class _SingleImagePickerState extends State<SingleImagePicker> {
+  XFile? _image;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
-    final List<XFile>? pickedFiles = await _picker.pickMultiImage();
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFiles != null && pickedFiles.isNotEmpty) {
+    if (pickedFile != null) {
       setState(() {
-        _images.addAll(pickedFiles);
+        _image = pickedFile;
       });
+
+      if (widget.onImagePicked != null) {
+        widget.onImagePicked!(pickedFile.path);
+      }
     }
   }
 
@@ -29,9 +34,8 @@ class _MultipleImagePickerState extends State<MultipleImagePicker> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Upload Images"),
+        const Text("Upload Image"),
         const SizedBox(height: 8),
-
         GestureDetector(
           onTap: _pickImage,
           child: DottedBorder(
@@ -44,7 +48,7 @@ class _MultipleImagePickerState extends State<MultipleImagePicker> {
               width: double.infinity,
               alignment: Alignment.center,
               child: Text(
-                'Attach images',
+                'Attach image',
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
                   color: Colors.blue,
                 ),
@@ -52,41 +56,35 @@ class _MultipleImagePickerState extends State<MultipleImagePicker> {
             ),
           ),
         ),
-
         const SizedBox(height: 12),
-
-        // Show selected images
-        if (_images.isNotEmpty)
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: _images.map((img) {
-              return Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.file(
-                      File(img.path),
-                      height: 80,
-                      width: 80,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Positioned(
-                    top: -6,
-                    right: -6,
-                    child: IconButton(
-                      icon: const Icon(Icons.cancel, color: Colors.red),
-                      onPressed: () {
-                        setState(() {
-                          _images.remove(img);
-                        });
-                      },
-                    ),
-                  )
-                ],
-              );
-            }).toList(),
+        if (_image != null)
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.file(
+                  File(_image!.path),
+                  height: 100,
+                  width: 100,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                top: -6,
+                right: -6,
+                child: IconButton(
+                  icon: const Icon(Icons.cancel, color: Colors.red),
+                  onPressed: () {
+                    setState(() {
+                      _image = null;
+                    });
+                    if (widget.onImagePicked != null) {
+                      widget.onImagePicked!(""); // clear
+                    }
+                  },
+                ),
+              )
+            ],
           ),
       ],
     );

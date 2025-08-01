@@ -115,8 +115,8 @@ class _EditArticlesDetailsState extends State<EditArticlesDetails> {
             SizedBox(height: AppSizes.spaceBtwSections),
 
             // Image Picker
-            const MultipleImagePicker(),
-            SizedBox(height: AppSizes.spaceBtwSections),
+            // const MultipleImagePicker(),
+            // SizedBox(height: AppSizes.spaceBtwSections),
 
             // Save Button
             PrimaryButton(

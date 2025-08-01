@@ -59,23 +59,18 @@ class _RegisterFormState extends State<RegisterForm> {
       if (mounted) {
         if (error == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Signup successful")),
+            const SnackBar(content: Text("Signup successful! Please login to continue.")),
           );
 
           // Debug print
           print("Registration successful! User type: ${provider.selectedType}");
 
           // Add a small delay to ensure the snackbar is shown
-          await Future.delayed(const Duration(milliseconds: 500));
+          await Future.delayed(const Duration(milliseconds: 1500));
 
-          // Navigate based on user type directly to dashboard
-          if (provider.selectedType == UserType.business) {
-            print("Navigating to Business Dashboard");
-            Get.offAll(() => const BusinessProfileScreen());
-          } else {
-            print("Navigating to Pet Owner Dashboard");
-            Get.offAll(() => const CurvedNavScreen());
-          }
+          // Navigate to login screen after successful registration
+          print("Navigating to Login Screen");
+          Get.offAll(() => const LoginScreen());
         } else {
           print("Registration error: $error");
           ScaffoldMessenger.of(context).showSnackBar(

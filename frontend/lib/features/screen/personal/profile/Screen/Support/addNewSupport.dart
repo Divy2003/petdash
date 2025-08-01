@@ -62,7 +62,7 @@ class _AddNewSupportState extends State<AddNewSupport> {
                 maxLines: 5,
               ),
               SizedBox(height: AppSizes.spaceBtwInputFields),
-              MultipleImagePicker(),
+              // MultipleImagePicker(),
               SizedBox(height: AppSizes.spaceBtwSections),
               PrimaryButton(title: 'Submit',onPressed: (){},),
             ],
