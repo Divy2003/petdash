@@ -12,7 +12,7 @@ class NavigationHelper {
     final userType = prefs.getString('user_type');
 
     // If no token, show welcome screen
-    if (token == null) {
+    if (token == null || token.isEmpty) {
       return const WelcomeScreen();
     }
 
@@ -30,5 +30,19 @@ class NavigationHelper {
     } else {
       return const CurvedNavScreen();
     }
+  }
+
+  // Helper method to clear all stored authentication data
+  static Future<void> clearAuthData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth_token');
+    await prefs.remove('user_type');
+  }
+
+  // Helper method to check if user is authenticated
+  static Future<bool> isAuthenticated() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    return token != null && token.isNotEmpty;
   }
 }

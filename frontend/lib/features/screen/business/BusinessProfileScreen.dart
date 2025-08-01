@@ -59,7 +59,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                       ProfileMenuTile(
                         icon: Icons.shopping_bag,
                         title: 'My Products',
-                        onTap: () => Get.to(() => MyProducts()),
+                        onTap: () => Get.to(() => MyProductsScreen()),
                       ),
                       Divider(
                           height: AppSizes.dividerHeight,
