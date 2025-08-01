@@ -13,7 +13,6 @@ exports.createProduct = async (req, res) => {
       name,
       description,
       price,
-      images,
       stock,
       subscriptionAvailable,
       category,
@@ -27,6 +26,10 @@ exports.createProduct = async (req, res) => {
       breedRecommendation,
       dietType
     } = req.body;
+    let images = req.body.images;
+    if (req.files && req.files.length > 0) {
+      images = req.files.map(file => `/uploads/${file.filename}`);
+    }
 
     const product = new Product({
       name,
@@ -67,6 +70,10 @@ exports.updateProduct = async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to update this product' });
     }
     const updates = req.body;
+    // Handle image update if new file uploaded
+    if (req.files && req.files.length > 0) {
+      updates.images = req.files.map(file => `/uploads/${file.filename}`);
+    }
     Object.assign(product, updates);
     await product.save();
     res.json({ message: 'Product updated successfully', product });
