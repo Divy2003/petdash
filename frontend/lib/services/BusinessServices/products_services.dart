@@ -33,7 +33,7 @@ class ProductApiService {
   //detele
   static Future<bool> deleteProduct(String token, String productId) async {
     final response = await http.delete(
-      Uri.parse('https://yourapi.com/products/$productId'),
+      Uri.parse('${AppConfig.baseUrl}/product/$productId'),
       headers: {'Authorization': 'Bearer $token'},
     );
     return response.statusCode == 200;
