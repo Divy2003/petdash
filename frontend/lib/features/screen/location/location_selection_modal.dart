@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../../utlis/constants/colors.dart';
 import '../../../utlis/constants/size.dart';
@@ -249,12 +250,11 @@ class _LocationSelectionModalState extends State<LocationSelectionModal> {
             onTap: () {
               Navigator.of(context).pop();
               // Handle address selection - you can add logic here to save the selected address
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                      'Selected: ${address['type']} - ${address['title']}'),
-                  backgroundColor: AppColors.success,
-                ),
+              Get.snackbar(
+                "Success",
+                'Selected: ${address['type']} - ${address['title']}',
+                backgroundColor: AppColors.success,
+                colorText: AppColors.white,
               );
             },
           ),

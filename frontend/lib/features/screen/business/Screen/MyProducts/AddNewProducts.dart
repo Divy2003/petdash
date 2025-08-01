@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,21 +55,25 @@ class _AddNewProductsState extends State<AddNewProducts> {
     super.dispose();
   }
 
-
-
   void _saveProduct() async {
     try {
       // Validate required fields
       if (_titleController.text.trim().isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("❌ Product title is required")),
+        Get.snackbar(
+          "Error",
+          "❌ Product title is required",
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
         return;
       }
 
       if (_priceController.text.trim().isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("❌ Product price is required")),
+        Get.snackbar(
+          "Error",
+          "❌ Product price is required",
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
         return;
       }
@@ -79,16 +84,22 @@ class _AddNewProductsState extends State<AddNewProducts> {
       final userType = prefs.getString('user_type');
 
       if (token == null || token.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("❌ Authentication required. Please login again.")),
+        Get.snackbar(
+          "Error",
+          "❌ Authentication required. Please login again.",
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
         return;
       }
 
       // Check if user has business access
       if (userType != "Business") {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("❌ Business account required to create products.")),
+        Get.snackbar(
+          "Error",
+          "❌ Business account required to create products.",
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
         return;
       }
@@ -99,7 +110,8 @@ class _AddNewProductsState extends State<AddNewProducts> {
         price: double.tryParse(_priceController.text.trim()) ?? 0,
         manufacturer: _manufacturerController.text.trim(),
         shippingCost: double.tryParse(_shippingController.text.trim()) ?? 0,
-        monthlyDeliveryPrice: double.tryParse(_monthlyDeliveryController.text.trim()),
+        monthlyDeliveryPrice:
+            double.tryParse(_monthlyDeliveryController.text.trim()),
         brand: "", // Add dropdown/textfield if required
         itemWeight: "",
         itemForm: "",
@@ -120,18 +132,27 @@ class _AddNewProductsState extends State<AddNewProducts> {
       );
 
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("✅ Product saved successfully")),
+        Get.snackbar(
+          "Success",
+          "✅ Product saved successfully",
+          backgroundColor: AppColors.success,
+          colorText: AppColors.white,
         );
         Navigator.pop(context, true); // Return true to indicate success
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("❌ Failed to save product")),
+        Get.snackbar(
+          "Error",
+          "❌ Failed to save product",
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("❌ Error: ${e.toString()}")),
+      Get.snackbar(
+        "Error",
+        "❌ Error: ${e.toString()}",
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     }
   }

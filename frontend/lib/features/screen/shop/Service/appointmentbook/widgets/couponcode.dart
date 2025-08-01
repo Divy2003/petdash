@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:petcare/utlis/constants/colors.dart';
 import 'package:petcare/utlis/constants/size.dart';
@@ -9,8 +10,11 @@ class CouponInput extends StatelessWidget {
 
   void _applyCoupon(BuildContext context, AppointmentBookingProvider provider) {
     if (provider.couponCode.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a coupon code')),
+      Get.snackbar(
+        "Error",
+        'Please enter a coupon code',
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -18,12 +22,18 @@ class CouponInput extends StatelessWidget {
     provider.applyCoupon();
 
     if (provider.isCouponApplied) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Coupon "${provider.couponCode}" applied! Saved \$${provider.couponDiscount.toStringAsFixed(2)}')),
+      Get.snackbar(
+        "Success",
+        'Coupon "${provider.couponCode}" applied! Saved \$${provider.couponDiscount.toStringAsFixed(2)}',
+        backgroundColor: AppColors.success,
+        colorText: AppColors.white,
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid coupon code')),
+      Get.snackbar(
+        "Error",
+        'Invalid coupon code',
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     }
   }
@@ -40,15 +50,16 @@ class CouponInput extends StatelessWidget {
                 Text(
                   'Coupon Code',
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    fontSize: AppSizes.fontSizeMd,
-                    color: AppColors.primary,
-                  ),
+                        fontWeight: FontWeight.w600,
+                        fontSize: AppSizes.fontSizeMd,
+                        color: AppColors.primary,
+                      ),
                 ),
                 if (provider.isCouponApplied) ...[
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.green.shade100,
                       borderRadius: BorderRadius.circular(4),
@@ -56,9 +67,9 @@ class CouponInput extends StatelessWidget {
                     child: Text(
                       'Applied',
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: Colors.green.shade700,
-                        fontWeight: FontWeight.w500,
-                      ),
+                            color: Colors.green.shade700,
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                   ),
                 ],
@@ -74,21 +85,27 @@ class CouponInput extends StatelessWidget {
                       contentPadding: const EdgeInsets.symmetric(
                           vertical: 12, horizontal: 12),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
-                        borderSide:  BorderSide(color: AppColors.textPrimaryColor),
+                        borderRadius:
+                            BorderRadius.circular(AppSizes.borderRadiusMd),
+                        borderSide:
+                            BorderSide(color: AppColors.textPrimaryColor),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderSide:  BorderSide(color: AppColors.textPrimaryColor),
-                        borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
+                        borderSide:
+                            BorderSide(color: AppColors.textPrimaryColor),
+                        borderRadius:
+                            BorderRadius.circular(AppSizes.borderRadiusMd),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: AppColors.primary),
-                        borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
+                        borderRadius:
+                            BorderRadius.circular(AppSizes.borderRadiusMd),
                       ),
                       hintText: 'Enter code (SAVE10, SAVE20, FIRST15)',
-                      hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: AppColors.primary,
-                      ),
+                      hintStyle:
+                          Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                color: AppColors.primary,
+                              ),
                     ),
                   ),
                 ),
@@ -97,16 +114,18 @@ class CouponInput extends StatelessWidget {
                   onPressed: () => _applyCoupon(context, provider),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2E3142),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 14),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
+                      borderRadius:
+                          BorderRadius.circular(AppSizes.borderRadiusMd),
                     ),
                   ),
                   child: Text(
                     'Apply',
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: AppColors.white,
-                    ),
+                          color: AppColors.white,
+                        ),
                   ),
                 ),
               ],
@@ -119,9 +138,9 @@ class CouponInput extends StatelessWidget {
                     Text(
                       'Discount: -\$${provider.couponDiscount.toStringAsFixed(2)}',
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: Colors.green.shade700,
-                        fontWeight: FontWeight.w500,
-                      ),
+                            color: Colors.green.shade700,
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                     const Spacer(),
                     GestureDetector(
@@ -129,9 +148,9 @@ class CouponInput extends StatelessWidget {
                       child: Text(
                         'Remove',
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Colors.red.shade600,
-                          fontWeight: FontWeight.w500,
-                        ),
+                              color: Colors.red.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
                     ),
                   ],

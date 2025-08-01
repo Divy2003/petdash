@@ -16,7 +16,6 @@ import '../../../../../common/widgets/cart/servicescart.dart';
 import '../../../../../utlis/constants/image_strings.dart';
 import '../serviceReceipt/receipt.dart';
 
-
 class AppointmentBooking extends StatefulWidget {
   const AppointmentBooking({super.key});
 
@@ -25,17 +24,17 @@ class AppointmentBooking extends StatefulWidget {
 }
 
 class _AppointmentBookingState extends State<AppointmentBooking> {
-
   void _confirmAppointment() {
-    final provider = Provider.of<AppointmentBookingProvider>(context, listen: false);
+    final provider =
+        Provider.of<AppointmentBookingProvider>(context, listen: false);
 
     // Validate form
     if (!provider.isFormValid) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(provider.validationError ?? 'Please complete all required fields'),
-          backgroundColor: Colors.red,
-        ),
+      Get.snackbar(
+        "Error",
+        provider.validationError ?? 'Please complete all required fields',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
       );
       return;
     }
@@ -107,7 +106,9 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
                   const SizedBox(height: 20),
                   PrimaryButton(
                     onPressed: provider.isLoading ? null : _confirmAppointment,
-                    title: provider.isLoading ? 'Processing...' : 'Confirm Appointment',
+                    title: provider.isLoading
+                        ? 'Processing...'
+                        : 'Confirm Appointment',
                   ),
                   if (!provider.isFormValid)
                     Padding(
@@ -115,8 +116,8 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
                       child: Text(
                         provider.validationError ?? '',
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Colors.red,
-                        ),
+                              color: Colors.red,
+                            ),
                       ),
                     ),
                 ],

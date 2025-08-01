@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:petcare/utlis/constants/image_strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,7 +52,8 @@ class _EditNewProductsState extends State<EditNewProducts> {
       _manufacturerController.text = widget.product!.manufacturer;
       _priceController.text = widget.product!.price.toString();
       _shippingController.text = widget.product!.shippingCost.toString();
-      _monthlyDeliveryController.text = widget.product!.monthlyDeliveryPrice?.toString() ?? '';
+      _monthlyDeliveryController.text =
+          widget.product!.monthlyDeliveryPrice?.toString() ?? '';
     }
   }
 
@@ -78,15 +80,21 @@ class _EditNewProductsState extends State<EditNewProducts> {
     try {
       // Validate required fields
       if (_titleController.text.trim().isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("❌ Product title is required")),
+        Get.snackbar(
+          "Error",
+          "❌ Product title is required",
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
         return;
       }
 
       if (_priceController.text.trim().isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("❌ Product price is required")),
+        Get.snackbar(
+          "Error",
+          "❌ Product price is required",
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
         return;
       }
@@ -96,15 +104,21 @@ class _EditNewProductsState extends State<EditNewProducts> {
       final token = prefs.getString('auth_token');
 
       if (token == null || token.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("❌ Authentication required. Please login again.")),
+        Get.snackbar(
+          "Error",
+          "❌ Authentication required. Please login again.",
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
         return;
       }
 
       if (widget.product?.id == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("❌ Product ID not found")),
+        Get.snackbar(
+          "Error",
+          "❌ Product ID not found",
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
         return;
       }
@@ -116,7 +130,8 @@ class _EditNewProductsState extends State<EditNewProducts> {
         price: double.tryParse(_priceController.text.trim()) ?? 0,
         manufacturer: _manufacturerController.text.trim(),
         shippingCost: double.tryParse(_shippingController.text.trim()) ?? 0,
-        monthlyDeliveryPrice: double.tryParse(_monthlyDeliveryController.text.trim()),
+        monthlyDeliveryPrice:
+            double.tryParse(_monthlyDeliveryController.text.trim()),
         brand: widget.product!.brand,
         itemWeight: widget.product!.itemWeight,
         itemForm: widget.product!.itemForm,
@@ -136,18 +151,27 @@ class _EditNewProductsState extends State<EditNewProducts> {
       );
 
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("✅ Product updated successfully")),
+        Get.snackbar(
+          "Success",
+          "✅ Product updated successfully",
+          backgroundColor: AppColors.success,
+          colorText: AppColors.white,
         );
         Navigator.pop(context, true); // Return true to indicate success
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("❌ Failed to update product")),
+        Get.snackbar(
+          "Error",
+          "❌ Failed to update product",
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("❌ Error: ${e.toString()}")),
+      Get.snackbar(
+        "Error",
+        "❌ Error: ${e.toString()}",
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     }
   }
@@ -170,7 +194,8 @@ class _EditNewProductsState extends State<EditNewProducts> {
                 controller: _titleController,
                 focusNode: _focusTitle,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: () => FocusScope.of(context).requestFocus(_focusDesc),
+                onFieldSubmitted: () =>
+                    FocusScope.of(context).requestFocus(_focusDesc),
                 maxLines: 1,
               ),
               SizedBox(height: AppSizes.spaceBtwItems),
@@ -179,7 +204,8 @@ class _EditNewProductsState extends State<EditNewProducts> {
                 controller: _descController,
                 focusNode: _focusDesc,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: () => FocusScope.of(context).requestFocus(_focusManu),
+                onFieldSubmitted: () =>
+                    FocusScope.of(context).requestFocus(_focusManu),
                 maxLines: 4,
               ),
               SizedBox(height: AppSizes.spaceBtwItems),
@@ -188,7 +214,8 @@ class _EditNewProductsState extends State<EditNewProducts> {
                 controller: _manufacturerController,
                 focusNode: _focusManu,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: () => FocusScope.of(context).requestFocus(_focusPrice),
+                onFieldSubmitted: () =>
+                    FocusScope.of(context).requestFocus(_focusPrice),
                 maxLines: 1,
               ),
               SizedBox(height: AppSizes.spaceBtwItems),
@@ -197,7 +224,8 @@ class _EditNewProductsState extends State<EditNewProducts> {
                 controller: _priceController,
                 focusNode: _focusPrice,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: () => FocusScope.of(context).requestFocus(_focusShipping),
+                onFieldSubmitted: () =>
+                    FocusScope.of(context).requestFocus(_focusShipping),
                 keyboardType: TextInputType.number,
                 maxLines: 1,
               ),
@@ -207,7 +235,8 @@ class _EditNewProductsState extends State<EditNewProducts> {
                 controller: _shippingController,
                 focusNode: _focusShipping,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: () => FocusScope.of(context).requestFocus(_focusMonthly),
+                onFieldSubmitted: () =>
+                    FocusScope.of(context).requestFocus(_focusMonthly),
                 keyboardType: TextInputType.number,
                 maxLines: 1,
               ),

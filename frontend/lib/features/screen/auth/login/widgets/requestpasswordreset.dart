@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/size.dart';
@@ -29,8 +30,11 @@ class _RequestPasswordResetScreenState
     if (!mounted) return;
 
     if (error == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Reset code sent to your email")),
+      Get.snackbar(
+        "Success",
+        "Reset code sent to your email",
+        backgroundColor: AppColors.success,
+        colorText: AppColors.white,
       );
       // Navigate to OTP verification screen
       Navigator.push(
@@ -38,8 +42,11 @@ class _RequestPasswordResetScreenState
         MaterialPageRoute(builder: (_) => OtpVerificationScreen()),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error)),
+      Get.snackbar(
+        "Error",
+        error,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     }
   }

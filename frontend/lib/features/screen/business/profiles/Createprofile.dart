@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
@@ -174,16 +175,13 @@ class _CreateProfileState extends State<CreateProfile> {
         Get.snackbar(
           'Success',
           'Profile updated successfully!',
-          backgroundColor: AppColors.success,
-          colorText: AppColors.white,
+          snackPosition: SnackPosition.BOTTOM,
         );
         Navigator.pop(context);
       } else {
         Get.snackbar(
           'Error',
           profileProvider.error!,
-          backgroundColor: AppColors.error,
-          colorText: AppColors.white,
         );
       }
     } catch (e) {

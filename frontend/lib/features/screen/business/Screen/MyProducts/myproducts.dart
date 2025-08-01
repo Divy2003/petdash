@@ -293,10 +293,13 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                                   children: [
                                     Text(
                                       "\$${product.price.toStringAsFixed(2)}",
-                                      style: const TextStyle(
-                                        color: Colors.green,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                     style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                            color: AppColors.primary,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     ),
                                     SizedBox(width: AppSizes.md),
                                     Spacer(),
@@ -310,7 +313,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                                           }
                                         },
                                         child: Icon(Icons.edit,
-                                            size: 18, color: Colors.grey)),
+                                            size: 18, color: AppColors.textPrimaryColor)),
                                     SizedBox(width: AppSizes.md),
                                     InkWell(
                                         onTap: () {
@@ -318,7 +321,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                                               product.id!); // implement this
                                         },
                                         child: Icon(Icons.delete,
-                                            size: 18, color: Colors.red)),
+                                            size: 18, color: AppColors.error)),
                                   ],
                                 ),
                               ],
