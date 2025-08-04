@@ -1,14 +1,21 @@
-// Flutter Profile Screen with time formatting, image handling, and best practices
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:petcare/services/profile_service.dart';
-import 'package:petcare/utlis/constants/colors.dart';
-import 'package:petcare/utlis/constants/image_strings.dart';
-import 'package:petcare/utlis/constants/size.dart';
-import '../../../../common/widgets/Button/primarybutton.dart';
+import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+import 'package:dotted_border/dotted_border.dart';
+import 'package:http/http.dart' as http;
+
 import '../../../../common/widgets/appbar/appbar.dart';
+import '../../../../common/widgets/Button/primarybutton.dart';
+import '../../../../utlis/constants/size.dart';
+import '../../../../utlis/constants/colors.dart';
+import '../../../../utlis/constants/image_strings.dart';
+import '../../../../utlis/app_config/app_config.dart';
 import '../../../../models/profile_model.dart';
+import '../../../../provider/profile_provider.dart';
+import '../widgets/custom_text_field.dart';
 
 class CreateProfile extends StatefulWidget {
   const CreateProfile({super.key});
@@ -18,227 +25,420 @@ class CreateProfile extends StatefulWidget {
 }
 
 class _CreateProfileState extends State<CreateProfile> {
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final phoneNumberController = TextEditingController();
-  final addressController = TextEditingController();
-  final shopOpenTimeController = TextEditingController();
-  final shopCloseTimeController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final ImagePicker _picker = ImagePicker();
 
+  // Controllers
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _shopOpenTimeController = TextEditingController();
+  final TextEditingController _shopCloseTimeController =
+      TextEditingController();
+
+  // Image files
   File? _profileImageFile;
   File? _shopImageFile;
-  ProfileModel? _profile;
-  bool _isLoading = true;
-  bool _isSaving = false;
+
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _loadProfile();
+    _loadExistingProfile();
   }
 
-  Future<void> _loadProfile() async {
-    try {
-      final profileData = await ProfileService.getProfile();
-      final profile = ProfileModel.fromJson(profileData);
-      setState(() {
-        _profile = profile;
-        nameController.text = profile.name ?? '';
-        emailController.text = profile.email ?? '';
-        phoneNumberController.text = profile.phoneNumber ?? '';
-        addressController.text = profile.primaryAddress?.fullAddress ?? '';
-        shopOpenTimeController.text = profile.shopOpenTime ?? '';
-        shopCloseTimeController.text = profile.shopCloseTime ?? '';
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() => _isLoading = false);
-      _showErrorSnackBar('Failed to load profile: $e');
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _shopOpenTimeController.dispose();
+    _shopCloseTimeController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadExistingProfile() async {
+    final profileProvider =
+        Provider.of<ProfileProvider>(context, listen: false);
+    await profileProvider.getProfile();
+
+    if (profileProvider.profile != null) {
+      final profile = profileProvider.profile!;
+      _nameController.text = profile.name ?? '';
+      _emailController.text = profile.email ?? '';
+      _phoneController.text = profile.phoneNumber ?? '';
+      _shopOpenTimeController.text = profile.shopOpenTime ?? '';
+      _shopCloseTimeController.text = profile.shopCloseTime ?? '';
     }
   }
 
-  void _showErrorSnackBar(String message) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
+  Future<void> _pickProfileImage() async {
+    final XFile? picked = await _picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1024,
+      maxHeight: 1024,
+      imageQuality: 85,
     );
-  }
-
-  void _showSuccessSnackBar(String message) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.green),
-    );
-  }
-
-  Future<void> _pickImage(bool isShopImage) async {
-    final picker = ImagePicker();
-    final picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
       setState(() {
-        if (isShopImage) {
-          _shopImageFile = File(picked.path);
-        } else {
-          _profileImageFile = File(picked.path);
-        }
+        _profileImageFile = File(picked.path);
       });
     }
   }
 
-  Future<void> _selectTime(TextEditingController controller) async {
+  Future<void> _pickShopImage() async {
+    final XFile? picked = await _picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1024,
+      maxHeight: 1024,
+      imageQuality: 85,
+    );
+    if (picked != null) {
+      setState(() {
+        _shopImageFile = File(picked.path);
+      });
+    }
+  }
+
+  Future<void> _selectTime(
+      TextEditingController controller, String label) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
     );
     if (picked != null) {
-      final formatted = '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
-      controller.text = formatted;
+      final formattedTime = picked.format(context);
+      controller.text = formattedTime;
+    }
+  }
+
+  Future<void> _testServerConnection() async {
+    try {
+      print('🔍 Testing server connectivity...');
+      final response = await http.get(
+        Uri.parse('${AppConfig.baseUrl}/health'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
+
+      print('🌐 Server connectivity test: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        Get.snackbar(
+          'Success',
+          'Server is reachable ✅',
+          backgroundColor: AppColors.success,
+          colorText: AppColors.white,
+        );
+      } else {
+        Get.snackbar(
+          'Warning',
+          'Server responded with status: ${response.statusCode}',
+          backgroundColor: AppColors.warning,
+          colorText: AppColors.white,
+        );
+      }
+    } catch (e) {
+      print('❌ Server connectivity failed: $e');
+      Get.snackbar(
+        'Error',
+        'Server is not reachable ❌\nError: ${e.toString()}',
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
+        duration: const Duration(seconds: 5),
+      );
     }
   }
 
   Future<void> _saveProfile() async {
-    if (_isSaving) return;
-    setState(() => _isSaving = true);
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
-      await ProfileService.updateProfile(
-        name: nameController.text.trim().isEmpty ? null : nameController.text.trim(),
-        email: emailController.text.trim().isEmpty ? null : emailController.text.trim(),
-        phoneNumber: phoneNumberController.text.trim().isEmpty ? null : phoneNumberController.text.trim(),
-        address: addressController.text.trim().isEmpty ? null : addressController.text.trim(),
-        profileImage: _profileImageFile,
-        shopImage: _shopImageFile,
-        shopOpenTime: shopOpenTimeController.text.trim().isEmpty ? null : shopOpenTimeController.text.trim(),
-        shopCloseTime: shopCloseTimeController.text.trim().isEmpty ? null : shopCloseTimeController.text.trim(),
+      final profileProvider =
+          Provider.of<ProfileProvider>(context, listen: false);
+
+      await profileProvider.updateProfile(
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        phoneNumber: _phoneController.text.trim(),
+        shopOpenTime: _shopOpenTimeController.text.trim(),
+        shopCloseTime: _shopCloseTimeController.text.trim(),
+        profileImageFile: _profileImageFile,
+        shopImageFile: _shopImageFile,
       );
-      _showSuccessSnackBar('Profile updated successfully');
-      Navigator.pop(context, true);
+
+      if (profileProvider.error == null) {
+        Get.snackbar(
+          'Success',
+          'Profile updated successfully!',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        Navigator.pop(context);
+      } else {
+        Get.snackbar(
+          'Error',
+          profileProvider.error!,
+        );
+      }
     } catch (e) {
-      _showErrorSnackBar('Failed to update profile: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to update profile: ${e.toString()}',
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
+      );
     } finally {
-      setState(() => _isSaving = false);
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Create Profile'),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildImagePicker(),
-            _buildTextField('Full Name', nameController),
-            _buildTextField('Email', emailController),
-            _buildTextField('Phone Number', phoneNumberController),
-            _buildTextField('Address', addressController),
-            if (_profile?.isBusiness == true) ...[
-              _buildShopImagePicker(),
-              _buildTimeField('Opening Time', shopOpenTimeController),
-              _buildTimeField('Closing Time', shopCloseTimeController),
-            ],
-            const SizedBox(height: 20),
-            PrimaryButton(
-              title: _isSaving ? 'Saving...' : 'Update Profile',
-              onPressed: _isSaving ? null : _saveProfile,
-            )
-          ],
-        ),
-      ),
-    );
-  }
+      appBar: CustomAppBar(title: 'Create Business Profile'),
+      body: Consumer<ProfileProvider>(
+        builder: (context, profileProvider, child) {
+          if (profileProvider.isLoading && profileProvider.profile == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-  Widget _buildImagePicker() {
-    return Center(
-      child: Stack(
-        alignment: Alignment.bottomRight,
-        children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: _profileImageFile != null
-                ? FileImage(_profileImageFile!)
-                : (_profile?.profileImage != null
-                ? NetworkImage(_profile!.profileImage!)
-                : const AssetImage(AppImages.person)) as ImageProvider,
-          ),
-          GestureDetector(
-            onTap: () => _pickImage(false),
-            child: CircleAvatar(
-              radius: 15,
-              backgroundColor: AppColors.primary,
-              child: const Icon(Icons.camera_alt, size: 16, color: Colors.white),
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(AppSizes.md),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Profile Image Section
+                    _buildImageSection(
+                      title: 'Profile Image',
+                      imageFile: _profileImageFile,
+                      existingImageUrl: profileProvider.profile?.profileImage,
+                      onTap: _pickProfileImage,
+                    ),
+
+                    SizedBox(height: AppSizes.spaceBtwSections),
+
+                    // Shop Image Section
+                    _buildImageSection(
+                      title: 'Shop Image',
+                      imageFile: _shopImageFile,
+                      existingImageUrl: profileProvider.profile?.shopImage,
+                      onTap: _pickShopImage,
+                    ),
+
+                    SizedBox(height: AppSizes.spaceBtwSections),
+
+                    // Basic Information
+                    Text(
+                      'Basic Information',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                          ),
+                    ),
+                    SizedBox(height: AppSizes.spaceBtwItems),
+
+                    // Name Field
+                    CustomTextField(
+                      label: 'Business Name',
+                      controller: _nameController,
+                      hintText: 'Enter your business name',
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Business name is required';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: AppSizes.spaceBtwInputFields),
+
+                    // Email Field
+                    CustomTextField(
+                      label: 'Email',
+                      controller: _emailController,
+                      hintText: 'Enter your email address',
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Email is required';
+                        }
+                        if (!GetUtils.isEmail(value.trim())) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: AppSizes.spaceBtwInputFields),
+
+                    // Phone Field
+                    CustomTextField(
+                      label: 'Phone Number',
+                      controller: _phoneController,
+                      hintText: 'Enter your phone number',
+                      keyboardType: TextInputType.phone,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Phone number is required';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: AppSizes.spaceBtwSections),
+
+                    // Shop Hours
+                    Text(
+                      'Shop Hours',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                          ),
+                    ),
+                    SizedBox(height: AppSizes.spaceBtwItems),
+
+                    // Opening Time
+                    CustomTextField(
+                      label: 'Opening Time',
+                      controller: _shopOpenTimeController,
+                      hintText: 'Select opening time',
+                      readOnly: true,
+                      onTap: () =>
+                          _selectTime(_shopOpenTimeController, 'Opening Time'),
+                      suffixIcon:
+                          Icon(Icons.access_time, color: AppColors.primary),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Opening time is required';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: AppSizes.spaceBtwInputFields),
+
+                    // Closing Time
+                    CustomTextField(
+                      label: 'Closing Time',
+                      controller: _shopCloseTimeController,
+                      hintText: 'Select closing time',
+                      readOnly: true,
+                      onTap: () =>
+                          _selectTime(_shopCloseTimeController, 'Closing Time'),
+                      suffixIcon:
+                          Icon(Icons.access_time, color: AppColors.primary),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Closing time is required';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: AppSizes.spaceBtwSections),
+
+                    // Save Button
+                    PrimaryButton(
+                      title: _isLoading ? 'Saving...' : 'Save Profile',
+                      onPressed: _isLoading ? null : _saveProfile,
+                    ),
+                    SizedBox(height: AppSizes.sm),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildShopImagePicker() {
+  Widget _buildImageSection({
+    required String title,
+    required File? imageFile,
+    required String? existingImageUrl,
+    required VoidCallback onTap,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16),
-        const Text('Shop Image'),
-        const SizedBox(height: 8),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary,
+              ),
+        ),
+        SizedBox(height: AppSizes.spaceBtwItems),
         GestureDetector(
-          onTap: () => _pickImage(true),
-          child: Container(
-            height: 120,
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.textPrimaryColor),
-              borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
+          onTap: onTap,
+          child: DottedBorder(
+            borderType: BorderType.RRect,
+            radius: Radius.circular(AppSizes.borderRadiusLg),
+            dashPattern: const [6, 4],
+            color: AppColors.primary,
+            strokeWidth: 2,
+            child: Container(
+              height: 150,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
+                color: AppColors.grey.withValues(alpha: 0.1),
+              ),
+              child: imageFile != null
+                  ? ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(AppSizes.borderRadiusLg),
+                      child: Image.file(
+                        imageFile,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                    )
+                  : existingImageUrl != null
+                      ? ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(AppSizes.borderRadiusLg),
+                          child: Image.network(
+                            '${AppConfig.baseFileUrl}$existingImageUrl',
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                            errorBuilder: (context, error, stackTrace) {
+                              return _buildImagePlaceholder();
+                            },
+                          ),
+                        )
+                      : _buildImagePlaceholder(),
             ),
-            child: _shopImageFile != null
-                ? ClipRRect(
-              borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-              child: Image.file(_shopImageFile!, fit: BoxFit.cover),
-            )
-                : (_profile?.shopImage != null
-                ? ClipRRect(
-              borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-              child: Image.network(_profile!.shopImage!, fit: BoxFit.cover),
-            )
-                : const Center(child: Icon(Icons.add_photo_alternate, size: 40))),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-          ),
+  Widget _buildImagePlaceholder() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.add_photo_alternate_outlined,
+          size: 48,
+          color: AppColors.primary,
         ),
-      ),
-    );
-  }
-
-  Widget _buildTimeField(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: TextFormField(
-        controller: controller,
-        readOnly: true,
-        onTap: () => _selectTime(controller),
-        decoration: InputDecoration(
-          labelText: label,
-          suffixIcon: const Icon(Icons.access_time),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-          ),
+        SizedBox(height: AppSizes.xs),
+        Text(
+          'Tap to select image',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppColors.primary,
+              ),
         ),
-      ),
+      ],
     );
   }
 }

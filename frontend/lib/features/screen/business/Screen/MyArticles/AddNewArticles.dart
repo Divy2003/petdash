@@ -118,8 +118,8 @@ class _AddNewArticlesState extends State<AddNewArticles> {
             SizedBox(height: AppSizes.spaceBtwInputFields),
 
             // Image Picker
-            const MultipleImagePicker(),
-            SizedBox(height: AppSizes.spaceBtwSections),
+            // const MultipleImagePicker(),
+            // SizedBox(height: AppSizes.spaceBtwSections),
 
             // Save Button
             PrimaryButton(

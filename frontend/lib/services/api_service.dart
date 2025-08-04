@@ -24,6 +24,53 @@ class ApiService {
     return headers;
   }
 
+  // Get current user role information from token
+  static Future<Map<String, dynamic>?> getCurrentUserRoleInfo() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('auth_token');
+
+      if (token == null) return null;
+
+      // Decode JWT token to get role information
+      final parts = token.split('.');
+      if (parts.length != 3) return null;
+
+      final payload = parts[1];
+      final normalized = base64Url.normalize(payload);
+      final decoded = utf8.decode(base64Url.decode(normalized));
+      final Map<String, dynamic> tokenData = json.decode(decoded);
+
+      return {
+        'currentRole': tokenData['currentRole'] ?? tokenData['userType'],
+        'availableRoles':
+            tokenData['availableRoles'] ?? [tokenData['userType']],
+        'userType': tokenData['userType'],
+        'userId': tokenData['id'],
+      };
+    } catch (e) {
+      print('Error decoding token: $e');
+      return null;
+    }
+  }
+
+  // Check if current user can switch to a specific role
+  static Future<bool> canSwitchToRole(String targetRole) async {
+    try {
+      final roleInfo = await getCurrentUserRoleInfo();
+      if (roleInfo == null) return false;
+
+      final availableRoles = (roleInfo['availableRoles'] as List<dynamic>?)
+              ?.map((role) => role.toString())
+              .toList() ??
+          [];
+      return availableRoles.contains(targetRole);
+    } catch (e) {
+      print('Error checking role permissions: $e');
+      return false;
+    }
+  }
+
   // Generic GET request
   static Future<Map<String, dynamic>> get(
     String endpoint, {
@@ -108,13 +155,36 @@ class ApiService {
 
   // Handle HTTP response
   static Map<String, dynamic> _handleResponse(http.Response response) {
-    final responseBody = json.decode(response.body);
+    print('📊 Response Status: ${response.statusCode}');
+    print(
+        '📄 Response Body (first 200 chars): ${response.body.length > 200 ? response.body.substring(0, 200) : response.body}');
 
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return responseBody;
-    } else {
+    // Check if response is HTML (error page)
+    if (response.body.trim().startsWith('<!DOCTYPE') ||
+        response.body.trim().startsWith('<html')) {
       throw ApiException(
-        responseBody['message'] ?? 'Request failed',
+        'Server returned HTML instead of JSON. Server may be down or endpoint incorrect. Status: ${response.statusCode}',
+        statusCode: response.statusCode,
+      );
+    }
+
+    try {
+      final responseBody = json.decode(response.body);
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return responseBody;
+      } else {
+        throw ApiException(
+          responseBody['message'] ?? 'Request failed',
+          statusCode: response.statusCode,
+        );
+      }
+    } catch (e) {
+      if (e is ApiException) {
+        rethrow;
+      }
+      throw ApiException(
+        'Invalid JSON response from server: ${e.toString()}',
         statusCode: response.statusCode,
       );
     }

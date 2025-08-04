@@ -9,6 +9,8 @@ import 'package:petcare/provider/category_provider.dart';
 import 'package:petcare/provider/business_provider.dart';
 import 'package:petcare/provider/location_provider.dart';
 import 'package:petcare/provider/services_provider.dart';
+import 'package:petcare/provider/profile_provider.dart';
+import 'package:petcare/provider/role_switching_provider.dart';
 
 import 'package:petcare/utlis/theme/Theme.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +35,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => BusinessProvider()),
         ChangeNotifierProvider(create: (_) => LocationProvider()),
         ChangeNotifierProvider(create: (_) => ServicesProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
+        ChangeNotifierProvider(create: (_) => RoleSwitchingProvider()),
       ],
       child: const MyApp(),
     ),

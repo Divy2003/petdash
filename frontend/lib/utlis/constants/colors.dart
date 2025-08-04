@@ -10,6 +10,7 @@ class AppColors{
   static const Color secondary  = Color(0xFF070821);
 
   static const Color textPrimaryColor = Color(0xFF969292);
+  static const Color primaryColor = Color(0xFF969292);
   static const Color textSecondary = Color(0xFF9E9E9E);
   static const Color dividerColor  = Color(0xFF979292);
   static const Color dottedColor = Color(0xFF4552CB);

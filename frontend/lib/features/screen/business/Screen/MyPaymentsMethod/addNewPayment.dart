@@ -1,13 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 import '../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/image_strings.dart';
 import '../../model/cardModel.dart';
-
 
 class AddCardScreen extends StatefulWidget {
   final Function(CardModel) onSave;
@@ -63,8 +62,11 @@ class _AddCardScreenState extends State<AddCardScreen> {
   void saveCard() {
     if (_formKey.currentState!.validate()) {
       if (cardBrand != 'Visa' && cardBrand != 'Mastercard') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Only Visa and Mastercard cards are supported.')),
+        Get.snackbar(
+          "Error",
+          'Only Visa and Mastercard cards are supported.',
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
         return;
       }
@@ -81,7 +83,6 @@ class _AddCardScreenState extends State<AddCardScreen> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -92,7 +93,6 @@ class _AddCardScreenState extends State<AddCardScreen> {
       });
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +106,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
           return null;
       }
     }
+
     return Scaffold(
       appBar: CustomAppBar(title: 'Add New Card'),
       body: SingleChildScrollView(
@@ -118,15 +119,19 @@ class _AddCardScreenState extends State<AddCardScreen> {
                 controller: nameController,
                 focusNode: nameFocus,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(numberFocus),
-                decoration:  InputDecoration(
+                onFieldSubmitted: (_) =>
+                    FocusScope.of(context).requestFocus(numberFocus),
+                decoration: InputDecoration(
                   labelText: "Name on card",
                   labelStyle: TextStyle(
                     color: AppColors.primary,
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.primary), // 🔲 black underline when focused
-                  ),),
+                    borderSide: BorderSide(
+                        color: AppColors
+                            .primary), // 🔲 black underline when focused
+                  ),
+                ),
                 validator: (v) => v == null || v.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 10),
@@ -140,20 +145,23 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   LengthLimitingTextInputFormatter(19),
                   _CardNumberInputFormatter(),
                 ],
-                onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(expFocus),
+                onFieldSubmitted: (_) =>
+                    FocusScope.of(context).requestFocus(expFocus),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(
                     color: AppColors.primary,
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.primary), // 🔲 black underline when focused
+                    borderSide: BorderSide(
+                        color: AppColors
+                            .primary), // 🔲 black underline when focused
                   ),
                   labelText: "Card number",
                   suffixIcon: getCardLogo() != null
                       ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: getCardLogo(),
-                  )
+                          padding: const EdgeInsets.all(8.0),
+                          child: getCardLogo(),
+                        )
                       : null,
                 ),
                 validator: (v) {
@@ -177,25 +185,28 @@ class _AddCardScreenState extends State<AddCardScreen> {
                       focusNode: expFocus,
                       textInputAction: TextInputAction.next,
                       controller: expController,
-                      onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(cvvFocus),
+                      onFieldSubmitted: (_) =>
+                          FocusScope.of(context).requestFocus(cvvFocus),
                       keyboardType: TextInputType.number,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         LengthLimitingTextInputFormatter(6),
                         _ExpiryDateInputFormatter(),
                       ],
-                      decoration:  InputDecoration(
+                      decoration: InputDecoration(
                         labelStyle: TextStyle(
                           color: AppColors.primary,
                         ),
                         labelText: "Expiry Date",
                         focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.primary), // 🔲 black underline when focused
+                          borderSide: BorderSide(
+                              color: AppColors
+                                  .primary), // 🔲 black underline when focused
                         ),
                       ),
-                      validator: (v) =>
-                      v == null || !RegExp(r"^(0[1-9]|1[0-2])\/20[2-9]\d$")
-                          .hasMatch(v)
+                      validator: (v) => v == null ||
+                              !RegExp(r"^(0[1-9]|1[0-2])\/20[2-9]\d$")
+                                  .hasMatch(v)
                           ? 'Invalid MM/YYYY'
                           : null,
                     ),
@@ -206,23 +217,27 @@ class _AddCardScreenState extends State<AddCardScreen> {
                       focusNode: cvvFocus,
                       textInputAction: TextInputAction.next,
                       controller: cvvController,
-                      onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(zipFocus),
+                      onFieldSubmitted: (_) =>
+                          FocusScope.of(context).requestFocus(zipFocus),
                       obscureText: true,
                       keyboardType: TextInputType.number,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         LengthLimitingTextInputFormatter(3),
                       ],
-                      decoration:  InputDecoration(
+                      decoration: InputDecoration(
                         labelStyle: TextStyle(
                           color: AppColors.primary,
                         ),
                         labelText: "CVV",
                         focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.primary), // 🔲 black underline when focused
-                        ),),
+                          borderSide: BorderSide(
+                              color: AppColors
+                                  .primary), // 🔲 black underline when focused
+                        ),
+                      ),
                       validator: (v) =>
-                      v == null || v.length != 3 ? 'Invalid CVV' : null,
+                          v == null || v.length != 3 ? 'Invalid CVV' : null,
                     ),
                   ),
                 ],
@@ -240,13 +255,18 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   ),
                   labelText: "Zip code",
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.primary), // 🔲 black underline when focused
+                    borderSide: BorderSide(
+                        color: AppColors
+                            .primary), // 🔲 black underline when focused
                   ),
                 ),
                 validator: (v) => v == null || v.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 30),
-              PrimaryButton(title: 'Save',onPressed: saveCard,),
+              PrimaryButton(
+                title: 'Save',
+                onPressed: saveCard,
+              ),
             ],
           ),
         ),
@@ -260,10 +280,12 @@ class _CardNumberInputFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     final digitsOnly = newValue.text.replaceAll(RegExp(r'\D'), '');
-    final newString = digitsOnly.replaceAllMapped(
-      RegExp(r".{1,4}"),
+    final newString = digitsOnly
+        .replaceAllMapped(
+          RegExp(r".{1,4}"),
           (match) => "${match.group(0)} ",
-    ).trimRight();
+        )
+        .trimRight();
 
     return TextEditingValue(
       text: newString,

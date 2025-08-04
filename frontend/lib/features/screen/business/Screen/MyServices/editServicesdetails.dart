@@ -107,8 +107,11 @@ class _EditServicesDetailsState extends State<EditServicesDetails> {
 
     // Basic validation
     if (titleController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a service title')),
+      Get.snackbar(
+        "Error",
+        'Please enter a service title',
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -147,15 +150,19 @@ class _EditServicesDetailsState extends State<EditServicesDetails> {
 
     if (mounted) {
       if (success) {
-        ScaffoldMessenger.of(this.context).showSnackBar(
-          const SnackBar(content: Text('Service updated successfully')),
+        Get.snackbar(
+          "Success",
+          'Service updated successfully',
+          backgroundColor: AppColors.success,
+          colorText: AppColors.white,
         );
         Get.back(); // Go back to services list
       } else {
-        ScaffoldMessenger.of(this.context).showSnackBar(
-          SnackBar(
-              content:
-                  Text(servicesProvider.error ?? 'Failed to update service')),
+        Get.snackbar(
+          "Error",
+          servicesProvider.error ?? 'Failed to update service',
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
       }
     }

@@ -8,7 +8,7 @@ import '../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/size.dart';
-import '../../../../../services/profile_service.dart';
+import '../../../../../services/BusinessServices/profile_service.dart';
 import '../../../../../models/profile_model.dart';
 
 class EditProfile extends StatefulWidget {
@@ -32,11 +32,7 @@ class _EditProfileState extends State<EditProfile> {
   bool _isLoading = true;
   bool _isSaving = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadProfile();
-  }
+
 
   @override
   void dispose() {
@@ -47,36 +43,6 @@ class _EditProfileState extends State<EditProfile> {
     shopOpenTimeController.dispose();
     shopCloseTimeController.dispose();
     super.dispose();
-  }
-
-  Future<void> _loadProfile() async {
-    try {
-      final profileData = await ProfileService.getProfile();
-      final profile = ProfileModel.fromJson(profileData);
-
-      setState(() {
-        _profile = profile;
-        nameController.text = profile.name ?? '';
-        emailController.text = profile.email ?? '';
-        phoneNumberController.text = profile.phoneNumber ?? '';
-        addressController.text = profile.primaryAddress?.fullAddress ?? '';
-        shopOpenTimeController.text = profile.shopOpenTime ?? '';
-        shopCloseTimeController.text = profile.shopCloseTime ?? '';
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to load profile: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
   }
 
   Future<void> _pickProfileImage() async {
@@ -111,59 +77,6 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  Future<void> _saveProfile() async {
-    if (_isSaving) return;
-
-    setState(() {
-      _isSaving = true;
-    });
-
-    try {
-      await ProfileService.updateProfile(
-        name: nameController.text.trim().isEmpty
-            ? null
-            : nameController.text.trim(),
-        email: emailController.text.trim().isEmpty
-            ? null
-            : emailController.text.trim(),
-        phoneNumber: phoneNumberController.text.trim().isEmpty
-            ? null
-            : phoneNumberController.text.trim(),
-        profileImage: _profileImageFile,
-        shopImage: _shopImageFile,
-        shopOpenTime: shopOpenTimeController.text.trim().isEmpty
-            ? null
-            : shopOpenTimeController.text.trim(),
-        shopCloseTime: shopCloseTimeController.text.trim().isEmpty
-            ? null
-            : shopCloseTimeController.text.trim(),
-      );
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile updated successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.pop(context, true); // Return true to indicate success
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to update profile: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
-      setState(() {
-        _isSaving = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -183,9 +96,7 @@ class _EditProfileState extends State<EditProfile> {
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+      body: SingleChildScrollView(
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -529,8 +440,10 @@ class _EditProfileState extends State<EditProfile> {
                     ],
 
                     PrimaryButton(
-                      title: _isSaving ? 'Saving...' : 'Update Profile',
-                      onPressed: _isSaving ? null : _saveProfile,
+                      title:  'Update Profile',
+                      onPressed:(){
+
+                      },
                     ),
                   ],
                 ),

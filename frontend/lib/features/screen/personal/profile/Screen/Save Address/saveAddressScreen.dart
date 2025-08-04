@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../../../../../utlis/constants/colors.dart';
 import '../../../../../../utlis/constants/size.dart';
@@ -103,11 +104,11 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
     return GestureDetector(
       onTap: () {
         // Handle address selection
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Selected ${address['type']} address'),
-            backgroundColor: AppColors.success,
-          ),
+        Get.snackbar(
+          "Success",
+          'Selected ${address['type']} address',
+          backgroundColor: AppColors.success,
+          colorText: AppColors.white,
         );
       },
       child: Container(

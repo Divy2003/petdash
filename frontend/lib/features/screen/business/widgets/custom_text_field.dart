@@ -20,6 +20,8 @@ class CustomTextField extends StatelessWidget {
   final Widget? prefixIcon;
   final EdgeInsets? contentPadding;
   final TextStyle? labelStyle;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   const CustomTextField({
     Key? key,
@@ -38,6 +40,8 @@ class CustomTextField extends StatelessWidget {
     this.prefixIcon,
     this.contentPadding,
     this.labelStyle,
+    this.readOnly = false,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -47,10 +51,11 @@ class CustomTextField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: labelStyle ?? Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: AppColors.primary,
-            fontWeight: FontWeight.w500,
-          ),
+          style: labelStyle ??
+              Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -62,12 +67,15 @@ class CustomTextField extends StatelessWidget {
           textInputAction: textInputAction,
           validator: validator,
           enabled: enabled,
-          onFieldSubmitted: onFieldSubmitted != null ? (_) => onFieldSubmitted!() : null,
+          readOnly: readOnly,
+          onTap: onTap,
+          onFieldSubmitted:
+              onFieldSubmitted != null ? (_) => onFieldSubmitted!() : null,
           decoration: InputDecoration(
             hintText: hintText,
             suffixIcon: suffixIcon,
             prefixIcon: prefixIcon,
-            contentPadding: contentPadding ?? 
+            contentPadding: contentPadding ??
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),

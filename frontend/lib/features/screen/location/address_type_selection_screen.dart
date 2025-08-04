@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../../utlis/constants/colors.dart';
 import '../../../utlis/constants/size.dart';
@@ -256,11 +257,11 @@ class _AddressTypeSelectionScreenState
     );
 
     // Show success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$selectedType address saved successfully!'),
-        backgroundColor: AppColors.success,
-      ),
+    Get.snackbar(
+      "Success",
+      '$selectedType address saved successfully!',
+      backgroundColor: AppColors.success,
+      colorText: AppColors.white,
     );
 
     // Navigate back to the previous screens

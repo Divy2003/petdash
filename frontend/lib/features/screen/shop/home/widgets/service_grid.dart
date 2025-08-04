@@ -5,7 +5,7 @@ import '../../../../../utlis/app_config/app_config.dart';
 import '../../../../../utlis/constants/size.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../provider/category_provider.dart';
-import '../../../../../services/category_service.dart';
+import '../../../../../services/petowerServices/category_service.dart';
 
 import '../../Service/ServicesList.dart';
 import 'service_tile.dart';

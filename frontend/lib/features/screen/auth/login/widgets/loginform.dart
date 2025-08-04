@@ -13,7 +13,6 @@ import '../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../provider/auth_provider/loginprovider.dart';
 import '../../../Navigation.dart';
 
-
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
@@ -53,10 +52,8 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 
-
-  Future<void> submit() async{
-    final provider =
-    Provider.of<LoginProvider>(context, listen: false);
+  Future<void> submit() async {
+    final provider = Provider.of<LoginProvider>(context, listen: false);
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
@@ -64,8 +61,11 @@ class _LoginFormState extends State<LoginForm> {
 
     if (mounted) {
       if (error == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Login successful")),
+        Get.snackbar(
+          "Success",
+          "Login successful",
+          backgroundColor: AppColors.success,
+          colorText: AppColors.white,
         );
 
         // Add a small delay to ensure the snackbar is shown
@@ -78,8 +78,11 @@ class _LoginFormState extends State<LoginForm> {
           Get.offAll(() => const CurvedNavScreen());
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error)),
+        Get.snackbar(
+          "Error",
+          error,
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
       }
     }
@@ -225,7 +228,7 @@ class _LoginFormState extends State<LoginForm> {
             height: 40,
           ),
           PrimaryButton(
-             onPressed: loginProvider.isLoading ? null : submit,
+            onPressed: loginProvider.isLoading ? null : submit,
             title: 'Log-in',
           ),
           // Login  button

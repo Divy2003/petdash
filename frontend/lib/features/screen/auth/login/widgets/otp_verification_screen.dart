@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/size.dart';
@@ -36,8 +37,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Future<void> verifyOtp() async {
     final otpCode = getOtpCode();
     if (otpCode.length != 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please enter the complete 6-digit code")),
+      Get.snackbar(
+        "Error",
+        "Please enter the complete 6-digit code",
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -49,8 +53,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     if (!mounted) return;
 
     if (error == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("OTP verified successfully")),
+      Get.snackbar(
+        "Success",
+        "OTP verified successfully",
+        backgroundColor: AppColors.success,
+        colorText: AppColors.white,
       );
       // Navigate to new password screen and pass the OTP
       Navigator.push(
@@ -58,8 +65,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         MaterialPageRoute(builder: (_) => NewPasswordScreen(otpCode: otpCode)),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error)),
+      Get.snackbar(
+        "Error",
+        error,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     }
   }
@@ -72,8 +82,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     if (!mounted) return;
 
     if (error == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("New code sent to your email")),
+      Get.snackbar(
+        "Success",
+        "New code sent to your email",
+        backgroundColor: AppColors.success,
+        colorText: AppColors.white,
       );
       // Clear current OTP fields
       for (var controller in otpControllers) {
@@ -81,8 +94,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       }
       focusNodes[0].requestFocus();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error)),
+      Get.snackbar(
+        "Error",
+        error,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     }
   }

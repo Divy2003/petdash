@@ -58,11 +58,11 @@ class RegisterProvider with ChangeNotifier {
       print("Mock registration successful for testing");
       await Future.delayed(Duration(seconds: 1)); // Simulate network delay
 
-      // Store user type in shared preferences for future use
+      // Store user type in shared preferences for future use (but not auth token)
       final prefs = await SharedPreferences.getInstance();
       final userTypeString = selectedType == UserType.petOwner ? "Pet Owner" : "Business";
       await prefs.setString('user_type', userTypeString);
-      await prefs.setString('auth_token', 'mock_token_for_testing');
+      // Note: No auth_token stored during registration - user must login
 
       _registeredUser = UserModel(
         name: name,
@@ -93,21 +93,14 @@ class RegisterProvider with ChangeNotifier {
           userType: selectedType!,
         );
 
-        // Store user type and token in shared preferences for future use
+        // Store user type for future reference (but not auth token)
         final prefs = await SharedPreferences.getInstance();
         final userTypeString = selectedType == UserType.petOwner ? "Pet Owner" : "Business";
         await prefs.setString('user_type', userTypeString);
         print("Stored user type: $userTypeString");
 
-        // If backend returns a token during registration, store it
-        if (responseBody['token'] != null) {
-          await prefs.setString('auth_token', responseBody['token']);
-          print("Stored auth token: ${responseBody['token']}");
-        } else {
-          // For testing, create a mock token
-          await prefs.setString('auth_token', 'mock_token_${DateTime.now().millisecondsSinceEpoch}');
-          print("Created mock auth token for testing");
-        }
+        // Note: We don't store auth_token during registration
+        // Users must login after registration to get authenticated
 
         notifyListeners();
         print("Registration provider returning null (success)");

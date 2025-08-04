@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/service_model.dart';
-import '../services/service_api_service.dart';
+import '../services/BusinessServices/service_api_service.dart';
 
 class ServicesProvider with ChangeNotifier {
   List<ServiceModel> _services = [];

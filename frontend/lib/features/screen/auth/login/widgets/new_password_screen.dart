@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/size.dart';
@@ -44,8 +45,11 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
     if (!mounted) return;
 
     if (error == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Password reset successfully")),
+      Get.snackbar(
+        "Success",
+        "Password reset successfully",
+        backgroundColor: AppColors.success,
+        colorText: AppColors.white,
       );
       // Navigate back to login screen
       Navigator.pushAndRemoveUntil(
@@ -54,8 +58,11 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
         (route) => false,
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error)),
+      Get.snackbar(
+        "Error",
+        error,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     }
   }
