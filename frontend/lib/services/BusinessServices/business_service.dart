@@ -27,18 +27,48 @@ class BusinessService {
         queryParams['zipCode'] = zipCode;
       }
 
+      print(
+          '🌐 BusinessService: Making API call to /business/category/$categoryId');
+      print('📋 BusinessService: Query params: $queryParams');
+
       final response = await ApiService.get(
         '/business/category/$categoryId',
         queryParams: queryParams,
       );
 
+      print('📥 BusinessService: API response received');
+      print('🔍 BusinessService: Response keys: ${response.keys.toList()}');
+
       if (response['businesses'] != null) {
         final List<dynamic> businessesJson = response['businesses'];
-        return businessesJson.map((json) => BusinessModel.fromJson(json)).toList();
+        print(
+            '✅ BusinessService: Found ${businessesJson.length} businesses in response');
+
+        // Log each business for debugging
+        for (int i = 0; i < businessesJson.length; i++) {
+          final businessJson = businessesJson[i];
+          print(
+              '   Business ${i + 1}: ${businessJson['name']} (ID: ${businessJson['_id']})');
+          print('     UserType: ${businessJson['userType']}');
+          print('     IsActive: ${businessJson['isActive']}');
+          print('     Email: ${businessJson['email']}');
+          print('     Profile Image: ${businessJson['profileImage']}');
+          print('     Shop Image: ${businessJson['shopImage']}');
+        }
+
+        final businesses =
+            businessesJson.map((json) => BusinessModel.fromJson(json)).toList();
+        print(
+            '🏗️ BusinessService: Successfully parsed ${businesses.length} BusinessModel objects');
+        return businesses;
+      } else {
+        print('⚠️ BusinessService: No "businesses" key in response');
+        print('📄 BusinessService: Full response: $response');
       }
 
       return [];
     } catch (e) {
+      print('❌ BusinessService: Error fetching businesses: $e');
       throw Exception('Failed to fetch businesses: ${e.toString()}');
     }
   }
@@ -97,7 +127,9 @@ class BusinessService {
 
       if (response['businesses'] != null) {
         final List<dynamic> businessesJson = response['businesses'];
-        return businessesJson.map((json) => BusinessModel.fromJson(json)).toList();
+        return businessesJson
+            .map((json) => BusinessModel.fromJson(json))
+            .toList();
       }
 
       return [];

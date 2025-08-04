@@ -7,6 +7,7 @@ import '../../../../utlis/constants/colors.dart';
 import '../../../../utlis/constants/size.dart';
 import '../../../../models/category_model.dart';
 import '../../../../provider/business_provider.dart';
+
 import 'ServiceDetails.dart';
 
 class ServicesList extends StatefulWidget {
@@ -36,19 +37,67 @@ class _ServicesListState extends State<ServicesList> {
     super.initState();
     // Load businesses when widget initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.category != null) {
-        context
-            .read<BusinessProvider>()
-            .loadBusinessesByCategory(widget.category!);
-      }
+      _loadBusinessesWithRetry();
     });
+  }
+
+  // Load businesses with retry mechanism and better error handling
+  Future<void> _loadBusinessesWithRetry({int retryCount = 0}) async {
+    final businessProvider = context.read<BusinessProvider>();
+
+    if (widget.category != null) {
+      try {
+        print(
+            '🔍 ServicesList: Loading businesses for category: ${widget.category!.name} (ID: ${widget.category!.id})');
+        print('🔄 ServicesList: Retry attempt: $retryCount');
+
+        await businessProvider.loadBusinessesByCategory(widget.category!);
+
+        print(
+            '✅ ServicesList: Load completed. Found ${businessProvider.businesses.length} businesses');
+
+        // If successful but no businesses found, this might be a new business category
+        // or the user's business profile hasn't been indexed yet
+        if (!businessProvider.hasBusinesses && retryCount < 2) {
+          print(
+              '⏳ ServicesList: No businesses found, retrying in 2 seconds...');
+          // Wait a bit and retry
+          await Future.delayed(const Duration(seconds: 2));
+          await _loadBusinessesWithRetry(retryCount: retryCount + 1);
+        } else if (businessProvider.hasBusinesses) {
+          print('📋 ServicesList: Businesses found:');
+          for (int i = 0; i < businessProvider.businesses.length; i++) {
+            final business = businessProvider.businesses[i];
+            print('  ${i + 1}. ${business.name} (ID: ${business.id})');
+            print('     Email: ${business.email}');
+            print('     Phone: ${business.phone ?? 'N/A'}');
+            print('     Profile Image: ${business.profileImage ?? 'N/A'}');
+            print('     Shop Image: ${business.shopImage ?? 'N/A'}');
+            print('     Rating: ${business.rating ?? 'N/A'}');
+            print('     Active: ${business.isActive}');
+          }
+        }
+      } catch (e) {
+        print('❌ ServicesList: Error loading businesses: $e');
+        // If error occurs and we haven't retried yet, try once more
+        if (retryCount < 1) {
+          print('🔄 ServicesList: Retrying after error in 1 second...');
+          await Future.delayed(const Duration(seconds: 1));
+          await _loadBusinessesWithRetry(retryCount: retryCount + 1);
+        }
+      }
+    } else {
+      print('⚠️ ServicesList: No category provided for loading businesses');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: CustomAppBar(title: displayTitle),
+      appBar: CustomAppBar(
+        title: displayTitle,
+      ),
       body: Column(
         children: [
           // Filter & Sort
@@ -102,7 +151,7 @@ class _ServicesListState extends State<ServicesList> {
             ),
           ),
 
-          // List
+          // List with pull-to-refresh
           Expanded(
             child: Consumer<BusinessProvider>(
               builder: (context, businessProvider, child) {
@@ -115,7 +164,12 @@ class _ServicesListState extends State<ServicesList> {
                 }
 
                 if (businessProvider.hasBusinesses) {
-                  return _buildBusinessList(businessProvider.businesses);
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      await businessProvider.forceRefreshBusinesses();
+                    },
+                    child: _buildBusinessList(businessProvider.businesses),
+                  );
                 }
 
                 // Fallback to hardcoded data if no businesses
@@ -149,52 +203,144 @@ class _ServicesListState extends State<ServicesList> {
   }
 
   Widget _buildErrorView(BusinessProvider businessProvider) {
+    // Check if this is an authentication error
+    bool isAuthError =
+        businessProvider.error?.contains('Authentication') == true ||
+            businessProvider.error?.contains('401') == true ||
+            businessProvider.error?.contains('token') == true;
+
+    // Check if this is a network error
+    bool isNetworkError = businessProvider.error?.contains('Network') == true ||
+        businessProvider.error?.contains('Connection') == true ||
+        businessProvider.error?.contains('SocketException') == true;
+
     return Container(
       padding: EdgeInsets.all(AppSizes.md),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.error_outline,
+            isAuthError
+                ? Icons.lock_outline
+                : isNetworkError
+                    ? Icons.wifi_off
+                    : Icons.error_outline,
             size: 64,
             color: AppColors.error,
           ),
           SizedBox(height: AppSizes.md),
           Text(
-            'Failed to load businesses',
+            isAuthError
+                ? 'Authentication Required'
+                : isNetworkError
+                    ? 'Connection Problem'
+                    : 'Failed to load businesses',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: AppColors.error,
                 ),
           ),
           SizedBox(height: AppSizes.sm),
           Text(
-            businessProvider.error ?? 'Unknown error',
+            _getErrorMessage(businessProvider.error),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.textSecondary,
                 ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: AppSizes.lg),
+
+          // Primary action button
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               businessProvider.clearError();
-              if (widget.category != null) {
-                businessProvider.loadBusinessesByCategory(widget.category!);
-              }
+              await _loadBusinessesWithRetry();
             },
-            child: const Text('Retry'),
+            child: Text(isAuthError ? 'Login Again' : 'Retry'),
           ),
+
           SizedBox(height: AppSizes.sm),
+
+          // Secondary action - show sample data
           TextButton(
             onPressed: () {
-              // Show fallback data
+              // Force show fallback data by clearing error
+              businessProvider.clearError();
               setState(() {});
             },
-            child: const Text('Use Offline Mode'),
+            child: const Text('Browse Sample Businesses'),
           ),
+
+          // If it's a new business profile issue, show helpful message
+          if (!isAuthError && !isNetworkError)
+            FutureBuilder<bool>(
+              future: businessProvider.isCurrentUserBusiness(),
+              builder: (context, snapshot) {
+                if (snapshot.data == true) {
+                  return Padding(
+                    padding: EdgeInsets.only(top: AppSizes.md),
+                    child: Container(
+                      padding: EdgeInsets.all(AppSizes.sm),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        borderRadius:
+                            BorderRadius.circular(AppSizes.cardRadiusSm),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(Icons.business_center, color: AppColors.primary),
+                          SizedBox(height: AppSizes.xs),
+                          Text(
+                            'Business Owner?',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            'Your business profile may take a few minutes to appear in search results after creation or updates.',
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: AppColors.primary,
+                                    ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
         ],
       ),
     );
+  }
+
+  String _getErrorMessage(String? error) {
+    if (error == null) return 'Unknown error occurred';
+
+    if (error.contains('Authentication') ||
+        error.contains('401') ||
+        error.contains('token')) {
+      return 'Please log in again to access business listings';
+    }
+
+    if (error.contains('Network') ||
+        error.contains('Connection') ||
+        error.contains('SocketException')) {
+      return 'Please check your internet connection and try again';
+    }
+
+    if (error.contains('businesses') && error.contains('fetch')) {
+      return 'Unable to load business listings. This might be temporary.';
+    }
+
+    return error.length > 100 ? '${error.substring(0, 100)}...' : error;
   }
 
   Widget _buildBusinessList(businesses) {
@@ -219,18 +365,84 @@ class _ServicesListState extends State<ServicesList> {
   Widget _buildFallbackList(BusinessProvider businessProvider) {
     final fallbackBusinesses = businessProvider.getFallbackBusinesses();
 
-    return ListView.builder(
-      padding: EdgeInsets.all(AppSizes.md),
-      itemCount: fallbackBusinesses.length,
-      itemBuilder: (context, index) {
-        final provider = fallbackBusinesses[index];
-        return GestureDetector(
-          onTap: () {
-            Get.to(() => ServiceDetails(providerName: provider['name']));
-          },
-          child: _buildFallbackBusinessCard(provider),
-        );
-      },
+    return Column(
+      children: [
+        // Info message about sample data
+        Container(
+          margin: EdgeInsets.all(AppSizes.md),
+          padding: EdgeInsets.all(AppSizes.md),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
+            border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.info_outline, color: AppColors.primary),
+              SizedBox(width: AppSizes.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Sample Businesses',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      'Showing sample data. Real businesses will appear here once they register and create profiles.',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppColors.primary,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Refresh button
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.md),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () async {
+                await _loadBusinessesWithRetry();
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('Check for New Businesses'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
+              ),
+            ),
+          ),
+        ),
+
+        SizedBox(height: AppSizes.md),
+
+        // Sample businesses list
+        Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.md),
+            itemCount: fallbackBusinesses.length,
+            itemBuilder: (context, index) {
+              final provider = fallbackBusinesses[index];
+              return GestureDetector(
+                onTap: () {
+                  Get.to(() => ServiceDetails(providerName: provider['name']));
+                },
+                child: _buildFallbackBusinessCard(provider),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 

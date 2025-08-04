@@ -1,9 +1,6 @@
-import 'dart:io';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:petcare/utlis/constants/image_strings.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../common/widgets/appbar/appbar.dart';
