@@ -22,16 +22,14 @@ const app = express();
 
 // 🔌 connect to MongoDB
 const connectDB = require('./config/db');
-const { runSeeder } = require('./seeders/databaseSeeder');
 
-// Connect to database and run seeder
+// Connect to database
 const initializeDatabase = async () => {
   try {
     await connectDB();
-    await runSeeder();
-    console.log('✅ Database initialization complete');
+    console.log('✅ Database connected');
   } catch (error) {
-    console.error('❌ Database initialization failed:', error.message);
+    console.error('❌ Database connection failed:', error.message);
     process.exit(1);
   }
 };

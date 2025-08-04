@@ -1,7 +1,7 @@
 
+/* Import our custom admin styles */
+@import './admin.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import our custom admin styles */
-@import './admin.css';
