@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:petcare/common/widgets/Tile/profilemenutile.dart';
 import 'package:petcare/features/screen/auth/login/loginscreen.dart';
 import 'package:petcare/features/screen/business/profiles/Createprofile.dart';
 import 'package:petcare/features/screen/personal/profile/widgets/editProfile.dart';
 import 'package:petcare/features/screen/personal/profile/widgets/profileheaderwidgets.dart';
 import 'package:petcare/services/user_session_service.dart';
+import 'package:petcare/provider/profile_provider.dart';
 
 import '../../../utlis/constants/colors.dart';
 import '../../../utlis/constants/image_strings.dart';
@@ -30,32 +32,97 @@ class BusinessProfileScreen extends StatefulWidget {
 
 class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
   @override
+  void initState() {
+    super.initState();
+    // Load profile data when screen initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadProfileData();
+    });
+  }
+
+  Future<void> _loadProfileData() async {
+    await context.read<ProfileProvider>().getProfile();
+  }
+
+  Future<void> _refreshProfile() async {
+    await _loadProfileData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          // Business user header
-          ProfileHeaderWidget(
-            name: 'Pet Care Business',
-            location: 'New York, USA',
-            imagePath: AppImages.person,
-            onEdit: () {
-              Get.to(() => EditProfile());
-            },
-          ),
-          SizedBox(height: 40.h),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(AppSizes.sm),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
-                    border: Border.all(color: AppColors.secondary),
+      body: Consumer<ProfileProvider>(
+        builder: (context, profileProvider, child) {
+          // Show loading indicator while fetching profile
+          if (profileProvider.isLoading && profileProvider.profile == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // Show error if there's an error fetching profile
+          if (profileProvider.error != null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline,
+                       size: 64,
+                       color: AppColors.error),
+                  SizedBox(height: AppSizes.md),
+                  Text(
+                    'Error loading profile',
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
-                  child: Column(
-                    children: [
+                  SizedBox(height: AppSizes.sm),
+                  Text(
+                    profileProvider.error!,
+                    style: Theme.of(context).textTheme.bodySmall,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: AppSizes.md),
+                  ElevatedButton(
+                    onPressed: _refreshProfile,
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          // Get profile data or use defaults
+          final profile = profileProvider.profile;
+          final businessName = profile?.name ?? 'Pet Care Business';
+          final businessLocation = profile?.displayAddress ?? 'Location not set';
+          final profileImagePath = profile?.profileImage ?? AppImages.person;
+
+          return RefreshIndicator(
+            onRefresh: _refreshProfile,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  // Business user header with real data
+                  ProfileHeaderWidget(
+                    name: businessName,
+                    location: businessLocation,
+                    imagePath: profileImagePath,
+                    onEdit: () {
+                      Get.to(() => EditProfile());
+                    },
+                  ),
+
+                  SizedBox(height: AppSizes.md),
+
+                  // Menu Section
+                  Padding(
+                    padding: EdgeInsets.all(AppSizes.sm),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
+                        border: Border.all(color: AppColors.secondary),
+                      ),
+                      child: Column(
+                        children: [
                       ProfileMenuTile(
                         icon: Icons.shopping_bag,
                         title: 'My Products',
@@ -66,8 +133,14 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                           color: AppColors.divider),
                       ProfileMenuTile(
                         icon: Icons.supervised_user_circle,
-                        title: 'Create Profile',
-                        onTap: () => Get.to(() => CreateProfile()),
+                        title: profile?.name != null ? 'Edit Profile' : 'Create Profile',
+                        onTap: () async {
+                          final result = await Get.to(() => CreateProfile());
+                          // Refresh profile data when returning from create/edit
+                          if (result == true) {
+                            _refreshProfile();
+                          }
+                        },
                       ),
                       Divider(
                           height: AppSizes.dividerHeight,
@@ -272,13 +345,18 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                           );
                         },
                       ),
-                    ],
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+
+                  // Add some bottom padding for better scrolling
+                  SizedBox(height: AppSizes.xl),
+                ],
               ),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

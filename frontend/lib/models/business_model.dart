@@ -1,3 +1,5 @@
+import '../utlis/app_config/app_config.dart';
+
 class BusinessModel {
   final String id;
   final String name;
@@ -43,7 +45,7 @@ class BusinessModel {
         String cleanPath = profileImagePath.startsWith('/')
             ? profileImagePath.substring(1)
             : profileImagePath;
-        fullProfileImageUrl = 'http://localhost:5000/$cleanPath';
+        fullProfileImageUrl = '${AppConfig.baseFileUrl}/$cleanPath';
       }
     }
 
@@ -58,7 +60,7 @@ class BusinessModel {
         String cleanPath = shopImagePath.startsWith('/')
             ? shopImagePath.substring(1)
             : shopImagePath;
-        fullShopImageUrl = 'http://localhost:5000/$cleanPath';
+        fullShopImageUrl = '${AppConfig.baseFileUrl}/$cleanPath';
       }
     }
 

@@ -3,7 +3,8 @@ const router = express.Router();
 const {
   getBusinessesByCategory,
   getBusinessProfile,
-  searchBusinesses
+  searchBusinesses,
+  getAllBusinessesWithProfiles
 } = require('../controllers/businessController');
 
 // Public routes (no authentication required for browsing businesses)
@@ -19,5 +20,9 @@ router.get('/profile/:businessId', getBusinessProfile);
 // Search businesses across all categories
 // GET /api/business/search?query=&category=&city=&state=&zipCode=&page=1&limit=10
 router.get('/search', searchBusinesses);
+
+// Get all businesses with complete profiles (for testing/debugging)
+// GET /api/business/all-with-profiles?page=1&limit=10
+router.get('/all-with-profiles', getAllBusinessesWithProfiles);
 
 module.exports = router;

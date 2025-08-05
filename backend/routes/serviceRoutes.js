@@ -8,7 +8,8 @@ const {
   updateService,
   getService,
   getBusinessServices,
-  deleteService
+  deleteService,
+  getServicesByBusinessId
 } = require('../controllers/serviceController');
 const { getBusinessProfile } = require('../controllers/businessController'); // <-- Added import
 

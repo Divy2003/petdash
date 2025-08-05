@@ -27,12 +27,29 @@ exports.getBusinessesByCategory = async (req, res) => {
       isActive: true
     }).populate('business', '_id');
 
-    // Get unique business IDs
-    const businessIds = [...new Set(services.map(service => service.business && service.business._id ? service.business._id.toString() : null).filter(Boolean))];
+    // Get unique business IDs from services
+    const businessIdsFromServices = [...new Set(services.map(service => service.business && service.business._id ? service.business._id.toString() : null).filter(Boolean))];
+
+    // Also find businesses with complete profiles (even without services)
+    // A complete profile should have at least name and either profileImage or shopImage
+    const businessesWithProfiles = await User.find({
+      userType: 'Business',
+      name: { $exists: true, $ne: '' },
+      $or: [
+        { profileImage: { $exists: true, $ne: null, $ne: '' } },
+        { shopImage: { $exists: true, $ne: null, $ne: '' } },
+        { shopOpenTime: { $exists: true, $ne: null, $ne: '' } }
+      ],
+      ...locationFilter
+    }).select('_id');
+
+    // Combine business IDs from services and complete profiles
+    const businessIdsFromProfiles = businessesWithProfiles.map(b => b._id.toString());
+    const allBusinessIds = [...new Set([...businessIdsFromServices, ...businessIdsFromProfiles])];
 
     // Build business filter
     const businessFilter = {
-      _id: { $in: businessIds },
+      _id: { $in: allBusinessIds },
       userType: 'Business',
       ...locationFilter
     };
@@ -216,7 +233,33 @@ exports.searchBusinesses = async (req, res) => {
     } else if (category) {
       // If only category filter, get businesses that have services in that category
       const serviceBusinessIds = await Service.find(serviceFilter).distinct('business');
-      businessFilter._id = { $in: serviceBusinessIds };
+
+      // Also include businesses with complete profiles (even without services in this category)
+      const businessesWithProfiles = await User.find({
+        userType: 'Business',
+        name: { $exists: true, $ne: '' },
+        $or: [
+          { profileImage: { $exists: true, $ne: null, $ne: '' } },
+          { shopImage: { $exists: true, $ne: null, $ne: '' } },
+          { shopOpenTime: { $exists: true, $ne: null, $ne: '' } }
+        ]
+      }).distinct('_id');
+
+      const allBusinessIds = [...new Set([...serviceBusinessIds, ...businessesWithProfiles])];
+      businessFilter._id = { $in: allBusinessIds };
+    } else {
+      // If no specific filters, include all businesses with complete profiles
+      const businessesWithProfiles = await User.find({
+        userType: 'Business',
+        name: { $exists: true, $ne: '' },
+        $or: [
+          { profileImage: { $exists: true, $ne: null, $ne: '' } },
+          { shopImage: { $exists: true, $ne: null, $ne: '' } },
+          { shopOpenTime: { $exists: true, $ne: null, $ne: '' } }
+        ]
+      }).distinct('_id');
+
+      businessFilter._id = { $in: businessesWithProfiles };
     }
 
     // Get businesses with pagination
@@ -266,6 +309,70 @@ exports.searchBusinesses = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: 'Error searching businesses',
+      error: error.message
+    });
+  }
+};
+
+// Get all businesses with complete profiles (for testing/debugging)
+exports.getAllBusinessesWithProfiles = async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+
+    // Find all businesses with complete profiles
+    const businessFilter = {
+      userType: 'Business',
+      name: { $exists: true, $ne: '' },
+      $or: [
+        { profileImage: { $exists: true, $ne: null, $ne: '' } },
+        { shopImage: { $exists: true, $ne: null, $ne: '' } },
+        { shopOpenTime: { $exists: true, $ne: null, $ne: '' } }
+      ]
+    };
+
+    const businesses = await User.find(businessFilter)
+      .select('-password -resetPasswordToken -resetPasswordExpires')
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort({ name: 1 });
+
+    const total = await User.countDocuments(businessFilter);
+
+    // Get services and reviews for each business
+    const businessesWithServices = await Promise.all(
+      businesses.map(async (business) => {
+        const businessServices = await Service.find({
+          business: business._id,
+          isActive: true
+        }).populate('category', 'name icon color')
+          .select('title description price images category');
+
+        // Get review statistics for this business
+        const reviewStats = await Review.calculateAverageRating(business._id);
+
+        return {
+          ...business.toObject(),
+          services: businessServices,
+          serviceCount: businessServices.length,
+          averageRating: reviewStats.averageRating,
+          totalReviews: reviewStats.totalReviews
+        };
+      })
+    );
+
+    res.status(200).json({
+      message: 'All businesses with profiles fetched successfully',
+      businesses: businessesWithServices,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / limit),
+        totalBusinesses: total,
+        limit: parseInt(limit)
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error fetching businesses with profiles',
       error: error.message
     });
   }

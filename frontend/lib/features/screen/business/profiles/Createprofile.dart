@@ -177,7 +177,7 @@ class _CreateProfileState extends State<CreateProfile> {
           'Profile updated successfully!',
           snackPosition: SnackPosition.BOTTOM,
         );
-        Navigator.pop(context);
+        Navigator.pop(context, true); // Return true to indicate success
       } else {
         Get.snackbar(
           'Error',
