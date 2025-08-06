@@ -25,7 +25,14 @@ exports.addImages = async (req, res) => {
     if (!user || user.userType !== 'Business') {
       return res.status(403).json({ message: 'Access denied' });
     }
-    const imagePaths = req.files.map(file => file.path);
+    const imagePaths = req.files.map(file => {
+      // Normalize path to use single backslashes and ensure it starts with \uploads\
+      let normalizedPath = file.path.replace(/\\\\/g, '\\').replace(/\//g, '\\');
+      if (!normalizedPath.startsWith('\\')) {
+        normalizedPath = '\\' + normalizedPath;
+      }
+      return normalizedPath;
+    });
     let gallery = await Gallery.findOne({ business: req.user.id });
     if (!gallery) {
       gallery = await Gallery.create({ business: req.user.id, images: imagePaths });
