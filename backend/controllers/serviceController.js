@@ -156,3 +156,47 @@ exports.deleteService = async (req, res) => {
     res.status(500).json({ message: 'Error deleting service', error: error.message });
   }
 };
+
+// Get services by business ID (for public viewing - pet owners viewing business services)
+exports.getServicesByBusinessId = async (req, res) => {
+  try {
+    const { businessId } = req.params;
+    const { page = 1, limit = 10, category } = req.query;
+
+    // Build filter
+    let filter = {
+      business: businessId,
+      isActive: true
+    };
+
+    if (category) {
+      filter.category = category;
+    }
+
+    // Get services for this business
+    const services = await Service.find(filter)
+      .populate('category', 'name description icon color')
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort({ createdAt: -1 });
+
+    const total = await Service.countDocuments(filter);
+
+    res.status(200).json({
+      message: 'Services fetched successfully',
+      services,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / limit),
+        totalServices: total,
+        hasNext: page < Math.ceil(total / limit),
+        hasPrev: page > 1
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error fetching services for business',
+      error: error.message
+    });
+  }
+};

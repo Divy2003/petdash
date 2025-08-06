@@ -3,9 +3,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:petcare/utlis/constants/image_strings.dart';
 
 import '../../../../../../utlis/constants/colors.dart';
+import '../../../../../../models/business_model.dart';
 
 class CurvedHeaderWidget extends StatelessWidget {
-  const CurvedHeaderWidget({super.key});
+  final BusinessModel? businessProfile;
+  final double? rating;
+
+  const CurvedHeaderWidget({
+    super.key,
+    this.businessProfile,
+    this.rating,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +30,9 @@ class CurvedHeaderWidget extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(AppImages.store1),
+                  image: businessProfile?.profileImage != null
+                      ? NetworkImage(businessProfile!.profileImage!)
+                      : AssetImage(AppImages.store1) as ImageProvider,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -47,7 +57,7 @@ class CurvedHeaderWidget extends StatelessWidget {
                       Icon(Icons.star, color: Colors.amber, size: 16.sp),
                       SizedBox(width: 4.w),
                       Text(
-                        "4.5",
+                        rating?.toStringAsFixed(1) ?? '4.5',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 14.sp,
@@ -74,10 +84,21 @@ class CurvedHeaderWidget extends StatelessWidget {
               ),
               child: Padding(
                 padding: EdgeInsets.all(6.w),
-                child: Image.asset(
-                  AppImages.storeLogo1,
-                  fit: BoxFit.cover,
-                ),
+                child: businessProfile?.shopImage != null
+                    ? Image.network(
+                        businessProfile!.shopImage!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                            AppImages.storeLogo1,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        AppImages.storeLogo1,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
           ),
@@ -94,8 +115,10 @@ class TopCurveClipper extends CustomClipper<Path> {
     final path = Path();
     path.lineTo(0, size.height - 40);
     path.quadraticBezierTo(
-      size.width / 2, size.height,
-      size.width, size.height - 40,
+      size.width / 2,
+      size.height,
+      size.width,
+      size.height - 40,
     );
     path.lineTo(size.width, 0);
     path.close();

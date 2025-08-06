@@ -168,6 +168,31 @@ class BusinessProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Load all businesses with complete profiles (for testing/debugging)
+  Future<void> loadAllBusinessesWithProfiles({
+    int page = 1,
+    int limit = 10,
+  }) async {
+    if (_isLoading) return;
+
+    _setLoading(true);
+    _setError(null);
+    _selectedCategory = null;
+
+    try {
+      final businesses = await BusinessService.getAllBusinessesWithProfiles(
+        page: page,
+        limit: limit,
+      );
+      _businesses = businesses;
+      notifyListeners();
+    } catch (e) {
+      _setError(e.toString());
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   // Check if current user is a business owner
   Future<bool> isCurrentUserBusiness() async {
     try {

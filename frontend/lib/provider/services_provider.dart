@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/service_model.dart';
 import '../services/BusinessServices/service_api_service.dart';
+import '../services/BusinessServices/business_service.dart';
 
 class ServicesProvider with ChangeNotifier {
   List<ServiceModel> _services = [];
@@ -130,6 +131,54 @@ class ServicesProvider with ChangeNotifier {
   // Refresh services
   Future<void> refreshServices() async {
     await loadBusinessServices(refresh: true);
+  }
+
+  // Load services for a specific business ID (for ServiceDetails screen)
+  Future<void> loadBusinessServicesByBusinessId(String businessId) async {
+    _setLoading(true);
+    _setError(null);
+    try {
+      // Use the business profile API to get services
+      final businessData = await BusinessService.getBusinessProfileWithServices(businessId);
+
+      // Extract services from the servicesByCategory structure
+      List<ServiceModel> allServices = [];
+      final servicesByCategory = businessData['servicesByCategory'] as Map<String, dynamic>? ?? {};
+
+      // Convert services from each category to ServiceModel objects
+      servicesByCategory.forEach((categoryName, categoryData) {
+        if (categoryData is Map<String, dynamic> && categoryData['services'] is List) {
+          final categoryServices = categoryData['services'] as List;
+          for (var serviceJson in categoryServices) {
+            try {
+              final service = ServiceModel.fromJson(serviceJson);
+              allServices.add(service);
+            } catch (e) {
+              print('❌ Error parsing service: $e');
+              print('📄 Service JSON: $serviceJson');
+            }
+          }
+        }
+      });
+
+      _services = allServices;
+      _hasInitialized = true;
+      _updateLastRefreshTime();
+      notifyListeners();
+
+      print('✅ Loaded ${allServices.length} services for business $businessId');
+    } catch (e) {
+      String errorMessage = e.toString();
+      if (errorMessage.contains('401') ||
+          errorMessage.contains('Authentication failed') ||
+          errorMessage.contains('Invalid token')) {
+        errorMessage = 'Authentication failed. Please log in again.';
+      }
+      _setError(errorMessage);
+      print('❌ Error loading business services: $errorMessage');
+    } finally {
+      _setLoading(false);
+    }
   }
 
   Future<void> getServiceById(String serviceId) async {

@@ -270,6 +270,21 @@ class _ServicesListState extends State<ServicesList> {
             child: const Text('Browse Sample Businesses'),
           ),
 
+          SizedBox(height: AppSizes.sm),
+
+          // Debug action - load all business profiles
+          ElevatedButton(
+            onPressed: () {
+              businessProvider.clearError();
+              businessProvider.loadAllBusinessesWithProfiles();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+            ),
+            child: const Text('Load All Business Profiles',
+                style: TextStyle(color: Colors.white)),
+          ),
+
           // If it's a new business profile issue, show helpful message
           if (!isAuthError && !isNetworkError)
             FutureBuilder<bool>(
@@ -471,21 +486,54 @@ class _ServicesListState extends State<ServicesList> {
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(AppSizes.cardRadiusMd),
                 ),
-                child: business.profileImage != null
+                child: business.profileImage != null &&
+                        business.profileImage!.isNotEmpty
                     ? Image.network(
                         business.profileImage!,
                         height: 150.h,
                         width: double.infinity,
                         fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            height: 150.h,
+                            width: double.infinity,
+                            color: AppColors.grey.withOpacity(0.1),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    AppColors.primary),
+                              ),
+                            ),
+                          );
+                        },
                         errorBuilder: (context, error, stackTrace) {
+                          print(
+                              '❌ Image load error for ${business.name}: $error');
+                          print('📍 Image URL: ${business.profileImage}');
+                          print('🔍 Error details: $stackTrace');
                           return Container(
                             height: 150.h,
                             width: double.infinity,
                             color: AppColors.grey.withOpacity(0.3),
-                            child: Icon(
-                              Icons.business,
-                              size: 48,
-                              color: AppColors.grey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.business,
+                                  size: 48,
+                                  color: AppColors.grey,
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  'Image not available',
+                                  style: TextStyle(
+                                    color: AppColors.grey,
+                                    fontSize: 12.sp,
+                                  ),
+                                ),
+                              ],
                             ),
                           );
                         },
@@ -734,6 +782,8 @@ class _ServicesListState extends State<ServicesList> {
           height: 40.h,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
+            print('❌ Logo load error for ${business.name}: $error');
+            print('📍 Logo URL: $logoUrl');
             return Icon(
               Icons.business,
               color: AppColors.primary,
@@ -742,10 +792,14 @@ class _ServicesListState extends State<ServicesList> {
           },
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
-            return Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+            return SizedBox(
+              width: 40.w,
+              height: 40.h,
+              child: Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                ),
               ),
             );
           },
