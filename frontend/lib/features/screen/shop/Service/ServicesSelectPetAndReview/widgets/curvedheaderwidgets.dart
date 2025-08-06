@@ -78,7 +78,7 @@ class CurvedHeaderWidget extends StatelessWidget {
               height: 64.w,
               width: 64.w,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
+
                 color: Colors.white,
                 border: Border.all(color: Colors.grey.shade300, width: 2),
               ),

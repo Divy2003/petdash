@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
@@ -11,11 +10,12 @@ import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../utlis/constants/size.dart';
 import '../../../../utlis/constants/colors.dart';
-import '../../../../utlis/constants/image_strings.dart';
 import '../../../../utlis/app_config/app_config.dart';
-import '../../../../models/profile_model.dart';
 import '../../../../provider/profile_provider.dart';
 import '../widgets/custom_text_field.dart';
+import '../widgets/address_selection_widget.dart';
+import '../widgets/rating_display_widget.dart';
+import '../widgets/clickable_rating_widget.dart';
 
 class CreateProfile extends StatefulWidget {
   const CreateProfile({super.key});
@@ -40,12 +40,16 @@ class _CreateProfileState extends State<CreateProfile> {
   File? _profileImageFile;
   File? _shopImageFile;
 
+  // Address data
+  Map<String, String> _addressData = {};
+
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _loadExistingProfile();
+    _loadBusinessRating();
   }
 
   @override
@@ -70,7 +74,24 @@ class _CreateProfileState extends State<CreateProfile> {
       _phoneController.text = profile.phoneNumber ?? '';
       _shopOpenTimeController.text = profile.shopOpenTime ?? '';
       _shopCloseTimeController.text = profile.shopCloseTime ?? '';
+
+      // Load address data if available
+      if (profile.primaryAddress != null) {
+        _addressData = {
+          'streetName': profile.primaryAddress!.streetName ?? '',
+          'city': profile.primaryAddress!.city ?? '',
+          'state': profile.primaryAddress!.state ?? '',
+          'zipCode': profile.primaryAddress!.zipCode ?? '',
+          'country': profile.primaryAddress!.country ?? 'USA',
+        };
+      }
     }
+  }
+
+  Future<void> _loadBusinessRating() async {
+    final profileProvider =
+        Provider.of<ProfileProvider>(context, listen: false);
+    await profileProvider.getBusinessRating();
   }
 
   Future<void> _pickProfileImage() async {
@@ -169,6 +190,12 @@ class _CreateProfileState extends State<CreateProfile> {
         shopCloseTime: _shopCloseTimeController.text.trim(),
         profileImageFile: _profileImageFile,
         shopImageFile: _shopImageFile,
+        addressLabel: 'Business',
+        streetName: _addressData['streetName'],
+        city: _addressData['city'],
+        state: _addressData['state'],
+        zipCode: _addressData['zipCode'],
+        country: _addressData['country'],
       );
 
       if (profileProvider.error == null) {
@@ -337,6 +364,23 @@ class _CreateProfileState extends State<CreateProfile> {
                           return 'Closing time is required';
                         }
                         return null;
+                      },
+                    ),
+                    SizedBox(height: AppSizes.spaceBtwSections),
+
+                    // Business Rating Display (Read-only for business owner)
+
+
+                    // Clickable Rating Widget (for testing - customers would use this)
+                    // Address Section
+                    AddressSelectionWidget(
+                      initialStreetName: _addressData['streetName'],
+                      initialCity: _addressData['city'],
+                      initialState: _addressData['state'],
+                      initialZipCode: _addressData['zipCode'],
+                      initialCountry: _addressData['country'],
+                      onAddressChanged: (addressData) {
+                        _addressData = addressData;
                       },
                     ),
                     SizedBox(height: AppSizes.spaceBtwSections),

@@ -101,6 +101,12 @@ class ProfileService {
     String? shopCloseTime,
     File? profileImageFile,
     File? shopImageFile,
+    String? addressLabel,
+    String? streetName,
+    String? city,
+    String? state,
+    String? zipCode,
+    String? country,
   }) async {
     try {
       print('🔄 Starting profile update...');
@@ -135,6 +141,32 @@ class ProfileService {
       if (shopCloseTime != null && shopCloseTime.isNotEmpty) {
         request.fields['shopCloseTime'] = shopCloseTime;
         print('🕕 Adding shop close time: $shopCloseTime');
+      }
+
+      // Add address fields if provided
+      if (addressLabel != null && addressLabel.isNotEmpty) {
+        request.fields['addressLabel'] = addressLabel;
+        print('🏠 Adding address label: $addressLabel');
+      }
+      if (streetName != null && streetName.isNotEmpty) {
+        request.fields['streetName'] = streetName;
+        print('🛣️ Adding street name: $streetName');
+      }
+      if (city != null && city.isNotEmpty) {
+        request.fields['city'] = city;
+        print('🏙️ Adding city: $city');
+      }
+      if (state != null && state.isNotEmpty) {
+        request.fields['state'] = state;
+        print('🗺️ Adding state: $state');
+      }
+      if (zipCode != null && zipCode.isNotEmpty) {
+        request.fields['zipCode'] = zipCode;
+        print('📮 Adding zip code: $zipCode');
+      }
+      if (country != null && country.isNotEmpty) {
+        request.fields['country'] = country;
+        print('🌍 Adding country: $country');
       }
 
       if (profileImageFile != null) {

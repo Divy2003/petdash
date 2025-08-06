@@ -28,7 +28,7 @@ exports.createProduct = async (req, res) => {
     } = req.body;
     let images = req.body.images;
     if (req.files && req.files.length > 0) {
-      images = req.files.map(file => `/uploads/${file.filename}`);
+      images = req.files.map(file => `uploads/${file.filename}`);
     }
 
     const product = new Product({
@@ -72,7 +72,7 @@ exports.updateProduct = async (req, res) => {
     const updates = req.body;
     // Handle image update if new file uploaded
     if (req.files && req.files.length > 0) {
-      updates.images = req.files.map(file => `/uploads/${file.filename}`);
+      updates.images = req.files.map(file => `uploads/${file.filename}`);
     }
     Object.assign(product, updates);
     await product.save();
