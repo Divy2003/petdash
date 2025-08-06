@@ -153,12 +153,57 @@ exports.updateProfile = async (req, res) => {
     if (req.files) {
       // Handle profile image upload
       if (req.files.profileImage) {
-        updateFields.profileImage = `/uploads/${req.files.profileImage[0].filename}`;
+        updateFields.profileImage = `uploads/${req.files.profileImage[0].filename}`;
       }
-      
+
       // Handle shop image upload (for business users)
       if (req.files.shopImage) {
-        updateFields.shopImage = `/uploads/${req.files.shopImage[0].filename}`;
+        updateFields.shopImage = `uploads/${req.files.shopImage[0].filename}`;
+      }
+    }
+
+    // Handle address update if provided
+    const addressFields = ['addressLabel', 'streetName', 'city', 'state', 'zipCode', 'country'];
+    const hasAddressData = addressFields.some(field => req.body[field]);
+
+    if (hasAddressData) {
+      const addressLabel = req.body.addressLabel || 'Business';
+      const streetName = req.body.streetName;
+      const city = req.body.city;
+      const state = req.body.state;
+      const zipCode = req.body.zipCode;
+      const country = req.body.country || 'USA';
+
+      if (streetName && city && state && zipCode) {
+        // Check if user already has an address with this label
+        const existingAddressIndex = user.addresses.findIndex(
+          addr => addr.label.toLowerCase() === addressLabel.toLowerCase() && addr.isActive
+        );
+
+        if (existingAddressIndex !== -1) {
+          // Update existing address
+          user.addresses[existingAddressIndex].streetName = streetName;
+          user.addresses[existingAddressIndex].city = city;
+          user.addresses[existingAddressIndex].state = state;
+          user.addresses[existingAddressIndex].zipCode = zipCode;
+          user.addresses[existingAddressIndex].country = country;
+        } else {
+          // Add new address
+          const newAddress = {
+            label: addressLabel,
+            streetName: streetName,
+            city: city,
+            state: state,
+            zipCode: zipCode,
+            country: country,
+            isPrimary: user.addresses.filter(addr => addr.isActive).length === 0, // First address becomes primary
+            isActive: true
+          };
+          user.addresses.push(newAddress);
+        }
+
+        // Save user with address changes
+        await user.save();
       }
     }
 

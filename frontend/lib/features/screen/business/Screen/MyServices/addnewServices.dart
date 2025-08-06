@@ -113,7 +113,7 @@ class _AddNewServicesState extends State<AddNewServices> {
           backgroundColor: AppColors.success,
           colorText: AppColors.white,
         );
-        Get.back();
+        Navigator.of(context).pop();
       } else {
         Get.snackbar(
           "Error",

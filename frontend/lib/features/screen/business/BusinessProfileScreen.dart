@@ -10,6 +10,7 @@ import 'package:petcare/features/screen/personal/profile/widgets/profileheaderwi
 import 'package:petcare/services/user_session_service.dart';
 import 'package:petcare/provider/profile_provider.dart';
 
+import '../../../common/widgets/progessIndicator/threedotindicator.dart';
 import '../../../utlis/constants/colors.dart';
 import '../../../utlis/constants/image_strings.dart';
 import '../../../utlis/constants/size.dart';
@@ -55,7 +56,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
         builder: (context, profileProvider, child) {
           // Show loading indicator while fetching profile
           if (profileProvider.isLoading && profileProvider.profile == null) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: ThreeDotIndicator());
           }
 
           // Show error if there's an error fetching profile
@@ -97,7 +98,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
           return RefreshIndicator(
             onRefresh: _refreshProfile,
             child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
+              physics:  AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   // Business user header with real data

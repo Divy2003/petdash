@@ -3,6 +3,9 @@ class AppConfig {
   static const String baseUrl = 'http://10.0.2.2:5000/api';
   static const String baseFileUrl = 'http://10.0.2.2:5000';
 
+  // Google Maps API Key
+  static const String googleMapsApiKey = 'AIzaSyDXLquInbZLHKdE7s2UolTfUbfbl3oj-w0';
+
   // Alternative configurations if localhost doesn't work:
   // For Android emulator: 'http://10.0.2.2:5000/api'
   // For physical device: 'http://192.168.29.6:5000/api' (your computer's IP)

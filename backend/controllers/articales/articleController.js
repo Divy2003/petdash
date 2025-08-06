@@ -46,12 +46,18 @@ exports.createArticle = async (req, res) => {
     
     // Add featured image if uploaded
     if (req.files && req.files.featuredImage) {
-      articleData.featuredImage = req.files.featuredImage[0].path;
+      const normalizedPath = req.files.featuredImage[0].path.replace(/\\/g, '/');
+      const uploadsIndex = normalizedPath.indexOf('uploads/');
+      articleData.featuredImage = uploadsIndex !== -1 ? normalizedPath.substring(uploadsIndex) : normalizedPath;
     }
-    
+
     // Add additional images if uploaded
     if (req.files && req.files.images) {
-      articleData.images = req.files.images.map(file => file.path);
+      articleData.images = req.files.images.map(file => {
+        const normalizedPath = file.path.replace(/\\/g, '/');
+        const uploadsIndex = normalizedPath.indexOf('uploads/');
+        return uploadsIndex !== -1 ? normalizedPath.substring(uploadsIndex) : normalizedPath;
+      });
     }
     
     // Create and save the article

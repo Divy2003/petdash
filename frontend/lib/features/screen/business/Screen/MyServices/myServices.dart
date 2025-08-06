@@ -111,48 +111,91 @@ class _MyServicesState extends State<MyServices> {
               children: [
                 // Service Image (if available)
                 if (service.images.isNotEmpty) ...[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.r),
-                    child: Image.network(
-                      '${AppConfig.baseFileUrl}/${service.images.first}',
-                      height: 120.h,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
+                  Builder(
+                    builder: (context) {
+                      final imageUrl =
+                          '${AppConfig.baseFileUrl}/${service.images.first}';
+                      print('🖼️ Loading image: $imageUrl');
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(8.r),
+                        child: Image.network(
+                          imageUrl,
                           height: 120.h,
                           width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Icon(
-                            Icons.image_not_supported,
-                            color: Colors.grey[400],
-                            size: 40.sp,
-                          ),
-                        );
-                      },
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Container(
-                          height: 120.h,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
-                                  : null,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            print(
+                                '❌ Image load error for ${service.title}: $error');
+                            return Container(
+                              height: 120.h,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.image_not_supported,
+                                    color: Colors.grey[400],
+                                    size: 40.sp,
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    'Image failed to load',
+                                    style: TextStyle(
+                                      fontSize: 10.sp,
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              print(
+                                  '✅ Image loaded successfully for ${service.title}');
+                              return child;
+                            }
+                            return Container(
+                              height: 120.h,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    Text(
+                                      'Loading...',
+                                      style: TextStyle(
+                                        fontSize: 10.sp,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
                   ),
                   SizedBox(height: 8.h),
                   // Image count indicator
@@ -161,7 +204,7 @@ class _MyServicesState extends State<MyServices> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Text(

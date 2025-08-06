@@ -15,7 +15,9 @@ exports.createPetProfile = async (req, res) => {
     }
     const petData = { ...req.body, owner: req.user.id };
     if (req.file) {
-      petData.profileImage = req.file.path;
+      const normalizedPath = req.file.path.replace(/\\/g, '/');
+      const uploadsIndex = normalizedPath.indexOf('uploads/');
+      petData.profileImage = uploadsIndex !== -1 ? normalizedPath.substring(uploadsIndex) : normalizedPath;
     }
     // Parse arrays if sent as JSON strings
     if (typeof petData.allergies === 'string') petData.allergies = JSON.parse(petData.allergies);
@@ -35,7 +37,9 @@ exports.updatePetProfile = async (req, res) => {
     if (!hasPetOwnerAccess(req.user)) return res.status(403).json({ message: 'Only pet owners can update pet profiles' });
     const updateFields = { ...req.body };
     if (req.file) {
-      updateFields.profileImage = req.file.path;
+      const normalizedPath = req.file.path.replace(/\\/g, '/');
+      const uploadsIndex = normalizedPath.indexOf('uploads/');
+      updateFields.profileImage = uploadsIndex !== -1 ? normalizedPath.substring(uploadsIndex) : normalizedPath;
     }
     if (typeof updateFields.allergies === 'string') updateFields.allergies = JSON.parse(updateFields.allergies);
     if (typeof updateFields.favoriteToys === 'string') updateFields.favoriteToys = JSON.parse(updateFields.favoriteToys);
