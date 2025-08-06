@@ -239,14 +239,6 @@ exports.switchRole = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Check if user can switch to this role
-    if (!user.canSwitchToRole(newRole)) {
-      return res.status(403).json({
-        message: 'You do not have permission to switch to this role',
-        availableRoles: user.getAvailableRoles()
-      });
-    }
-
     // Switch the role
     await user.switchRole(newRole);
 

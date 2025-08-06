@@ -119,11 +119,6 @@ userSchema.methods.switchRole = function(newRole) {
     throw new Error('Admin users cannot switch roles.');
   }
 
-  // Check if user has access to this role
-  if (!this.availableRoles.includes(newRole) && this.userType !== newRole) {
-    throw new Error('User does not have access to this role.');
-  }
-
   // Record the role switch in history
   const previousRole = this.currentRole;
   this.roleHistory.push({
@@ -175,19 +170,12 @@ userSchema.pre('save', function(next) {
     }
   }
 
-  // Initialize role switching fields for existing users
-  if (this.isNew || !this.currentRole) {
+  // Initialize role switching fields for new users
+  if (this.isNew) {
     this.currentRole = this.userType;
-  }
-
-  // Initialize availableRoles for non-admin users
-  if (this.userType !== 'Admin') {
-    if (!this.availableRoles || this.availableRoles.length === 0) {
-      this.availableRoles = [this.userType];
-    }
-    // Ensure userType is always in availableRoles
-    if (!this.availableRoles.includes(this.userType)) {
-      this.availableRoles.push(this.userType);
+    // For non-admin users, grant both Pet Owner and Business roles by default
+    if (this.userType !== 'Admin') {
+      this.availableRoles = ['Pet Owner', 'Business'];
     }
   }
 

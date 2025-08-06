@@ -32,7 +32,7 @@ exports.createPetProfile = async (req, res) => {
 // Update Pet Profile
 exports.updatePetProfile = async (req, res) => {
   try {
-    if (!isPetOwner(req.user)) return res.status(403).json({ message: 'Only pet owners can update pet profiles' });
+    if (!hasPetOwnerAccess(req.user)) return res.status(403).json({ message: 'Only pet owners can update pet profiles' });
     const updateFields = { ...req.body };
     if (req.file) {
       updateFields.profileImage = req.file.path;
