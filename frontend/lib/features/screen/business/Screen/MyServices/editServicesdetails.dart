@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../common/widgets/progessIndicator/threedotindicator.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/size.dart';
 import '../../../../../provider/services_provider.dart';
@@ -156,7 +157,7 @@ class _EditServicesDetailsState extends State<EditServicesDetails> {
           backgroundColor: AppColors.success,
           colorText: AppColors.white,
         );
-        Get.back(); // Go back to services list
+        Navigator.of(context).pop();// Go back to services list
       } else {
         Get.snackbar(
           "Error",
@@ -399,7 +400,7 @@ class _EditServicesDetailsState extends State<EditServicesDetails> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             categoryProvider.loadCategories();
           });
-          return const CircularProgressIndicator();
+          return const ThreeDotIndicator();
         }
 
         return Column(

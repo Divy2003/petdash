@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 import '../../common/widgets/appbar/appbar.dart';
 import '../../common/widgets/Button/primarybutton.dart';
+import '../../common/widgets/progessIndicator/threedotindicator.dart';
 import '../../utlis/constants/size.dart';
 import '../../utlis/constants/colors.dart';
 import '../../utlis/app_config/app_config.dart';
@@ -387,13 +388,10 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                 IconButton(
                   onPressed: _isSearching ? null : _searchLocation,
                   icon: _isSearching
-                      ? SizedBox(
+                      ? const SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: AppColors.primary,
-                          ),
+                          child: ThreeDotIndicator(),
                         )
                       : Icon(
                           Icons.search,
@@ -410,13 +408,10 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
               child: OutlinedButton.icon(
                 onPressed: _isLoading ? null : _getCurrentLocation,
                 icon: _isLoading
-                    ? SizedBox(
+                    ? const SizedBox(
                         width: 16,
                         height: 16,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppColors.primary,
-                        ),
+                        child: ThreeDotIndicator(),
                       )
                     : Icon(Icons.my_location, color: AppColors.primary),
                 label: Text(

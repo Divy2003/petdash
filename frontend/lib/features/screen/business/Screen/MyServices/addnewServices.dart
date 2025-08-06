@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:dotted_border/dotted_border.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../common/widgets/progessIndicator/threedotindicator.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/size.dart';
 import '../../../../../provider/services_provider.dart';
@@ -89,7 +90,7 @@ class _AddNewServicesState extends State<AddNewServices> {
       context: context,
       barrierDismissible: false,
       builder: (context) => const Center(
-        child: CircularProgressIndicator(),
+        child: ThreeDotIndicator(),
       ),
     );
 
@@ -312,7 +313,7 @@ class _AddNewServicesState extends State<AddNewServices> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             categoryProvider.loadCategories();
           });
-          return const CircularProgressIndicator();
+          return const ThreeDotIndicator();
         }
 
         return Column(

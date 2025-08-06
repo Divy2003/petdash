@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../../utlis/app_config/app_config.dart';
 import '../../../../../utlis/constants/size.dart';
 import '../../../../../utlis/constants/colors.dart';
+import '../../../../../common/widgets/progessIndicator/threedotindicator.dart';
 import '../../../../../provider/category_provider.dart';
 import '../../../../../services/petowerServices/category_service.dart';
 
@@ -61,7 +62,7 @@ class _ServiceGridState extends State<ServiceGrid> {
             borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
           ),
           child: const Center(
-            child: CircularProgressIndicator(),
+            child: ThreeDotIndicator(),
           ),
         );
       }),

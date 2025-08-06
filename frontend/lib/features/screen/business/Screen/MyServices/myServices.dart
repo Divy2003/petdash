@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:petcare/common/widgets/Button/primarybutton.dart';
 import 'package:petcare/utlis/constants/colors.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../common/widgets/progessIndicator/threedotindicator.dart';
 import '../../../../../utlis/constants/size.dart';
 import '../../../../../utlis/app_config/app_config.dart';
 import '../../../../../provider/services_provider.dart';
@@ -79,7 +80,7 @@ class _MyServicesState extends State<MyServices> {
   Widget _buildServicesContent(ServicesProvider servicesProvider) {
     if (servicesProvider.isLoading) {
       return const Center(
-        child: CircularProgressIndicator(),
+        child: ThreeDotIndicator(),
       );
     }
 
@@ -170,16 +171,7 @@ class _MyServicesState extends State<MyServices> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    CircularProgressIndicator(
-                                      value:
-                                          loadingProgress.expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                    ),
+                                    ThreeDotIndicator(),
                                     SizedBox(height: 8.h),
                                     Text(
                                       'Loading...',
@@ -287,12 +279,7 @@ class _MyServicesState extends State<MyServices> {
                           ? SizedBox(
                               width: AppSizes.iconSm,
                               height: AppSizes.iconSm,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  const Color(0xFFFB2828),
-                                ),
-                              ),
+                              child: ThreeDotIndicator(),
                             )
                           : Icon(
                               Icons.delete,

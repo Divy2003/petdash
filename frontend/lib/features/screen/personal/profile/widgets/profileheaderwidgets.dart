@@ -93,9 +93,11 @@ class ProfileHeaderWidget extends StatelessWidget {
                   SizedBox(width: 5.w),
                   Text(
                     location,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           color: AppColors.white,
                           fontWeight: FontWeight.w500,
+
                         ),
                   ),
                 ],

@@ -7,12 +7,11 @@ import '../../../../../../models/business_model.dart';
 
 class CurvedHeaderWidget extends StatelessWidget {
   final BusinessModel? businessProfile;
-  final double? rating;
+
 
   const CurvedHeaderWidget({
     super.key,
     this.businessProfile,
-    this.rating,
   });
 
   @override
@@ -40,35 +39,6 @@ class CurvedHeaderWidget extends StatelessWidget {
           ),
 
           // App bar items (back + title + rating)
-          Positioned(
-            top: 20.h,
-            right: 16.w,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.amber, size: 16.sp),
-                      SizedBox(width: 4.w),
-                      Text(
-                        rating?.toStringAsFixed(1) ?? '4.5',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
 
           // Circular logo on bottom-left of white curve
           Positioned(

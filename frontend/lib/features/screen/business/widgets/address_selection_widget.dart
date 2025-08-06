@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 
 import '../../../../utlis/constants/size.dart';
 import '../../../../utlis/constants/colors.dart';
+import '../../../../common/widgets/progessIndicator/threedotindicator.dart';
 import '../../../../services/location_service.dart';
 import '../../../location/location_picker_screen.dart';
 import 'custom_text_field.dart';
@@ -226,10 +227,7 @@ class _AddressSelectionWidgetState extends State<AddressSelectionWidget> {
                   ? SizedBox(
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.primary,
-                      ),
+                      child: ThreeDotIndicator(),
                     )
                   : Icon(
                       Icons.my_location,
