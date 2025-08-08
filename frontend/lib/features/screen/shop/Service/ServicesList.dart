@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
+import '../../../../common/widgets/progessIndicator/threedotindicator.dart';
 import '../../../../utlis/constants/colors.dart';
 import '../../../../utlis/constants/size.dart';
 import '../../../../models/category_model.dart';
@@ -195,7 +196,7 @@ class _ServicesListState extends State<ServicesList> {
             borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
           ),
           child: const Center(
-            child: CircularProgressIndicator(),
+            child: ThreeDotIndicator(),
           ),
         );
       },
@@ -549,36 +550,6 @@ class _ServicesListState extends State<ServicesList> {
                         ),
                       ),
               ),
-              if (business.rating != null)
-                Positioned(
-                  top: AppSizes.sm,
-                  left: AppSizes.sm,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.sm,
-                      vertical: 4.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.star,
-                            color: AppColors.white, size: AppSizes.iconSm),
-                        SizedBox(width: 4.w),
-                        Text(
-                          business.ratingDisplay,
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    color: AppColors.white,
-                                    fontSize: AppSizes.fontSizeSm.sp,
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
             ],
           ),
 

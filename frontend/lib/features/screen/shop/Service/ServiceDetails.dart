@@ -85,7 +85,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
               },
               child: CurvedHeaderWidget(
                 businessProfile: businessProfile,
-                rating: businessProfile?.rating ?? 4.5,
+
               ),
             ),
             Padding(

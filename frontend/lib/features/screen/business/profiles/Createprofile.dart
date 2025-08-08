@@ -4,18 +4,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:http/http.dart' as http;
+
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/Button/primarybutton.dart';
+import '../../../../common/widgets/progessIndicator/threedotindicator.dart';
 import '../../../../utlis/constants/size.dart';
 import '../../../../utlis/constants/colors.dart';
 import '../../../../utlis/app_config/app_config.dart';
 import '../../../../provider/profile_provider.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/address_selection_widget.dart';
-import '../widgets/rating_display_widget.dart';
-import '../widgets/clickable_rating_widget.dart';
 
 class CreateProfile extends StatefulWidget {
   const CreateProfile({super.key});
@@ -134,42 +133,7 @@ class _CreateProfileState extends State<CreateProfile> {
     }
   }
 
-  Future<void> _testServerConnection() async {
-    try {
-      print('🔍 Testing server connectivity...');
-      final response = await http.get(
-        Uri.parse('${AppConfig.baseUrl}/health'),
-        headers: {'Content-Type': 'application/json'},
-      ).timeout(const Duration(seconds: 10));
 
-      print('🌐 Server connectivity test: ${response.statusCode}');
-
-      if (response.statusCode == 200) {
-        Get.snackbar(
-          'Success',
-          'Server is reachable ✅',
-          backgroundColor: AppColors.success,
-          colorText: AppColors.white,
-        );
-      } else {
-        Get.snackbar(
-          'Warning',
-          'Server responded with status: ${response.statusCode}',
-          backgroundColor: AppColors.warning,
-          colorText: AppColors.white,
-        );
-      }
-    } catch (e) {
-      print('❌ Server connectivity failed: $e');
-      Get.snackbar(
-        'Error',
-        'Server is not reachable ❌\nError: ${e.toString()}',
-        backgroundColor: AppColors.error,
-        colorText: AppColors.white,
-        duration: const Duration(seconds: 5),
-      );
-    }
-  }
 
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
@@ -232,7 +196,7 @@ class _CreateProfileState extends State<CreateProfile> {
       body: Consumer<ProfileProvider>(
         builder: (context, profileProvider, child) {
           if (profileProvider.isLoading && profileProvider.profile == null) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: ThreeDotIndicator());
           }
 
           return SingleChildScrollView(
@@ -253,7 +217,7 @@ class _CreateProfileState extends State<CreateProfile> {
 
                     SizedBox(height: AppSizes.spaceBtwSections),
 
-                    // Shop Image Section
+                   // Shop Image Section
                     _buildImageSection(
                       title: 'Shop Image',
                       imageFile: _shopImageFile,
