@@ -81,7 +81,9 @@ const userSchema = new mongoose.Schema({
   resetPasswordOTP: String,
   resetPasswordOTPExpires: Date
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
 // Virtual to get primary address

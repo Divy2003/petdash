@@ -5,6 +5,21 @@ const Pet = require('../models/Pet');
 const nodemailer = require('nodemailer');
 const { generateCustomerConfirmationEmail, generateBusinessNotificationEmail } = require('../utils/emailTemplates');
 
+// Helper to select a user's primary address
+const selectPrimaryAddressFromUser = (userDoc) => {
+  if (!userDoc) return null;
+  // Support populated document with virtuals
+  const primaryFromVirtual = userDoc.primaryAddress;
+  if (primaryFromVirtual) return primaryFromVirtual;
+  const addresses = userDoc.addresses || [];
+  return (
+    addresses.find((a) => a.isPrimary && a.isActive) ||
+    addresses.find((a) => a.isActive) ||
+    addresses[0] ||
+    null
+  );
+};
+
 // Email configuration
 const createEmailTransporter = () => {
   return nodemailer.createTransport({
@@ -93,6 +108,19 @@ exports.createAppointment = async (req, res) => {
       return res.status(404).json({ message: 'Business not found' });
     }
 
+    // Normalize add-on services: allow either array of strings or array of { name, price }
+    const normalizedAddOns = Array.isArray(addOnServices)
+      ? addOnServices.map((item) => {
+          if (!item) return null;
+          if (typeof item === 'string') {
+            return { name: item, price: 0 };
+          }
+          const name = typeof item.name === 'string' ? item.name : '';
+          const price = typeof item.price === 'number' ? item.price : 0;
+          return { name, price };
+        }).filter(Boolean)
+      : [];
+
     // Create appointment
     const appointment = new Appointment({
       customer: customerId,
@@ -101,7 +129,7 @@ exports.createAppointment = async (req, res) => {
       pet: petId,
       appointmentDate,
       appointmentTime,
-      addOnServices,
+      addOnServices: normalizedAddOns,
       subtotal,
       tax,
       total,
@@ -113,8 +141,8 @@ exports.createAppointment = async (req, res) => {
 
     // Populate appointment data for email
     await appointment.populate([
-      { path: 'customer', select: 'name email phoneNumber streetName city state zipCode' },
-      { path: 'business', select: 'name email phoneNumber streetName city state zipCode' },
+      { path: 'customer', select: 'name email phoneNumber addresses' },
+      { path: 'business', select: 'name email phoneNumber addresses' },
       { path: 'service', select: 'title description price' },
       { path: 'pet', select: 'name species breed weight' }
     ]);
@@ -132,10 +160,15 @@ exports.createAppointment = async (req, res) => {
     appointment.emailSent = emailSent;
     await appointment.save();
 
+    const customerPrimaryAddress = selectPrimaryAddressFromUser(appointment.customer);
+    const businessPrimaryAddress = selectPrimaryAddressFromUser(appointment.business);
+
     res.status(201).json({
       message: 'Appointment created successfully',
       appointment,
-      emailSent
+      emailSent,
+      customerPrimaryAddress,
+      businessPrimaryAddress
     });
 
   } catch (error) {
@@ -150,12 +183,20 @@ exports.getCustomerAppointments = async (req, res) => {
     const customerId = req.user.id;
     
     const appointments = await Appointment.find({ customer: customerId })
-      .populate('business', 'name phoneNumber streetName city state zipCode')
+      .populate('business', 'name phoneNumber addresses')
       .populate('service', 'title description price')
       .populate('pet', 'name species breed')
       .sort({ appointmentDate: -1 });
 
-    res.json({ appointments });
+    const result = appointments.map((appt) => {
+      const obj = appt.toObject();
+      return {
+        ...obj,
+        businessPrimaryAddress: selectPrimaryAddressFromUser(appt.business)
+      };
+    });
+
+    res.json({ appointments: result });
   } catch (error) {
     console.error('Get customer appointments error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -168,12 +209,20 @@ exports.getBusinessAppointments = async (req, res) => {
     const businessId = req.user.id;
     
     const appointments = await Appointment.find({ business: businessId })
-      .populate('customer', 'name email phoneNumber')
+      .populate('customer', 'name email phoneNumber addresses')
       .populate('service', 'title description price')
       .populate('pet', 'name species breed weight')
       .sort({ appointmentDate: -1 });
 
-    res.json({ appointments });
+    const result = appointments.map((appt) => {
+      const obj = appt.toObject();
+      return {
+        ...obj,
+        customerPrimaryAddress: selectPrimaryAddressFromUser(appt.customer)
+      };
+    });
+
+    res.json({ appointments: result });
   } catch (error) {
     console.error('Get business appointments error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -187,8 +236,8 @@ exports.getAppointmentDetails = async (req, res) => {
     const userId = req.user.id;
 
     const appointment = await Appointment.findById(appointmentId)
-      .populate('customer', 'name email phoneNumber streetName city state zipCode')
-      .populate('business', 'name email phoneNumber streetName city state zipCode')
+      .populate('customer', 'name email phoneNumber addresses')
+      .populate('business', 'name email phoneNumber addresses')
       .populate('service', 'title description price')
       .populate('pet', 'name species breed weight');
 
@@ -201,7 +250,10 @@ exports.getAppointmentDetails = async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to view this appointment' });
     }
 
-    res.json({ appointment });
+    const customerPrimaryAddress = selectPrimaryAddressFromUser(appointment.customer);
+    const businessPrimaryAddress = selectPrimaryAddressFromUser(appointment.business);
+
+    res.json({ appointment, customerPrimaryAddress, businessPrimaryAddress });
   } catch (error) {
     console.error('Get appointment details error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
