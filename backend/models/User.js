@@ -88,9 +88,14 @@ const userSchema = new mongoose.Schema({
 
 // Virtual to get primary address
 userSchema.virtual('primaryAddress').get(function() {
-  return this.addresses.find(addr => addr.isPrimary && addr.isActive) ||
-         this.addresses.find(addr => addr.isActive) ||
-         null;
+  const addresses = Array.isArray(this.addresses) ? this.addresses : [];
+  if (addresses.length === 0) return null;
+  return (
+    addresses.find(addr => addr.isPrimary && addr.isActive) ||
+    addresses.find(addr => addr.isActive) ||
+    addresses[0] ||
+    null
+  );
 });
 
 // Method to ensure only one primary address

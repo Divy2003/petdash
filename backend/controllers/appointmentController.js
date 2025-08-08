@@ -163,9 +163,16 @@ exports.createAppointment = async (req, res) => {
     const customerPrimaryAddress = selectPrimaryAddressFromUser(appointment.customer);
     const businessPrimaryAddress = selectPrimaryAddressFromUser(appointment.business);
 
+    // Sanitize appointment payload: keep only primary address for business
+    const appointmentObj = appointment.toObject();
+    if (appointmentObj.business) {
+      delete appointmentObj.business.addresses;
+      delete appointmentObj.business.primaryAddress;
+    }
+
     res.status(201).json({
       message: 'Appointment created successfully',
-      appointment,
+      appointment: appointmentObj,
       emailSent,
       customerPrimaryAddress,
       businessPrimaryAddress
@@ -190,6 +197,11 @@ exports.getCustomerAppointments = async (req, res) => {
 
     const result = appointments.map((appt) => {
       const obj = appt.toObject();
+      // Remove extra addresses, keep only top-level primary
+      if (obj.business) {
+        delete obj.business.addresses;
+        delete obj.business.primaryAddress;
+      }
       return {
         ...obj,
         businessPrimaryAddress: selectPrimaryAddressFromUser(appt.business)
@@ -216,6 +228,11 @@ exports.getBusinessAppointments = async (req, res) => {
 
     const result = appointments.map((appt) => {
       const obj = appt.toObject();
+      // Business side listing: strip business addresses as well for consistency
+      if (obj.business) {
+        delete obj.business.addresses;
+        delete obj.business.primaryAddress;
+      }
       return {
         ...obj,
         customerPrimaryAddress: selectPrimaryAddressFromUser(appt.customer)
@@ -253,7 +270,13 @@ exports.getAppointmentDetails = async (req, res) => {
     const customerPrimaryAddress = selectPrimaryAddressFromUser(appointment.customer);
     const businessPrimaryAddress = selectPrimaryAddressFromUser(appointment.business);
 
-    res.json({ appointment, customerPrimaryAddress, businessPrimaryAddress });
+    const appointmentObj = appointment.toObject();
+    if (appointmentObj.business) {
+      delete appointmentObj.business.addresses;
+      delete appointmentObj.business.primaryAddress;
+    }
+
+    res.json({ appointment: appointmentObj, customerPrimaryAddress, businessPrimaryAddress });
   } catch (error) {
     console.error('Get appointment details error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
