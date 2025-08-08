@@ -1,5 +1,25 @@
 // Email template utilities for appointment notifications
 
+const getPrimaryAddress = (user) => {
+  if (!user) return null;
+  // Support mongoose virtual if available, else fallback to first active or first address
+  const virtualPrimary = user.primaryAddress || null;
+  if (virtualPrimary) return virtualPrimary;
+  const addresses = user.addresses || [];
+  return (
+    addresses.find((a) => a.isPrimary && a.isActive) ||
+    addresses.find((a) => a.isActive) ||
+    addresses[0] ||
+    null
+  );
+};
+
+const formatAddress = (addr) => {
+  if (!addr) return '';
+  const parts = [addr.streetName, addr.city, addr.state, addr.zipCode].filter(Boolean);
+  return parts.join(', ');
+};
+
 const generateCustomerConfirmationEmail = (appointment, customer, business, service, pet) => {
   const appointmentDate = new Date(appointment.appointmentDate).toLocaleDateString('en-US', {
     weekday: 'long',
@@ -7,6 +27,8 @@ const generateCustomerConfirmationEmail = (appointment, customer, business, serv
     month: 'long',
     day: 'numeric'
   });
+
+  const businessAddress = formatAddress(getPrimaryAddress(business));
 
   return `
     <!DOCTYPE html>
@@ -53,7 +75,7 @@ const generateCustomerConfirmationEmail = (appointment, customer, business, serv
             <h3>🏪 Service Provider Details</h3>
             <p><strong>Business:</strong> ${business.name}</p>
             <p><strong>Phone:</strong> ${business.phoneNumber}</p>
-            <p><strong>Address:</strong> ${business.streetName}, ${business.city}, ${business.state} ${business.zipCode}</p>
+            <p><strong>Address:</strong> ${businessAddress}</p>
           </div>
           
           ${appointment.addOnServices && appointment.addOnServices.length > 0 ? `
@@ -97,6 +119,8 @@ const generateBusinessNotificationEmail = (appointment, customer, business, serv
     month: 'long',
     day: 'numeric'
   });
+
+  const customerAddress = formatAddress(getPrimaryAddress(customer));
 
   return `
     <!DOCTYPE html>
@@ -144,7 +168,7 @@ const generateBusinessNotificationEmail = (appointment, customer, business, serv
             <p><strong>Name:</strong> ${customer.name}</p>
             <p><strong>Phone:</strong> ${customer.phoneNumber}</p>
             <p><strong>Email:</strong> ${customer.email}</p>
-            <p><strong>Address:</strong> ${customer.streetName}, ${customer.city}, ${customer.state} ${customer.zipCode}</p>
+            <p><strong>Address:</strong> ${customerAddress}</p>
           </div>
           
           <div class="pet-info">
