@@ -98,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             icon: Icons.shopping_bag_outlined,
                             title: 'My order',
                             onTap: () {
-                              Get.to(() => MyOrdersScreen());
+                             // Get.to(() => MyOrdersScreen());
                             },
                           ),
                           Divider(
@@ -127,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             icon: Icons.support_agent_outlined,
                             title: 'Support',
                             onTap: () {
-                              Get.to(() => SupportScreen());
+                             // Get.to(() => SupportScreen());
                             },
                           ),
                           Divider(

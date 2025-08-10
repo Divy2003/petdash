@@ -90,8 +90,8 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
           // Get profile data or use defaults
           final profile = profileProvider.profile;
           final businessName = profile?.name ?? 'Pet Care Business';
-          final businessLocation =
-              profile?.displayAddress ?? 'Location not set';
+          // Hide location on Business profile header
+          final businessLocation = '';
           final profileImagePath = profile?.profileImage ?? AppImages.person;
 
           return RefreshIndicator(

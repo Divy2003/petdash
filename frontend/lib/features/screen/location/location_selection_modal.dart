@@ -247,9 +247,11 @@ class _LocationSelectionModalState extends State<LocationSelectionModal> {
               size: 16.sp,
               color: AppColors.textPrimaryColor,
             ),
-            onTap: () {
+            onTap: () async {
+              // Persist selected address text and close modal
+              await Provider.of<LocationProvider>(context, listen: false)
+                  .setSelectedAddressText(address['subtitle'] ?? address['title'] ?? '');
               Navigator.of(context).pop();
-              // Handle address selection - you can add logic here to save the selected address
               Get.snackbar(
                 "Success",
                 'Selected: ${address['type']} - ${address['title']}',

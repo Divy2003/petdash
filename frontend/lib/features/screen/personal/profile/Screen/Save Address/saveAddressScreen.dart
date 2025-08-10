@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../../../../../../utlis/constants/colors.dart';
 import '../../../../../../utlis/constants/size.dart';
 import '../../../../../../provider/location_provider.dart';
+import '../../../../../../provider/profile_provider.dart';
+import '../../../../../../models/profile_model.dart';
 import '../../../../location/google_map_screen.dart';
 import '../../../../location/address_type_selection_screen.dart';
 
@@ -17,10 +19,22 @@ class SaveAddressScreen extends StatefulWidget {
 
 class _SaveAddressScreenState extends State<SaveAddressScreen> {
   @override
+  void initState() {
+    super.initState();
+    // Fetch backend addresses on open
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileProvider>().getUserAddresses();
+      // Also refresh profile for primary address updates
+      context.read<ProfileProvider>().getProfile();
+    });
+  }
+  @override
   Widget build(BuildContext context) {
-    return Consumer<LocationProvider>(
-      builder: (context, locationProvider, child) {
+    return Consumer2<LocationProvider, ProfileProvider>(
+      builder: (context, locationProvider, profileProvider, child) {
         final savedAddresses = locationProvider.savedAddresses;
+        final primary = profileProvider.profile?.primaryAddress;
+        final backendAddresses = profileProvider.addresses;
 
         return Scaffold(
           backgroundColor: Colors.white,
@@ -77,6 +91,58 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
                     ),
                   ),
                 ),
+
+                // Backend addresses list
+                if (backendAddresses.isNotEmpty) ...[
+                  Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Your Addresses',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: AppColors.black,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ),
+                      SizedBox(height: AppSizes.sm),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: backendAddresses.length,
+                          itemBuilder: (context, index) {
+                            final addr = backendAddresses[index];
+                            return Card(
+                              child: ListTile(
+                                leading: Icon(
+                                  (addr.label ?? '').toLowerCase() == 'work'
+                                      ? Icons.work_outline
+                                      : Icons.home_outlined,
+                                  color: AppColors.primary,
+                                ),
+                                title: Text(addr.label ?? 'Address'),
+                                subtitle: Text(addr.fullAddress),
+                                trailing: addr.isPrimary == true
+                                    ? const Icon(Icons.check_circle, color: Colors.green)
+                                    : TextButton(
+                                        onPressed: () async {
+                                          await context
+                                              .read<ProfileProvider>()
+                                              .setPrimaryAddress(addr.id!);
+                                          await context
+                                              .read<LocationProvider>()
+                                              .refreshPrimaryAddress();
+                                        },
+                                        child: const Text('Make Primary'),
+                                      ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                if (primary != null) ...[
+                  SizedBox(height: AppSizes.md),
+                  _buildPrimaryAddressCard(primary),
+                ],
 
                 SizedBox(height: AppSizes.lg),
 
@@ -258,4 +324,52 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
       ),
     );
   }
+
+  Widget _buildPrimaryAddressCard(AddressModel address) {
+    return Container(
+      padding: EdgeInsets.all(AppSizes.md),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: Colors.green.shade200, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.check_circle, color: Colors.green, size: 20.sp),
+          SizedBox(width: AppSizes.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Primary Address',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.black,
+                      ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  address.fullAddress,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.textPrimaryColor,
+                        height: 1.4,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
+

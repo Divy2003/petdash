@@ -40,8 +40,10 @@ class _HomeAppBarState extends State<HomeAppBar> {
               },
               child: Consumer<LocationProvider>(
                 builder: (context, locationProvider, child) {
+                  final fallbackPrimary = locationProvider.primaryAddress?.fullAddress;
                   return Text(
                     locationProvider.selectedAddress ??
+                        fallbackPrimary ??
                         locationProvider.currentAddress ??
                         "My Location",
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(

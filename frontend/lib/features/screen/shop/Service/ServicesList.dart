@@ -9,6 +9,7 @@ import '../../../../utlis/constants/size.dart';
 import '../../../../models/category_model.dart';
 import '../../../../provider/business_provider.dart';
 
+import '../../../../services/location_service.dart';
 import 'ServiceDetails.dart';
 
 class ServicesList extends StatefulWidget {
@@ -595,12 +596,25 @@ class _ServicesListState extends State<ServicesList> {
                   ),
                 ),
 
-                // Distance
-                Text(
-                  business.distanceDisplay,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: AppColors.textPrimaryColor,
-                      ),
+                // Distance (calculated from user's current location)
+                FutureBuilder<double?>(
+                  future: business.address != null
+                      ? LocationService.getDistanceToAddressInMiles(
+                          business.address!.fullAddress,
+                        )
+                      : Future.value(null),
+                  builder: (context, snapshot) {
+                    final miles = snapshot.data;
+                    final display = miles == null
+                        ? ''
+                        : '${miles.toStringAsFixed(1)} miles away';
+                    return Text(
+                      display,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: AppColors.textPrimaryColor,
+                          ),
+                    );
+                  },
                 ),
               ],
             ),

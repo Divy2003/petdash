@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:geocoding/geocoding.dart';
 import '../../../utlis/constants/colors.dart';
 import '../../../utlis/constants/size.dart';
 import '../../../provider/location_provider.dart';
+import '../../../services/BusinessServices/address_service.dart';
 import 'google_map_screen.dart';
 
 class AddressTypeSelectionScreen extends StatefulWidget {
@@ -235,7 +237,7 @@ class _AddressTypeSelectionScreenState
     );
   }
 
-  void _saveAddress() {
+  Future<void> _saveAddress() async {
     if (selectedType == null ||
         widget.selectedAddress == null ||
         widget.latitude == null ||
@@ -243,29 +245,69 @@ class _AddressTypeSelectionScreenState
       return;
     }
 
-    // Save address using LocationProvider
-    final locationProvider =
-        Provider.of<LocationProvider>(context, listen: false);
+    // Save address using backend and set as primary
+    final profileProvider = Provider.of<LocationProvider>(context, listen: false);
 
-    locationProvider.addSavedAddress(
-      type: selectedType!,
-      address: widget.selectedAddress!,
-      latitude: widget.latitude!,
-      longitude: widget.longitude!,
-      name: _nameController.text.isNotEmpty ? _nameController.text : null,
-      isDefault: true, // First address of this type becomes default
-    );
+    try {
+      // Resolve detailed address parts from coordinates
+      Placemark? place;
+      try {
+        final placemarks = await placemarkFromCoordinates(
+          widget.latitude!,
+          widget.longitude!,
+        );
+        if (placemarks.isNotEmpty) place = placemarks.first;
+      } catch (_) {}
 
-    // Show success message
-    Get.snackbar(
-      "Success",
-      '$selectedType address saved successfully!',
-      backgroundColor: AppColors.success,
-      colorText: AppColors.white,
-    );
+      final streetName = (place?.street != null && place!.street!.trim().isNotEmpty)
+          ? place.street!.trim()
+          : widget.selectedAddress!;
+      final city = (place?.locality != null && place!.locality!.trim().isNotEmpty)
+          ? place.locality!.trim()
+          : 'Unknown City';
+      final state = (place?.administrativeArea != null &&
+              place!.administrativeArea!.trim().isNotEmpty)
+          ? place.administrativeArea!.trim()
+          : 'Unknown State';
+      final zip = (place?.postalCode != null && place!.postalCode!.trim().isNotEmpty)
+          ? place.postalCode!.trim()
+          : '00000';
+      final country = (place?.country != null && place!.country!.trim().isNotEmpty)
+          ? place.country!.trim()
+          : 'USA';
 
-    // Navigate back to the previous screens
-    Navigator.of(context).popUntil((route) => route.isFirst);
+      // Add address via backend with all required fields
+      await AddressService.addAddress(
+        label: selectedType!,
+        streetName: streetName,
+        city: city,
+        state: state,
+        zipCode: zip,
+        country: country,
+        isPrimary: true,
+      );
+
+      // Ensure primary is fetched and cached
+      await profileProvider.refreshPrimaryAddress();
+
+      // Show success message
+      Get.snackbar(
+        "Success",
+        '$selectedType address saved as primary!',
+        backgroundColor: AppColors.success,
+        colorText: AppColors.white,
+      );
+
+      // Navigate back to the previous screens
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        'Failed to save address: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 
   @override

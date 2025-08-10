@@ -11,6 +11,7 @@ import '../../../../services/BusinessServices/business_service.dart';
 import 'ServicesSelectPetAndReview/ServiceSelectPetandReview.dart';
 import 'ServicesSelectPetAndReview/widgets/curvedheaderwidgets.dart';
 import 'ServicesSubDeatils.dart';
+import '../../../../services/location_service.dart';
 
 class ServiceDetails extends StatefulWidget {
   final String providerName;
@@ -120,11 +121,24 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                               ),
                             ),
                             SizedBox(height: 4.h),
-                            Text(
-                              "(${businessProfile?.distanceDisplay ?? '0.0 miles away'} from your location)",
-                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: Color(0xFF4552CB),
-                              ),
+                            FutureBuilder<double?>(
+                              future: businessProfile?.address != null
+                                  ? LocationService.getDistanceToAddressInMiles(
+                                      businessProfile!.address!.fullAddress,
+                                    )
+                                  : Future.value(null),
+                              builder: (context, snapshot) {
+                                final miles = snapshot.data;
+                                final text = miles == null
+                                    ? ''
+                                    : '(${miles.toStringAsFixed(1)} miles away from your location)';
+                                return Text(
+                                  text,
+                                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Color(0xFF4552CB),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),

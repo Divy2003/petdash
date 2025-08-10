@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 
 import '../utlis/app_config/app_config.dart';
 
+import '../services/BusinessServices/address_service.dart';
+import '../models/profile_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class LocationProvider with ChangeNotifier {
   Position? _currentPosition;
@@ -28,24 +30,47 @@ class LocationProvider with ChangeNotifier {
   GoogleMapController? get mapController => _mapController;
   LatLng? get selectedLocation => _selectedLocation;
   String? get selectedAddress => _selectedAddress;
+  AddressModel? _primaryAddress;
   Set<Marker> get markers => _markers;
   List<Map<String, dynamic>> get savedAddresses => _savedAddresses;
+  static const _prefsPrimaryAddressKey = 'primary_address_v1';
+  static const _prefsSelectedAddressKey = 'selected_address_text_v1';
+  AddressModel? get primaryAddress => _primaryAddress;
 
   LocationProvider() {
     _loadSavedAddresses();
+    // Also refresh primary address from backend on startup
+    Future.microtask(() => refreshPrimaryAddress());
   }
 
   Future<void> _loadSavedAddresses() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+
+      // Load locally saved addresses (deprecated local cache but kept for compatibility)
       final jsonStr = prefs.getString(_prefsSavedAddressesKey);
       if (jsonStr != null && jsonStr.isNotEmpty) {
         final List<dynamic> list = json.decode(jsonStr);
         _savedAddresses
           ..clear()
           ..addAll(list.cast<Map<String, dynamic>>());
-        notifyListeners();
       }
+
+      // Load cached primary address from prefs
+      final primaryJson = prefs.getString(_prefsPrimaryAddressKey);
+      if (primaryJson != null && primaryJson.isNotEmpty) {
+        try {
+          _primaryAddress = AddressModel.fromJson(json.decode(primaryJson));
+        } catch (_) {}
+      }
+
+      // Load last selected address string (for Home app bar)
+      final selected = prefs.getString(_prefsSelectedAddressKey);
+      if (selected != null && selected.isNotEmpty) {
+        _selectedAddress = selected;
+      }
+
+      notifyListeners();
     } catch (_) {}
   }
 
@@ -166,6 +191,14 @@ class LocationProvider with ChangeNotifier {
   // Save business location to backend
   Future<bool> saveBusinessLocation(String token) async {
     if (_selectedLocation == null) {
+    // Persist selection text for app restart
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (_selectedAddress != null) {
+        await prefs.setString(_prefsSelectedAddressKey, _selectedAddress!);
+      }
+    } catch (_) {}
+
       _setError('Please select a location first');
       return false;
     }
@@ -291,9 +324,36 @@ class LocationProvider with ChangeNotifier {
     });
 
     _persistSavedAddresses();
-
     notifyListeners();
-    _persistSavedAddresses();
+  }
+  // Fetch primary address from backend and cache it
+  Future<AddressModel?> refreshPrimaryAddress() async {
+    try {
+      final address = await AddressService.getPrimaryAddress();
+      if (address != null) {
+        _primaryAddress = address;
+        _selectedAddress = address.fullAddress;
+        // Persist
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_prefsPrimaryAddressKey, json.encode(address.toJson()));
+        await prefs.setString(_prefsSelectedAddressKey, _selectedAddress!);
+        notifyListeners();
+      }
+      return address;
+    } catch (e) {
+      // Keep previous cached values on error
+      return _primaryAddress;
+    }
+  }
+
+  // Allow UI to set a manual selected address text and persist it
+  Future<void> setSelectedAddressText(String text) async {
+    _selectedAddress = text;
+    notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_prefsSelectedAddressKey, text);
+    } catch (_) {}
   }
 
   // Remove saved address

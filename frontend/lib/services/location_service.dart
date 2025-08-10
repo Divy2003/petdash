@@ -6,12 +6,10 @@ import '../utlis/app_config/app_config.dart';
 
 class LocationService {
   // Calculate distance between two coordinates using Haversine formula
-  static double calculateDistance(
-    double lat1,
-    double lon1,
-    double lat2,
-    double lon2,
-  ) {
+  static double calculateDistance(double lat1,
+      double lon1,
+      double lat2,
+      double lon2,) {
     const double earthRadius = 6371; // Earth's radius in kilometers
 
     double dLat = _degreesToRadians(lat2 - lat1);
@@ -97,33 +95,32 @@ class LocationService {
       final response = await http.get(
         Uri.parse(
           'https://maps.googleapis.com/maps/api/distancematrix/json?'
-          'origins=$fromLat,$fromLng&'
-          'destinations=$toLat,$toLng&'
-          'mode=$mode&'
-          'units=metric&'
-          'key=${AppConfig.googleMapsApiKey}',
+              'origins=$fromLat,$fromLng&'
+              'destinations=$toLat,$toLng&'
+              'mode=$mode&'
+              'units=metric&'
+              'key=${AppConfig.googleMapsApiKey}',
         ),
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        
-        if (data['status'] == 'OK' && 
-            data['rows'] != null && 
+
+        if (data['status'] == 'OK' &&
+            data['rows'] != null &&
             data['rows'].isNotEmpty &&
             data['rows'][0]['elements'] != null &&
             data['rows'][0]['elements'].isNotEmpty &&
             data['rows'][0]['elements'][0]['status'] == 'OK') {
-          
           final element = data['rows'][0]['elements'][0];
           final distanceValue = element['distance']['value']; // in meters
-          
+
           // Convert meters to miles
           double distanceKm = distanceValue / 1000.0;
           return kmToMiles(distanceKm);
         }
       }
-      
+
       return null;
     } catch (e) {
       print('Error getting distance from Google API: $e');
@@ -159,7 +156,7 @@ class LocationService {
     }
 
     // Sort by distance
-    nearbyBusinesses.sort((a, b) => 
+    nearbyBusinesses.sort((a, b) =>
         a['distanceKm'].compareTo(b['distanceKm']));
 
     return nearbyBusinesses;
@@ -185,21 +182,21 @@ class LocationService {
       final response = await http.get(
         Uri.parse(
           'https://maps.googleapis.com/maps/api/geocode/json?'
-          'latlng=$lat,$lng&'
-          'key=${AppConfig.googleMapsApiKey}',
+              'latlng=$lat,$lng&'
+              'key=${AppConfig.googleMapsApiKey}',
         ),
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        
-        if (data['status'] == 'OK' && 
-            data['results'] != null && 
+
+        if (data['status'] == 'OK' &&
+
+            data['results'] != null &&
             data['results'].isNotEmpty) {
-          
           final result = data['results'][0];
           final components = result['address_components'];
-          
+
           String street = '';
           String city = '';
           String state = '';
@@ -212,8 +209,8 @@ class LocationService {
 
             if (types.contains('street_number') || types.contains('route')) {
               street += '$longName ';
-            } else if (types.contains('locality') || 
-                       types.contains('administrative_area_level_2')) {
+            } else if (types.contains('locality') ||
+                types.contains('administrative_area_level_2')) {
               city = longName;
             } else if (types.contains('administrative_area_level_1')) {
               state = longName;
@@ -234,7 +231,7 @@ class LocationService {
           };
         }
       }
-      
+
       return null;
     } catch (e) {
       print('Error getting address from coordinates: $e');
@@ -262,16 +259,62 @@ class LocationService {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        
+
         if (data['status'] == 'OK' && data['results'] != null) {
           return List<Map<String, dynamic>>.from(data['results']);
         }
       }
-      
+
       return [];
     } catch (e) {
       print('Error searching places: $e');
       return [];
+    }
+  }
+
+  // Forward geocode: get lat/lng from a full address string
+  static Future<Map<String, double>?> getLatLngForAddress(
+      String address) async {
+    try {
+      final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?address='
+            '${Uri.encodeComponent(address)}&key=${AppConfig.googleMapsApiKey}',
+      );
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == 'OK' && data['results'] != null &&
+            data['results'].isNotEmpty) {
+          final loc = data['results'][0]['geometry']['location'];
+          final lat = (loc['lat'] as num).toDouble();
+          final lng = (loc['lng'] as num).toDouble();
+          return { 'lat': lat, 'lng': lng};
+        }
+      }
+      return null;
+    } catch (e) {
+      print('Error forward geocoding "$address": $e');
+      return null;
+    }
+  }
+
+  // Convenience: distance in miles from current user to a destination address
+  static Future<double?> getDistanceToAddressInMiles(String address) async {
+    try {
+      final pos = await getCurrentLocation();
+      if (pos == null) return null;
+      final dest = await getLatLngForAddress(address);
+      if (dest == null) return null;
+      final km = calculateDistance(
+        pos.latitude,
+        pos.longitude,
+        dest['lat']!,
+        dest['lng']!,
+      );
+      return kmToMiles(km);
+    } catch (e) {
+      print('Error computing distance to address: $e');
+      return null;
     }
   }
 }
