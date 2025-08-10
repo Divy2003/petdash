@@ -4,7 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:petcare/services/api_service.dart';
 import 'package:petcare/utlis/constants/colors.dart';
 import 'package:petcare/common/widgets/Button/primarybutton.dart';
-import '../../../../../../common/widgets/appbar/appbar.dart';
+
+
 import '../../../../../../common/widgets/progessIndicator/threedotindicator.dart';
 import 'AppoinmentsDetails.dart';
 
@@ -53,7 +54,7 @@ class _GetallAppoimentsState extends State<GetallAppoiments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'My Appointments'),
+      appBar: AppBar(title: const Text('My Appointments')), // simple default app bar
       body: isLoading
           ? const Center(child: ThreeDotIndicator())
           : error != null
@@ -135,50 +136,7 @@ class _GetallAppoimentsState extends State<GetallAppoiments> {
                             ],
                           ),
                           const SizedBox(height: 12),
-                          if ((appt['status'] ?? '').toString().toLowerCase() == 'upcoming')
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: PrimaryButton(
-                                    title: 'Cancel',
-                                    onPressed: () async {
-                                      final id = (appt['_id'] ?? appt['id'])?.toString();
-                                      if (id == null) return;
-                                      try {
-                                        await ApiService.put('/appointment/' + id + '/status', {'status': 'cancelled'}, requireAuth: true);
-                                        setState(() {
-                                          final idx = appointments.indexWhere((x) => (x['_id'] ?? x['id']) == (appt['_id'] ?? appt['id']));
-                                          if (idx != -1) appointments[idx]['status'] = 'cancelled';
-                                        });
-                                        Get.snackbar('Cancelled', 'Appointment cancelled', backgroundColor: Colors.black87, colorText: Colors.white);
-                                      } catch (e) {
-                                        Get.snackbar('Error', e.toString(), backgroundColor: Colors.red, colorText: Colors.white);
-                                      }
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: PrimaryButton(
-                                    title: 'Mark Completed',
-                                    onPressed: () async {
-                                      final id = (appt['_id'] ?? appt['id'])?.toString();
-                                      if (id == null) return;
-                                      try {
-                                        await ApiService.put('/appointment/' + id + '/status', {'status': 'completed'}, requireAuth: true);
-                                        setState(() {
-                                          final idx = appointments.indexWhere((x) => (x['_id'] ?? x['id']) == (appt['_id'] ?? appt['id']));
-                                          if (idx != -1) appointments[idx]['status'] = 'completed';
-                                        });
-                                        Get.snackbar('Completed', 'Marked as completed', backgroundColor: Colors.black87, colorText: Colors.white);
-                                      } catch (e) {
-                                        Get.snackbar('Error', e.toString(), backgroundColor: Colors.red, colorText: Colors.white);
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+
                           const SizedBox(height: 12),
                           PrimaryButton(
                             title: 'View Details',

@@ -295,7 +295,11 @@ class _AppointmentsDetailsState extends State<AppointmentsDetails> {
               ),
               SizedBox(height: 74),
 
-                Row(
+              Builder(builder: (context) {
+                final appt = (details?['appointment'] ?? {}) as Map<String, dynamic>;
+                final status = (appt['status'] ?? '').toString().toLowerCase();
+                if (status != 'upcoming') return const SizedBox.shrink();
+                return Row(
                   children: [
                     Expanded(
                       child: PrimaryButton(
@@ -335,7 +339,8 @@ class _AppointmentsDetailsState extends State<AppointmentsDetails> {
                       ),
                     ),
                   ],
-                ),
+                );
+              }),
             ],
           ),
         ),
