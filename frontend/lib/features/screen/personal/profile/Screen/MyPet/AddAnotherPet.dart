@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../../utlis/constants/colors.dart';
 import '../../../../../../utlis/constants/size.dart';
+import '../../../../../../services/petowerServices/pet_service.dart';
+import '../../../../business/widgets/avatarImagepicker.dart';
 import '../../../../business/widgets/custom_text_field.dart';
 
 class AddOrEditPetScreen extends StatefulWidget {
@@ -20,6 +23,7 @@ class AddOrEditPetScreen extends StatefulWidget {
 class _AddOrEditPetScreenState extends State<AddOrEditPetScreen> {
   final _formKey = GlobalKey<FormState>();
   bool isMale = true;
+  bool isLoading = false;
 
   // Form Fields
   late TextEditingController nameController;
@@ -79,7 +83,9 @@ class _AddOrEditPetScreenState extends State<AddOrEditPetScreen> {
           child: Column(
             children: [
               // Photo & QR row
-              CircleAvatar(radius: 40, child: Icon(Icons.camera_alt)),
+              Center(
+                child: AvatarImagePicker(),
+              ),
               const SizedBox(height: 16),
 
               CustomTextField(
@@ -176,9 +182,9 @@ class _AddOrEditPetScreenState extends State<AddOrEditPetScreen> {
 
               const SizedBox(height: 20),
               PrimaryButton(
-                  title: 'Save', onPressed: () {
-                // Save logic here
-              }),
+                title: isLoading ? 'Saving...' : 'Save',
+                onPressed: isLoading ? null : _savePet,
+              ),
             ],
           ),
         ),
@@ -202,7 +208,7 @@ class _AddOrEditPetScreenState extends State<AddOrEditPetScreen> {
             label,
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               color: isActive ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
@@ -258,5 +264,133 @@ class _AddOrEditPetScreenState extends State<AddOrEditPetScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _savePet() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    if (nameController.text.trim().isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Pet name is required',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Parse allergies and favorite toys from comma-separated strings
+      List<String>? allergies;
+      if (allergiesController.text.trim().isNotEmpty) {
+        allergies = allergiesController.text
+            .split(',')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList();
+      }
+
+      List<String>? favoriteToys;
+      if (favoriteToysController.text.trim().isNotEmpty) {
+        favoriteToys = favoriteToysController.text
+            .split(',')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList();
+      }
+
+      // Parse dates
+      DateTime? birthday;
+      if (birthdayController.text.trim().isNotEmpty) {
+        try {
+          birthday = DateTime.parse(birthdayController.text.trim());
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Invalid birthday format. Please use YYYY-MM-DD',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+          setState(() {
+            isLoading = false;
+          });
+          return;
+        }
+      }
+
+      DateTime? lastVaccinatedDate;
+      if (vaccinatedDateController.text.trim().isNotEmpty) {
+        try {
+          lastVaccinatedDate = DateTime.parse(vaccinatedDateController.text.trim());
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Invalid vaccination date format. Please use YYYY-MM-DD',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+          setState(() {
+            isLoading = false;
+          });
+          return;
+        }
+      }
+
+      final result = await PetService.createPetProfile(
+        name: nameController.text.trim(),
+        species: speciesController.text.trim().isNotEmpty ? speciesController.text.trim() : null,
+        breed: breedController.text.trim().isNotEmpty ? breedController.text.trim() : null,
+        weight: weightController.text.trim().isNotEmpty ? weightController.text.trim() : null,
+        gender: isMale ? 'Male' : 'Female',
+        birthday: birthday,
+        allergies: allergies,
+        currentMedications: medicationsController.text.trim().isNotEmpty ? medicationsController.text.trim() : null,
+        lastVaccinatedDate: lastVaccinatedDate,
+        favoriteToys: favoriteToys,
+        neutered: switches['neutered'],
+        vaccinated: switches['vaccinated'],
+        friendlyWithDogs: switches['friendlyDogs'],
+        friendlyWithCats: switches['friendlyCats'],
+        friendlyWithKidsUnder10: switches['friendlyKidsUnder10'],
+        friendlyWithKidsOver10: switches['friendlyKidsOver10'],
+        microchipped: switches['microchipped'],
+        purebred: switches['purebred'],
+        pottyTrained: switches['pottyTrained'],
+      );
+
+      if (result != null) {
+        Get.snackbar(
+          'Success',
+          'Pet profile created successfully!',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+        Navigator.pop(context, true);// Return true to indicate success
+      } else {
+        Get.snackbar(
+          'Error',
+          'Failed to create pet profile',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to create pet profile: ${e.toString()}',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

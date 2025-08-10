@@ -223,13 +223,7 @@ class _AddressSelectionWidgetState extends State<AddressSelectionWidget> {
             ),
             IconButton(
               onPressed: _isLoadingLocation ? null : _getCurrentLocation,
-              icon: _isLoadingLocation
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: ThreeDotIndicator(),
-                    )
-                  : Icon(
+              icon:  Icon(
                       Icons.my_location,
                       color: AppColors.primary,
                     ),

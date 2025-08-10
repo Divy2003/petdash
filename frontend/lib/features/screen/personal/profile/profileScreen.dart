@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:petcare/common/widgets/Tile/profilemenutile.dart';
 import 'package:petcare/features/screen/auth/login/loginscreen.dart';
 import 'package:petcare/features/screen/personal/profile/widgets/editProfile.dart';
 import 'package:petcare/features/screen/personal/profile/widgets/profileheaderwidgets.dart';
 import 'package:petcare/services/user_session_service.dart';
-import 'package:petcare/services/BusinessServices/profile_service.dart';
-import 'package:petcare/models/profile_model.dart';
-
 import '../../../../utlis/constants/colors.dart';
 import '../../../../utlis/constants/image_strings.dart';
 import '../../../../utlis/constants/size.dart';
+import 'Screen/MyAppointments/GetAllAppoiments.dart';
 import 'Screen/MyOrder/myorderScreen.dart';
 import 'Screen/MyPet/mypets.dart';
 import 'Screen/Save Address/saveAddressScreen.dart';
 import 'Screen/Support/supportScreen.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -70,6 +68,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             title: 'Saved Addresses',
                             onTap: () {
                               Get.to(() => SaveAddressScreen());
+                            },
+                          ),
+                          Divider(
+                            height: 1,
+                            color: AppColors.divider,
+                          ),
+                          ProfileMenuTile(
+                            icon: Icons.event_available,
+                            title: 'My Appointments',
+                            onTap: () {
+                              Get.to(() => GetallAppoiments());
                             },
                           ),
                           Divider(

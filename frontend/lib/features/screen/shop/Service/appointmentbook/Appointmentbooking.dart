@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 import 'package:petcare/common/widgets/Button/primarybutton.dart';
 import 'package:petcare/features/screen/shop/Service/appointmentbook/widgets/Notes.dart';
@@ -9,22 +8,50 @@ import 'package:petcare/features/screen/shop/Service/appointmentbook/widgets/ast
 import 'package:petcare/features/screen/shop/Service/appointmentbook/widgets/couponcode.dart';
 import 'package:petcare/features/screen/shop/Service/appointmentbook/widgets/dateAndTimePicker.dart';
 import 'package:petcare/provider/appointment_provider/appointment_booking_provider.dart';
+import 'package:petcare/services/api_service.dart';
+import 'package:petcare/services/petowerServices/pet_service.dart';
 
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/cart/servicescart.dart';
 
 import '../../../../../utlis/constants/image_strings.dart';
-import '../serviceReceipt/receipt.dart';
+import 'ThankyouAppoinmentbook.dart';
 
 class AppointmentBooking extends StatefulWidget {
-  const AppointmentBooking({super.key});
+  final String businessId;
+  final String serviceId;
+  final String petId;
+
+  const AppointmentBooking({
+    super.key,
+    required this.businessId,
+    required this.serviceId,
+    required this.petId,
+  });
 
   @override
   State<AppointmentBooking> createState() => _AppointmentBookingState();
 }
 
 class _AppointmentBookingState extends State<AppointmentBooking> {
-  void _confirmAppointment() {
+  Future<String?> _ensurePetId() async {
+    // If petId already provided, use it
+    if (widget.petId.trim().isNotEmpty) return widget.petId;
+
+    try {
+      // Try to fetch user's pets and use the first one
+      final pets = await PetService.getAllPets();
+      if (pets.isNotEmpty && pets.first.id != null) {
+        return pets.first.id!;
+      }
+    } catch (e) {
+      // ignore and fall through to error handling below
+    }
+
+    return null; // no pet available
+  }
+
+  Future<void> _createAppointment() async {
     final provider =
         Provider.of<AppointmentBookingProvider>(context, listen: false);
 
@@ -38,6 +65,32 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
       );
       return;
     }
+
+    final effectivePetId = await _ensurePetId();
+    if (effectivePetId == null || effectivePetId.trim().isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please select or create a pet profile before booking.',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    // Validate service/business ids too
+    final businessId = widget.businessId.trim();
+    final serviceId = widget.serviceId.trim();
+    if (businessId.isEmpty || serviceId.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Service information is missing. Please reopen this service.',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (!mounted) return;
 
     // Show confirmation dialog
     showDialog(
@@ -63,11 +116,41 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // Here you would typically call an API to create the appointment
-              // For now, we'll just navigate to the receipt
-              Get.to(() => Receipt());
+            onPressed: () async {
+              Navigator.pop(context); // close dialog
+              try {
+                provider.setLoading(true);
+                final payload = provider.getAppointmentData(
+                  businessId: widget.businessId,
+                  serviceId: widget.serviceId,
+                  petId: effectivePetId,
+                );
+
+                // Call API: POST /appointment/create (auth required)
+                final response = await ApiService.post(
+                  '/appointment/create',
+                  payload,
+                  requireAuth: true,
+                );
+
+                provider.resetForm();
+
+                // Navigate to Thank You screen with appointment data
+                Get.off(() => ThankyouAppoinmentBook(
+                      appointment: response['appointment'],
+                      message: response['message'] ??
+                          'Appointment created successfully',
+                    ));
+              } catch (e) {
+                Get.snackbar(
+                  'Error',
+                  e.toString(),
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+              } finally {
+                provider.setLoading(false);
+              }
             },
             child: const Text('Confirm'),
           ),
@@ -98,14 +181,14 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
                   const SizedBox(height: 20),
                   AddOnsChecklist(),
                   const SizedBox(height: 10),
-                  CouponInput(),
-                  const SizedBox(height: 10),
+                  // CouponInput(),
+                  // const SizedBox(height: 10),
                   NotesInput(),
                   const SizedBox(height: 10),
                   EstimatedCostCard(),
                   const SizedBox(height: 20),
                   PrimaryButton(
-                    onPressed: provider.isLoading ? null : _confirmAppointment,
+                    onPressed: provider.isLoading ? null : _createAppointment,
                     title: provider.isLoading
                         ? 'Processing...'
                         : 'Confirm Appointment',

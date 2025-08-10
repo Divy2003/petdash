@@ -10,9 +10,12 @@ import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/size.dart';
 import '../../../../../services/BusinessServices/profile_service.dart';
 import '../../../../../models/profile_model.dart';
+import '../../../../../utlis/helpers/image_helper.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+  final ProfileModel? initialProfile;
+
+  const EditProfile({super.key, this.initialProfile});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -32,7 +35,51 @@ class _EditProfileState extends State<EditProfile> {
   bool _isLoading = true;
   bool _isSaving = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
 
+  Future<void> _loadProfile() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      // Use initial profile if provided, otherwise fetch from service
+      ProfileModel? profile = widget.initialProfile;
+      if (profile == null) {
+        profile = await ProfileService.getProfile();
+      }
+
+      if (profile != null) {
+        setState(() {
+          _profile = profile;
+          nameController.text = profile!.name ?? '';
+          emailController.text = profile.email ?? '';
+          phoneNumberController.text = profile.phoneNumber ?? '';
+          addressController.text = profile.primaryAddress?.streetName ?? '';
+          shopOpenTimeController.text = profile.shopOpenTime ?? '';
+          shopCloseTimeController.text = profile.shopCloseTime ?? '';
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading profile: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load profile: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -65,15 +112,132 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
+  ImageProvider _getProfileImageProvider() {
+    if (_profileImageFile != null) {
+      return FileImage(_profileImageFile!);
+    } else if (_profile?.profileImage != null &&
+        _profile!.profileImage!.isNotEmpty) {
+      final imageUrl = ImageHelper.getImageUrl(_profile!.profileImage!);
+      return NetworkImage(imageUrl);
+    } else {
+      return AssetImage(AppImages.person);
+    }
+  }
+
+  Widget _getShopImageWidget() {
+    if (_shopImageFile != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
+        child: Image.file(_shopImageFile!, fit: BoxFit.cover),
+      );
+    } else if (_profile?.shopImage != null && _profile!.shopImage!.isNotEmpty) {
+      final imageUrl = ImageHelper.getImageUrl(_profile!.shopImage!);
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
+        child: Image.network(
+          imageUrl,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error, size: 40, color: AppColors.textPrimaryColor),
+                SizedBox(height: 8),
+                Text('Failed to load image',
+                    style: TextStyle(color: AppColors.textPrimaryColor)),
+              ],
+            );
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            );
+          },
+        ),
+      );
+    } else {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.add_photo_alternate,
+              size: 40, color: AppColors.textPrimaryColor),
+          SizedBox(height: 8),
+          Text('Add Shop Image',
+              style: TextStyle(color: AppColors.textPrimaryColor)),
+        ],
+      );
+    }
+  }
+
   Future<void> _selectTime(
       TextEditingController controller, String label) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
     );
-    if (picked != null) {
+    if (picked != null && mounted) {
       final formattedTime = picked.format(context);
       controller.text = formattedTime;
+    }
+  }
+
+  Future<void> _updateProfile() async {
+    if (_isSaving) return;
+
+    try {
+      setState(() {
+        _isSaving = true;
+      });
+
+      final updatedProfile = await ProfileService.updateProfile(
+        name: nameController.text.trim(),
+        email: emailController.text.trim(),
+        phoneNumber: phoneNumberController.text.trim(),
+        // Business-only fields removed for pet owner edit
+        shopOpenTime: null,
+        shopCloseTime: null,
+        profileImageFile: _profileImageFile,
+        shopImageFile: null, // hide/remove shop image for pet owner
+        streetName: addressController.text.trim(),
+      );
+
+      if (updatedProfile != null) {
+        setState(() {
+          _profile = updatedProfile;
+          _profileImageFile = null;
+          _shopImageFile = null;
+        });
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Profile updated successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context, true); // Return true to indicate success
+        }
+      }
+    } catch (e) {
+      debugPrint('Error updating profile: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update profile: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      setState(() {
+        _isSaving = false;
+      });
     }
   }
 
@@ -96,7 +260,9 @@ class _EditProfileState extends State<EditProfile> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -109,12 +275,7 @@ class _EditProfileState extends State<EditProfile> {
                         children: [
                           CircleAvatar(
                             radius: 50,
-                            backgroundImage: _profileImageFile != null
-                                ? FileImage(_profileImageFile!)
-                                : (_profile?.profileImage != null
-                                        ? NetworkImage(_profile!.profileImage!)
-                                        : AssetImage(AppImages.person))
-                                    as ImageProvider,
+                            backgroundImage: _getProfileImageProvider(),
                           ),
                           GestureDetector(
                             onTap: _pickProfileImage,
@@ -311,139 +472,15 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                     SizedBox(height: 15),
 
-                    // Business-specific fields
-                    if (_profile?.isBusiness == true) ...[
-                      Text(
-                        'Shop Image',
-                        style:
-                            Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  color: AppColors.primary,
-                                ),
-                      ),
-                      SizedBox(height: 15),
-                      GestureDetector(
-                        onTap: _pickShopImage,
-                        child: Container(
-                          height: 120,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: AppColors.textPrimaryColor),
-                            borderRadius:
-                                BorderRadius.circular(AppSizes.borderRadiusLg),
-                          ),
-                          child: _shopImageFile != null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(
-                                      AppSizes.borderRadiusLg),
-                                  child: Image.file(_shopImageFile!,
-                                      fit: BoxFit.cover),
-                                )
-                              : (_profile?.shopImage != null
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                          AppSizes.borderRadiusLg),
-                                      child: Image.network(_profile!.shopImage!,
-                                          fit: BoxFit.cover),
-                                    )
-                                  : Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.add_photo_alternate,
-                                            size: 40,
-                                            color: AppColors.textPrimaryColor),
-                                        SizedBox(height: 8),
-                                        Text('Add Shop Image',
-                                            style: TextStyle(
-                                                color: AppColors
-                                                    .textPrimaryColor)),
-                                      ],
-                                    )),
-                        ),
-                      ),
-                      SizedBox(height: 15),
-                      Text(
-                        'Shop Opening Time',
-                        style:
-                            Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  color: AppColors.primary,
-                                ),
-                      ),
-                      SizedBox(height: 15),
-                      TextFormField(
-                        controller: shopOpenTimeController,
-                        readOnly: true,
-                        onTap: () => _selectTime(
-                            shopOpenTimeController, 'Shop Opening Time'),
-                        decoration: InputDecoration(
-                          hintText: 'Select opening time',
-                          suffixIcon: Icon(Icons.access_time),
-                          hintStyle:
-                              Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                    color: AppColors.textPrimaryColor,
-                                  ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 14),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppSizes.borderRadiusLg),
-                            borderSide: BorderSide(
-                                color: AppColors.textPrimaryColor, width: 2),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppSizes.borderRadiusLg),
-                            borderSide: BorderSide(
-                                color: AppColors.textPrimaryColor, width: 2),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 15),
-                      Text(
-                        'Shop Closing Time',
-                        style:
-                            Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  color: AppColors.primary,
-                                ),
-                      ),
-                      SizedBox(height: 15),
-                      TextFormField(
-                        controller: shopCloseTimeController,
-                        readOnly: true,
-                        onTap: () => _selectTime(
-                            shopCloseTimeController, 'Shop Closing Time'),
-                        decoration: InputDecoration(
-                          hintText: 'Select closing time',
-                          suffixIcon: Icon(Icons.access_time),
-                          hintStyle:
-                              Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                    color: AppColors.textPrimaryColor,
-                                  ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 14),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppSizes.borderRadiusLg),
-                            borderSide: BorderSide(
-                                color: AppColors.textPrimaryColor, width: 2),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppSizes.borderRadiusLg),
-                            borderSide: BorderSide(
-                                color: AppColors.textPrimaryColor, width: 2),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 15),
-                    ],
+                    // Business-specific fields are hidden for pet owner edit screen
+                    // If you ever want them back for Business mode, re-add behind a role check
+                    // like: if (_profile?.isBusiness == true) ...[ ... ]
+                    // (intentionally removed)
+
 
                     PrimaryButton(
-                      title:  'Update Profile',
-                      onPressed:(){
-
-                      },
+                      title: _isSaving ? 'Updating...' : 'Update Profile',
+                      onPressed: _isSaving ? null : _updateProfile,
                     ),
                   ],
                 ),

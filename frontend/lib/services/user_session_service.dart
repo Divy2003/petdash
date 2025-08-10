@@ -231,13 +231,6 @@ class UserSessionService {
                           color: AppColors.primary,
                         ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'This will change your account type and navigate you to the appropriate screen.',
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: AppColors.grey,
-                        ),
-                  ),
                 ],
               ),
               actions: [

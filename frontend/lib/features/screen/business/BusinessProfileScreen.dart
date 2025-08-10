@@ -65,9 +65,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline,
-                       size: 64,
-                       color: AppColors.error),
+                  Icon(Icons.error_outline, size: 64, color: AppColors.error),
                   SizedBox(height: AppSizes.md),
                   Text(
                     'Error loading profile',
@@ -92,13 +90,14 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
           // Get profile data or use defaults
           final profile = profileProvider.profile;
           final businessName = profile?.name ?? 'Pet Care Business';
-          final businessLocation = profile?.displayAddress ?? 'Location not set';
+          final businessLocation =
+              profile?.displayAddress ?? 'Location not set';
           final profileImagePath = profile?.profileImage ?? AppImages.person;
 
           return RefreshIndicator(
             onRefresh: _refreshProfile,
             child: SingleChildScrollView(
-              physics:  AlwaysScrollableScrollPhysics(),
+              physics: AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   // Business user header with real data
@@ -106,12 +105,17 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                     name: businessName,
                     location: businessLocation,
                     imagePath: profileImagePath,
-                    onEdit: () {
-                      Get.to(() => EditProfile());
+                    onEdit: () async {
+                      final result = await Get.to(
+                          () => EditProfile(initialProfile: profile));
+                      // Refresh profile data when returning from edit
+                      if (result == true) {
+                        _refreshProfile();
+                      }
                     },
                   ),
 
-                  SizedBox(height: AppSizes.md),
+                  SizedBox(height: AppSizes.lg),
 
                   // Menu Section
                   Padding(
@@ -119,233 +123,246 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: AppColors.white,
-                        borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
+                        borderRadius:
+                            BorderRadius.circular(AppSizes.cardRadiusLg),
                         border: Border.all(color: AppColors.secondary),
                       ),
                       child: Column(
                         children: [
-                      ProfileMenuTile(
-                        icon: Icons.shopping_bag,
-                        title: 'My Products',
-                        onTap: () => Get.to(() => MyProductsScreen()),
-                      ),
-                      Divider(
-                          height: AppSizes.dividerHeight,
-                          color: AppColors.divider),
-                      ProfileMenuTile(
-                        icon: Icons.supervised_user_circle,
-                        title: profile?.name != null ? 'Edit Profile' : 'Create Profile',
-                        onTap: () async {
-                          final result = await Get.to(() => CreateProfile());
-                          // Refresh profile data when returning from create/edit
-                          if (result == true) {
-                            _refreshProfile();
-                          }
-                        },
-                      ),
-                      Divider(
-                          height: AppSizes.dividerHeight,
-                          color: AppColors.divider),
-                      ProfileMenuTile(
-                        icon: Icons.calendar_today,
-                        title: 'Appointments',
-                        onTap: () => Get.to(() => AppointmentScreen()),
-                      ),
-                      Divider(
-                          height: AppSizes.dividerHeight,
-                          color: AppColors.divider),
-                      ProfileMenuTile(
-                        icon: Icons.receipt_long,
-                        title: 'Orders',
-                        onTap: () => Get.to(() => OrderScreen()),
-                      ),
-                      Divider(
-                          height: AppSizes.dividerHeight,
-                          color: AppColors.divider),
-                      ProfileMenuTile(
-                        icon: Icons.miscellaneous_services,
-                        title: 'My Services',
-                        onTap: () => Get.to(() => MyServices()),
-                      ),
-                      Divider(
-                          height: AppSizes.dividerHeight,
-                          color: AppColors.divider),
-                      ProfileMenuTile(
-                        icon: Icons.group,
-                        title: 'My Clients',
-                        onTap: () => Get.to(() => MyClients()),
-                      ),
-                      Divider(
-                          height: AppSizes.dividerHeight,
-                          color: AppColors.divider),
-                      ProfileMenuTile(
-                        icon: Icons.article_outlined,
-                        title: 'My Articles',
-                        onTap: () => Get.to(() => MyArticles()),
-                      ),
-                      Divider(
-                          height: AppSizes.dividerHeight,
-                          color: AppColors.divider),
-                      ProfileMenuTile(
-                        icon: Icons.bar_chart,
-                        title: 'Reports',
-                        onTap: () => Get.to(() => StatisticsScreen()),
-                      ),
-                      Divider(
-                          height: AppSizes.dividerHeight,
-                          color: AppColors.divider),
-                      ProfileMenuTile(
-                        icon: Icons.credit_card,
-                        title: 'PaymentsMethod',
-                        onTap: () => Get.to(() => MyCardScreen()),
-                      ),
-                      Divider(
-                          height: AppSizes.dividerHeight,
-                          color: AppColors.divider),
-                      ProfileMenuTile(
-                        icon: Icons.subscriptions,
-                        title: 'Subscription',
-                        onTap: () => Get.to(() => SubscriptionScreen()),
-                      ),
-                      Divider(
-                          height: AppSizes.dividerHeight,
-                          color: AppColors.divider),
-                      ProfileMenuTile(
-                        icon: Icons.swap_horiz,
-                        title: 'Switch to Service Account',
-                        onTap: () {
-                          UserSessionService.showAccountSwitchDialog(context);
-                        },
-                      ),
-                      Divider(
-                          height: AppSizes.dividerHeight,
-                          color: AppColors.divider),
-                      ProfileMenuTile(
-                        icon: Icons.logout,
-                        title: 'Logout',
-                        isLogout: true,
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                backgroundColor: AppColors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      AppSizes.cardRadiusLg),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(AppSizes.lg),
-                                  child: IntrinsicHeight(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        Text(
-                                          'Logout',
-                                          textAlign: TextAlign.center,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge!
-                                              .copyWith(
-                                                color: AppColors.primary,
-                                              ),
-                                        ),
-                                        SizedBox(height: AppSizes.sm),
-                                        Text(
-                                          'Are you sure you want to logout?',
-                                          textAlign: TextAlign.center,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .copyWith(
-                                                color: AppColors.primary,
-                                              ),
-                                        ),
-                                        SizedBox(height: AppSizes.md),
-                                        Row(
+                          ProfileMenuTile(
+                            icon: Icons.shopping_bag,
+                            title: 'My Products',
+                            onTap: () => Get.to(() => MyProductsScreen()),
+                          ),
+                          Divider(
+                              height: AppSizes.dividerHeight,
+                              color: AppColors.divider),
+                          ProfileMenuTile(
+                            icon: Icons.supervised_user_circle,
+                            title: profile?.name != null
+                                ? 'Edit Profile'
+                                : 'Create Profile',
+                            onTap: () async {
+                              final result =
+                                  await Get.to(() => CreateProfile());
+                              // Refresh profile data when returning from create/edit
+                              if (result == true) {
+                                _refreshProfile();
+                              }
+                            },
+                          ),
+                          Divider(
+                              height: AppSizes.dividerHeight,
+                              color: AppColors.divider),
+                          ProfileMenuTile(
+                            icon: Icons.calendar_today,
+                            title: 'Appointments',
+                            onTap: () => Get.to(() => AppointmentScreen()),
+                          ),
+                          Divider(
+                              height: AppSizes.dividerHeight,
+                              color: AppColors.divider),
+                          ProfileMenuTile(
+                            icon: Icons.receipt_long,
+                            title: 'Orders',
+                            onTap: () => Get.to(() => OrderScreen()),
+                          ),
+                          Divider(
+                              height: AppSizes.dividerHeight,
+                              color: AppColors.divider),
+                          ProfileMenuTile(
+                            icon: Icons.miscellaneous_services,
+                            title: 'My Services',
+                            onTap: () => Get.to(() => MyServices()),
+                          ),
+                          Divider(
+                              height: AppSizes.dividerHeight,
+                              color: AppColors.divider),
+                          ProfileMenuTile(
+                            icon: Icons.group,
+                            title: 'My Clients',
+                            onTap: () => Get.to(() => MyClients()),
+                          ),
+                          Divider(
+                              height: AppSizes.dividerHeight,
+                              color: AppColors.divider),
+                          ProfileMenuTile(
+                            icon: Icons.article_outlined,
+                            title: 'My Articles',
+                            onTap: () => Get.to(() => MyArticles()),
+                          ),
+                          Divider(
+                              height: AppSizes.dividerHeight,
+                              color: AppColors.divider),
+                          ProfileMenuTile(
+                            icon: Icons.bar_chart,
+                            title: 'Reports',
+                            onTap: () => Get.to(() => StatisticsScreen()),
+                          ),
+                          Divider(
+                              height: AppSizes.dividerHeight,
+                              color: AppColors.divider),
+                          ProfileMenuTile(
+                            icon: Icons.credit_card,
+                            title: 'PaymentsMethod',
+                            onTap: () => Get.to(() => MyCardScreen()),
+                          ),
+                          Divider(
+                              height: AppSizes.dividerHeight,
+                              color: AppColors.divider),
+                          ProfileMenuTile(
+                            icon: Icons.subscriptions,
+                            title: 'Subscription',
+                            onTap: () => Get.to(() => SubscriptionScreen()),
+                          ),
+                          Divider(
+                              height: AppSizes.dividerHeight,
+                              color: AppColors.divider),
+                          ProfileMenuTile(
+                            icon: Icons.swap_horiz,
+                            title: 'Switch to Service Account',
+                            onTap: () {
+                              UserSessionService.showAccountSwitchDialog(
+                                  context);
+                            },
+                          ),
+                          Divider(
+                              height: AppSizes.dividerHeight,
+                              color: AppColors.divider),
+                          ProfileMenuTile(
+                            icon: Icons.logout,
+                            title: 'Logout',
+                            isLogout: true,
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    backgroundColor: AppColors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          AppSizes.cardRadiusLg),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(AppSizes.lg),
+                                      child: IntrinsicHeight(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
                                           children: [
-                                            Expanded(
-                                              child: OutlinedButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                                style: OutlinedButton.styleFrom(
-                                                  side: BorderSide(
-                                                      color: AppColors.primary),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            AppSizes
-                                                                .buttonRadius),
+                                            Text(
+                                              'Logout',
+                                              textAlign: TextAlign.center,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge!
+                                                  .copyWith(
+                                                    color: AppColors.primary,
                                                   ),
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical:
-                                                        AppSizes.buttonHeight,
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  'Cancel',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .copyWith(
-                                                        color: AppColors.black,
-                                                      ),
-                                                ),
-                                              ),
                                             ),
-                                            SizedBox(width: AppSizes.sm),
-                                            Expanded(
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                  UserSessionService.logout(
-                                                      context);
-                                                  Navigator.pushAndRemoveUntil(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (_) =>
-                                                            LoginScreen()),
-                                                    (route) => false,
-                                                  );
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      AppColors.primary,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            AppSizes
+                                            SizedBox(height: AppSizes.sm),
+                                            Text(
+                                              'Are you sure you want to logout?',
+                                              textAlign: TextAlign.center,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(
+                                                    color: AppColors.primary,
+                                                  ),
+                                            ),
+                                            SizedBox(height: AppSizes.md),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: OutlinedButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                    style: OutlinedButton
+                                                        .styleFrom(
+                                                      side: BorderSide(
+                                                          color: AppColors
+                                                              .primary),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius
+                                                            .circular(AppSizes
                                                                 .buttonRadius),
-                                                  ),
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical:
-                                                        AppSizes.buttonHeight,
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  'Logout',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .copyWith(
-                                                        color: AppColors.white,
                                                       ),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                        vertical: AppSizes
+                                                            .buttonHeight,
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      'Cancel',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .titleMedium!
+                                                          .copyWith(
+                                                            color:
+                                                                AppColors.black,
+                                                          ),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
+                                                SizedBox(width: AppSizes.sm),
+                                                Expanded(
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                      UserSessionService.logout(
+                                                          context);
+                                                      Navigator
+                                                          .pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (_) =>
+                                                                LoginScreen()),
+                                                        (route) => false,
+                                                      );
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          AppColors.primary,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius
+                                                            .circular(AppSizes
+                                                                .buttonRadius),
+                                                      ),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                        vertical: AppSizes
+                                                            .buttonHeight,
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      'Logout',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .titleMedium!
+                                                          .copyWith(
+                                                            color:
+                                                                AppColors.white,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
-                      ),
+                          ),
                         ],
                       ),
                     ),

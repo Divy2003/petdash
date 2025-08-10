@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 import '../utlis/app_config/app_config.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
 class LocationProvider with ChangeNotifier {
   Position? _currentPosition;
   String? _currentAddress;
@@ -15,6 +16,7 @@ class LocationProvider with ChangeNotifier {
   GoogleMapController? _mapController;
   LatLng? _selectedLocation;
   String? _selectedAddress;
+  static const _prefsSavedAddressesKey = 'saved_addresses_v1';
   final Set<Marker> _markers = {};
   final List<Map<String, dynamic>> _savedAddresses = [];
 
@@ -28,6 +30,31 @@ class LocationProvider with ChangeNotifier {
   String? get selectedAddress => _selectedAddress;
   Set<Marker> get markers => _markers;
   List<Map<String, dynamic>> get savedAddresses => _savedAddresses;
+
+  LocationProvider() {
+    _loadSavedAddresses();
+  }
+
+  Future<void> _loadSavedAddresses() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonStr = prefs.getString(_prefsSavedAddressesKey);
+      if (jsonStr != null && jsonStr.isNotEmpty) {
+        final List<dynamic> list = json.decode(jsonStr);
+        _savedAddresses
+          ..clear()
+          ..addAll(list.cast<Map<String, dynamic>>());
+        notifyListeners();
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _persistSavedAddresses() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_prefsSavedAddressesKey, json.encode(_savedAddresses));
+    } catch (_) {}
+  }
 
   void setMapController(GoogleMapController controller) {
     _mapController = controller;
@@ -263,7 +290,10 @@ class LocationProvider with ChangeNotifier {
       'subtitle': address, // Full address as subtitle
     });
 
+    _persistSavedAddresses();
+
     notifyListeners();
+    _persistSavedAddresses();
   }
 
   // Remove saved address
@@ -271,6 +301,7 @@ class LocationProvider with ChangeNotifier {
     if (index >= 0 && index < _savedAddresses.length) {
       _savedAddresses.removeAt(index);
       notifyListeners();
+      _persistSavedAddresses();
     }
   }
 

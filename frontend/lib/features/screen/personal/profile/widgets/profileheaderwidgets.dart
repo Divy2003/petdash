@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/image_strings.dart';
 import '../../../../../utlis/constants/size.dart';
+import '../../../../../utlis/helpers/image_helper.dart';
 
 class ProfileHeaderWidget extends StatelessWidget {
   final String name;
@@ -18,6 +19,122 @@ class ProfileHeaderWidget extends StatelessWidget {
     required this.imagePath,
     this.onEdit,
   });
+
+  Widget _buildProfileImage(String imagePath) {
+    // Check if it's already a full URL
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            AppImages.person,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          );
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            color: AppColors.white.withValues(alpha: 0.8),
+            child: Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+                strokeWidth: 2,
+                color: AppColors.primary,
+              ),
+            ),
+          );
+        },
+      );
+    }
+    // Check if it's a valid asset path
+    else if (imagePath.startsWith('assets/') || imagePath.contains('assets')) {
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            AppImages.person,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          );
+        },
+      );
+    }
+    // If it looks like an upload path, construct the full URL using ImageHelper
+    else if (imagePath.contains('uploads/') ||
+        imagePath.contains('.jpg') ||
+        imagePath.contains('.png') ||
+        imagePath.contains('.jpeg')) {
+      final fullUrl = ImageHelper.getImageUrl(imagePath);
+      if (fullUrl.isNotEmpty) {
+        return Image.network(
+          fullUrl,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+          errorBuilder: (context, error, stackTrace) {
+            return Image.asset(
+              AppImages.person,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            );
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              color: AppColors.white.withValues(alpha: 0.8),
+              child: Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                      : null,
+                  strokeWidth: 2,
+                  color: AppColors.primary,
+                ),
+              ),
+            );
+          },
+        );
+      } else {
+        return Image.asset(
+          AppImages.person,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        );
+      }
+    }
+    // Default fallback
+    else {
+      return Image.asset(
+        imagePath.isNotEmpty ? imagePath : AppImages.person,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            AppImages.person,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +169,9 @@ class ProfileHeaderWidget extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.white, width: 5.w),
-              image: DecorationImage(
-                image: imagePath.startsWith('http')
-                    ? NetworkImage(imagePath) as ImageProvider
-                    : AssetImage(imagePath),
-                fit: BoxFit.cover,
-              ),
+            ),
+            child: ClipOval(
+              child: _buildProfileImage(imagePath),
             ),
           ),
         ),
@@ -97,7 +211,6 @@ class ProfileHeaderWidget extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           color: AppColors.white,
                           fontWeight: FontWeight.w500,
-
                         ),
                   ),
                 ],

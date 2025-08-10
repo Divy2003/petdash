@@ -32,8 +32,8 @@ class _CurvedNavScreenState extends State<CurvedNavScreen> {
       bottomNavigationBar: CurvedNavigationBar(
         index: _selectedIndex,
         backgroundColor: Colors.white,
-        color: AppColors.primary,
-        buttonBackgroundColor: AppColors.primary,
+        color: AppColors.cart,
+        buttonBackgroundColor: AppColors.cart,
         height: 60,
         animationDuration: Duration(milliseconds: 300),
         items: [

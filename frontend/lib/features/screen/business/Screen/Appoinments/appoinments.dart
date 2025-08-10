@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:petcare/common/widgets/Button/primarybutton.dart';
 import 'package:petcare/utlis/constants/colors.dart';
 import 'package:petcare/utlis/constants/size.dart';
+import 'package:petcare/services/appointment_service.dart';
 
 import '../../../../../common/widgets/appbar/appbar.dart';
-import '../../model/appointments.dart';
+
+import '../../../../../common/widgets/progessIndicator/threedotindicator.dart';
 import 'AppointmentsDetails.dart';
+
 
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({super.key});
@@ -19,32 +21,46 @@ class AppointmentScreen extends StatefulWidget {
 }
 
 class _AppointmentScreenState extends State<AppointmentScreen> {
-  final List<Appointment> appointments = [
-    Appointment(
-      title: 'Bath & Haircut with FURminator',
-      dateTime: DateTime(2021, 5, 20, 11, 0),
-      status: 'Upcoming',
-    ),
-    Appointment(
-      title: 'Bath & Haircut',
-      dateTime: DateTime(2021, 3, 10, 17, 0),
-      status: 'Completed',
-    ),
-    Appointment(
-      title: 'Bath & Haircut with FURminator',
-      dateTime: DateTime(2021, 3, 9, 18, 0),
-      status: 'Cancelled',
-    ),
-  ];
+  List<Map<String, dynamic>> appointments = [];
+  bool isLoading = false;
+  String? error;
+  final Set<String> _updating = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppointments();
+  }
+
+  Future<void> _loadAppointments() async {
+    setState(() {
+      isLoading = true;
+      error = null;
+    });
+    try {
+      final data = await AppointmentService.getBusinessAppointments();
+      setState(() {
+        appointments = List<Map<String, dynamic>>.from(data);
+      });
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   Color getStatusColor(String status) {
-    switch (status) {
-      case 'Upcoming':
-        return Color(0xFF1D9031);
-      case 'Completed':
-        return Color(0xFF1976D2);
-      case 'Cancelled':
-        return Color(0xFF999999);
+    switch (status.toLowerCase()) {
+      case 'upcoming':
+        return  Color(0xFF1D9031);
+      case 'completed':
+        return  Color(0xFF1976D2);
+      case 'cancelled':
+        return  Color(0xFF999999);
       default:
         return Colors.black;
     }
@@ -55,12 +71,24 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     return Scaffold(
       appBar: CustomAppBar(title: 'Appointments'),
 
-      body: ListView.builder(
-        padding: EdgeInsets.all(16),
-        itemCount: appointments.length,
-        itemBuilder: (context, index) {
-          final appt = appointments[index];
-          return Container(
+      body: isLoading
+          ?  Center(child: ThreeDotIndicator())
+          : error != null
+              ? Center(child: Text(error!))
+              : RefreshIndicator(
+                  onRefresh: _loadAppointments,
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(16),
+                    itemCount: appointments.length,
+                    itemBuilder: (context, index) {
+                      final appt = appointments[index];
+                      final status = (appt['status'] ?? 'upcoming').toString();
+                      final dateStr = (appt['appointmentDate'] ?? '').toString();
+                      final timeStr = (appt['appointmentTime'] ?? '').toString();
+                      final dateTime = dateStr.isNotEmpty
+                          ? DateTime.tryParse(dateStr) ?? DateTime.now()
+                          : DateTime.now();
+                      return Container(
             margin: EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.textPrimaryColor),
@@ -76,11 +104,11 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: getStatusColor(appt.status),
+                      color: getStatusColor(status),
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                     ),
                     child: Text(
-                      appt.status,
+                      status.capitalizeFirst ?? status,
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: AppColors.white,
                       ),
@@ -90,7 +118,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
                   /// Title
                   Text(
-                    appt.title,
+                    (appt['service']?['title'] ?? appt['title'] ?? 'Appointment').toString(),
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                       color: AppColors.primary,
                     ),
@@ -104,14 +132,14 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       Icon(Icons.calendar_today, size: 16, color: Colors.grey),
                       SizedBox(width: 6),
                       Text(
-                        DateFormat('MMMM dd yyyy, EEEE').format(appt.dateTime),
+                        DateFormat('MMMM dd yyyy, EEEE').format(dateTime),
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: AppColors.textPrimaryColor,
                         ),
                       ),
                       Spacer(),
                       Text(
-                        DateFormat('h:mm a').format(appt.dateTime),
+                        timeStr.isNotEmpty ? timeStr : DateFormat('h:mm a').format(dateTime),
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: AppColors.textPrimaryColor,
                         ),
@@ -119,21 +147,84 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     ],
                   ),
 
-                  /// Add to calendar button (only if upcoming)
-                  if (appt.status == 'Upcoming') ...[
+                  if (status.toLowerCase() == 'upcoming') ...[
+                    /// Actions
                     SizedBox(height: 12),
-                   PrimaryButton(
-                     title: "Add to Calendar",
-                     onPressed: (){
-                       Get.to(() => AppointmentsDetails());
-                     },
-                   )
-                  ]
+                    Row(
+                      children: [
+                        Expanded(
+                          child: PrimaryButton(
+                            title: _updating.contains(appt['_id']) ? 'Updating...' : 'Mark Completed',
+                            onPressed: _updating.contains(appt['_id'])
+                                ? null
+                                : () async {
+                                    final id = appt['_id']?.toString();
+                                    if (id == null) return;
+                                    setState(() => _updating.add(id));
+                                    final ok = await AppointmentService.updateAppointmentStatus(
+                                      appointmentId: id,
+                                      status: 'completed',
+                                    );
+                                    setState(() => _updating.remove(id));
+                                    if (ok) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Marked as completed')),
+                                      );
+                                      setState(() {
+                                        final idx = appointments.indexWhere((x) => x['_id'] == id);
+                                        if (idx != -1) appointments[idx]['status'] = 'completed';
+                                      });
+                                    }
+                                  },
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: PrimaryButton(
+                            title: _updating.contains(appt['_id']) ? 'Updating...' : 'Cancel',
+                            onPressed: _updating.contains(appt['_id'])
+                                ? null
+                                : () async {
+                                    final id = appt['_id']?.toString();
+                                    if (id == null) return;
+                                    setState(() => _updating.add(id));
+                                    final ok = await AppointmentService.updateAppointmentStatus(
+                                      appointmentId: id,
+                                      status: 'cancelled',
+                                    );
+                                    setState(() => _updating.remove(id));
+                                    if (ok) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Appointment cancelled')),
+                                      );
+                                      setState(() {
+                                        appointments.removeWhere((x) => x['_id'] == id);
+                                      });
+                                    }
+                                  },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+
+                  /// Details navigation
+                  SizedBox(height: 12),
+                  PrimaryButton(
+                    title: "View Details",
+                    onPressed: (){
+                      final id = appt['_id']?.toString();
+                      if (id != null) {
+                        Get.to(() => AppointmentsDetails(appointmentId: id));
+                      }
+                    },
+                  )
                 ],
               ),
             ),
           );
         },
+      ),
       ),
     );
   }

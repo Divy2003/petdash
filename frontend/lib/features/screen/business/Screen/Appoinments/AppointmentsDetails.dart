@@ -1,36 +1,82 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/cart/servicescart.dart';
+import '../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/image_strings.dart';
 import '../../../../../utlis/constants/size.dart';
+import '../../../../../services/appointment_service.dart';
 
 
 class AppointmentsDetails extends StatefulWidget {
-  const AppointmentsDetails({super.key});
+  final String? appointmentId;
+  const AppointmentsDetails({super.key, this.appointmentId});
 
   @override
   State<AppointmentsDetails> createState() => _AppointmentsDetailsState();
 }
 
 class _AppointmentsDetailsState extends State<AppointmentsDetails> {
+  Map<String, dynamic>? details;
+  bool isLoading = false;
+  String? error;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.appointmentId != null) {
+      _loadDetails();
+    }
+  }
+
+  Future<void> _loadDetails() async {
+    setState(() {
+      isLoading = true;
+      error = null;
+    });
+    try {
+      final data = await AppointmentService.getAppointmentDetails(widget.appointmentId!);
+      setState(() {
+        details = data;
+      });
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Appointment Details'),
 
-      body: SingleChildScrollView(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : error != null
+              ? Center(child: Text(error!))
+              : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Column(
             crossAxisAlignment:  CrossAxisAlignment.start,
             children: [
-              ServiceCard(
-                title: 'Bath & Haircut with FURminator',
-                subtitle: 'Customer: John Doe',
-                imagePath: AppImages.person,
-              ),
+              Builder(builder: (context) {
+                final appt = (details?['appointment'] ?? {}) as Map<String, dynamic>;
+                final service = (appt['service'] ?? {}) as Map<String, dynamic>;
+                final customer = (appt['customer'] ?? {}) as Map<String, dynamic>;
+                return ServiceCard(
+                  title: (service['title'] ?? 'Service').toString(),
+                  subtitle: 'Customer: ' + (customer['name'] ?? 'N/A').toString(),
+                  imagePath: AppImages.person,
+                );
+              }),
 
               SizedBox(height: AppSizes.spaceBtwItems),
 
@@ -41,7 +87,14 @@ class _AppointmentsDetailsState extends State<AppointmentsDetails> {
                       size: AppSizes.iconSm, color: AppColors.primary),
                   SizedBox(width: AppSizes.sm),
                   Text(
-                    '20 May 2021,\nMonday',
+                    (() {
+                      final appt = (details?['appointment'] ?? {}) as Map<String, dynamic>;
+                      final dateStr = (appt['appointmentDate'] ?? '').toString();
+                      if (dateStr.isEmpty) return '—';
+                      final dt = DateTime.tryParse(dateStr);
+                      if (dt == null) return '—';
+                      return DateFormat('dd MMM yyyy, EEEE').format(dt);
+                    })(),
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: AppColors.primary,
                     ),
@@ -51,7 +104,11 @@ class _AppointmentsDetailsState extends State<AppointmentsDetails> {
                       size: AppSizes.iconSm, color: Colors.black54),
                   SizedBox(width: AppSizes.xs),
                   Text(
-                    '11:00 AM',
+                    (() {
+                      final appt = (details?['appointment'] ?? {}) as Map<String, dynamic>;
+                      final t = (appt['appointmentTime'] ?? '').toString();
+                      return t.isNotEmpty ? t : '—';
+                    })(),
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: AppColors.primary,
                     ),
@@ -220,41 +277,65 @@ class _AppointmentsDetailsState extends State<AppointmentsDetails> {
                 runSpacing: 8,
                 spacing: 16,
                 children: [
-                  petInfo("Pet Type", "Dog"),
-                  petInfo("Owner Name", "Jane Cooper"),
-                  petInfo("Pet Size", "Medium"),
-                  petInfo("Pet Breed", "Husky"),
+                  Builder(builder: (context) {
+                    final appt = (details?['appointment'] ?? {}) as Map<String, dynamic>;
+                    final pet = (appt['pet'] ?? {}) as Map<String, dynamic>;
+                    final customer = (appt['customer'] ?? {}) as Map<String, dynamic>;
+                    return Wrap(
+                      runSpacing: 8,
+                      spacing: 16,
+                      children: [
+                        petInfo("Pet Type", (pet['species'] ?? '—').toString()),
+                        petInfo("Owner Name", (customer['name'] ?? '—').toString()),
+                        petInfo("Pet Breed", (pet['breed'] ?? '—').toString()),
+                      ],
+                    );
+                  }),
                 ],
               ),
               SizedBox(height: 74),
 
-                InkWell(
-                onTap: (){},
-                child: Container(
-              width: double.infinity,
-              height: 50, // responsive height
-              padding: EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
-                color: AppColors.primary,
-                border: Border.all(color: AppColors.textPrimaryColor),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Download invoice',
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.w500,
+                Row(
+                  children: [
+                    Expanded(
+                      child: PrimaryButton(
+                        title: 'Mark as Completed',
+                        onPressed: () async {
+                          if (widget.appointmentId == null) return;
+                          final ok = await AppointmentService.updateAppointmentStatus(
+                            appointmentId: widget.appointmentId!,
+                            status: 'completed',
+                          );
+                          if (ok) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Status updated to completed')),
+                            );
+                            _loadDetails();
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 3,),
-                  Icon(Icons.download, color: AppColors.white),
-                ],
-              ),
-            ),
-          ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: PrimaryButton(
+                        title: 'Cancel Appointment',
+                        onPressed: () async {
+                          if (widget.appointmentId == null) return;
+                          final ok = await AppointmentService.updateAppointmentStatus(
+                            appointmentId: widget.appointmentId!,
+                            status: 'cancelled',
+                          );
+                          if (ok) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Appointment cancelled')),
+                            );
+                            _loadDetails();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
         ),

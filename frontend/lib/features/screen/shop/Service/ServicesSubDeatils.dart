@@ -200,7 +200,15 @@ class _ServicesSubDetailsState extends State<ServicesSubDetails> {
               PrimaryButton(
                 title: 'Book Appointment',
                 onPressed: () {
-                  Get.to(() => const AppointmentBooking());
+                  // Navigate to booking with required IDs
+                  final businessId = service?.businessId ?? '';
+                  final serviceId = service?.id ?? (widget.serviceId ?? '');
+                  // Note: petId should come from user's selected pet in a future step
+                  Get.to(() => AppointmentBooking(
+                        businessId: businessId,
+                        serviceId: serviceId,
+                        petId: '',
+                      ));
                 },
               ),
             ],

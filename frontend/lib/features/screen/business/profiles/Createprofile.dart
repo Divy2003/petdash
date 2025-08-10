@@ -412,7 +412,7 @@ class _CreateProfileState extends State<CreateProfile> {
                       ? ClipRRect(
                           borderRadius:
                               BorderRadius.circular(AppSizes.borderRadiusLg),
-                          child: Image.network(
+                          child: Image.asset(
                             '${AppConfig.baseFileUrl}$existingImageUrl',
                             fit: BoxFit.cover,
                             width: double.infinity,
