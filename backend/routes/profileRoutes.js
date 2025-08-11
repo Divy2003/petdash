@@ -12,7 +12,9 @@ const {
   deleteAddress,
   setPrimaryAddress,
   getPrimaryAddress,
-  getSharedData
+  getPrimaryAddressesForAllRoles,
+  getSharedData,
+  deleteProfile
 } = require('../controllers/profileController');
 
 // Profile routes - all protected with auth middleware and role context
@@ -35,5 +37,9 @@ router.put('/addresses/:addressId', auth, updateUserContext, updateAddress);
 router.delete('/addresses/:addressId', auth, updateUserContext, deleteAddress);
 router.put('/addresses/:addressId/primary', auth, updateUserContext, setPrimaryAddress);
 router.get('/addresses/primary', auth, updateUserContext, getPrimaryAddress);
+router.get('/addresses/primary/all-roles', auth, updateUserContext, getPrimaryAddressesForAllRoles);
+
+// Profile deletion route (requires password confirmation)
+router.delete('/delete-profile', auth, updateUserContext, deleteProfile);
 
 module.exports = router;

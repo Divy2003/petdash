@@ -36,6 +36,15 @@ const addressSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  // Role-specific primary address support
+  isPrimaryForBusiness: {
+    type: Boolean,
+    default: false
+  },
+  isPrimaryForPetOwner: {
+    type: Boolean,
+    default: false
+  },
   isActive: {
     type: Boolean,
     default: true
@@ -86,7 +95,7 @@ const userSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-// Virtual to get primary address
+// Virtual to get primary address (legacy - for backward compatibility)
 userSchema.virtual('primaryAddress').get(function() {
   const addresses = Array.isArray(this.addresses) ? this.addresses : [];
   if (addresses.length === 0) return null;
@@ -98,7 +107,32 @@ userSchema.virtual('primaryAddress').get(function() {
   );
 });
 
-// Method to ensure only one primary address
+// Virtual to get primary address for current role
+userSchema.virtual('primaryAddressForCurrentRole').get(function() {
+  const addresses = Array.isArray(this.addresses) ? this.addresses : [];
+  if (addresses.length === 0) return null;
+
+  const currentRole = this.currentRole || this.userType;
+
+  // Find role-specific primary address
+  let primaryAddress = null;
+  if (currentRole === 'Business') {
+    primaryAddress = addresses.find(addr => addr.isPrimaryForBusiness && addr.isActive);
+  } else if (currentRole === 'Pet Owner') {
+    primaryAddress = addresses.find(addr => addr.isPrimaryForPetOwner && addr.isActive);
+  }
+
+  // Fallback to general primary or first active address
+  return (
+    primaryAddress ||
+    addresses.find(addr => addr.isPrimary && addr.isActive) ||
+    addresses.find(addr => addr.isActive) ||
+    addresses[0] ||
+    null
+  );
+});
+
+// Method to ensure only one primary address (legacy - for backward compatibility)
 userSchema.methods.setPrimaryAddress = function(addressId) {
   // Remove primary flag from all addresses
   this.addresses.forEach(addr => {
@@ -109,6 +143,34 @@ userSchema.methods.setPrimaryAddress = function(addressId) {
   const targetAddress = this.addresses.id(addressId);
   if (targetAddress) {
     targetAddress.isPrimary = true;
+  }
+
+  return this.save();
+};
+
+// Method to set primary address for specific role
+userSchema.methods.setPrimaryAddressForRole = function(addressId, role) {
+  const targetAddress = this.addresses.id(addressId);
+  if (!targetAddress) {
+    throw new Error('Address not found');
+  }
+
+  if (role === 'Business') {
+    // Remove primary flag from all addresses for business role
+    this.addresses.forEach(addr => {
+      addr.isPrimaryForBusiness = false;
+    });
+    // Set the specified address as primary for business
+    targetAddress.isPrimaryForBusiness = true;
+  } else if (role === 'Pet Owner') {
+    // Remove primary flag from all addresses for pet owner role
+    this.addresses.forEach(addr => {
+      addr.isPrimaryForPetOwner = false;
+    });
+    // Set the specified address as primary for pet owner
+    targetAddress.isPrimaryForPetOwner = true;
+  } else {
+    throw new Error('Invalid role. Only Business and Pet Owner roles are supported.');
   }
 
   return this.save();
@@ -168,12 +230,30 @@ userSchema.methods.getAvailableRoles = function() {
 
 // Pre-save middleware to maintain legacy fields and initialize role switching
 userSchema.pre('save', function(next) {
-  // Ensure only one primary address
+  // Ensure only one primary address (legacy)
   const primaryAddresses = this.addresses.filter(addr => addr.isPrimary && addr.isActive);
   if (primaryAddresses.length > 1) {
     // Keep the first one as primary, remove primary flag from others
     for (let i = 1; i < primaryAddresses.length; i++) {
       primaryAddresses[i].isPrimary = false;
+    }
+  }
+
+  // Ensure only one primary address for business role
+  const businessPrimaryAddresses = this.addresses.filter(addr => addr.isPrimaryForBusiness && addr.isActive);
+  if (businessPrimaryAddresses.length > 1) {
+    // Keep the first one as primary, remove primary flag from others
+    for (let i = 1; i < businessPrimaryAddresses.length; i++) {
+      businessPrimaryAddresses[i].isPrimaryForBusiness = false;
+    }
+  }
+
+  // Ensure only one primary address for pet owner role
+  const petOwnerPrimaryAddresses = this.addresses.filter(addr => addr.isPrimaryForPetOwner && addr.isActive);
+  if (petOwnerPrimaryAddresses.length > 1) {
+    // Keep the first one as primary, remove primary flag from others
+    for (let i = 1; i < petOwnerPrimaryAddresses.length; i++) {
+      petOwnerPrimaryAddresses[i].isPrimaryForPetOwner = false;
     }
   }
 

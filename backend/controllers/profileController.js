@@ -7,7 +7,8 @@ exports.getProfile = async (req, res) => {
 
     // Include primary address and role information in the response
     const profile = user.toObject();
-    profile.primaryAddress = user.primaryAddress;
+    profile.primaryAddress = user.primaryAddress; // Legacy support
+    profile.primaryAddressForCurrentRole = user.primaryAddressForCurrentRole; // Role-specific primary
     profile.currentRole = user.currentRole || user.userType;
     profile.availableRoles = user.getAvailableRoles();
     profile.canSwitchRoles = user.userType !== 'Admin';
@@ -246,7 +247,17 @@ exports.getUserAddresses = async (req, res) => {
 // Add new address
 exports.addAddress = async (req, res) => {
   try {
-    const { label, streetName, city, state, zipCode, country, isPrimary } = req.body;
+    const {
+      label,
+      streetName,
+      city,
+      state,
+      zipCode,
+      country,
+      isPrimary,
+      isPrimaryForBusiness,
+      isPrimaryForPetOwner
+    } = req.body;
 
     // Validation
     if (!label || !streetName || !city || !state || !zipCode) {
@@ -266,16 +277,42 @@ exports.addAddress = async (req, res) => {
       return res.status(400).json({ message: 'Address label already exists' });
     }
 
-    // If this is set as primary, remove primary flag from other addresses
+    // Handle role-specific primary address settings
+    if (isPrimaryForBusiness) {
+      user.addresses.forEach(addr => {
+        addr.isPrimaryForBusiness = false;
+      });
+    }
+
+    if (isPrimaryForPetOwner) {
+      user.addresses.forEach(addr => {
+        addr.isPrimaryForPetOwner = false;
+      });
+    }
+
+    // If this is set as general primary, remove primary flag from other addresses
     if (isPrimary) {
       user.addresses.forEach(addr => {
         addr.isPrimary = false;
       });
     }
 
-    // If no addresses exist, make this one primary
+    // If no addresses exist, make this one primary for current role
     const hasActiveAddresses = user.addresses.some(addr => addr.isActive);
-    const shouldBePrimary = isPrimary || !hasActiveAddresses;
+    const currentRole = user.currentRole || user.userType;
+
+    let shouldBePrimary = isPrimary || !hasActiveAddresses;
+    let shouldBePrimaryForBusiness = isPrimaryForBusiness;
+    let shouldBePrimaryForPetOwner = isPrimaryForPetOwner;
+
+    // Auto-set as primary for current role if it's the first address
+    if (!hasActiveAddresses) {
+      if (currentRole === 'Business') {
+        shouldBePrimaryForBusiness = true;
+      } else if (currentRole === 'Pet Owner') {
+        shouldBePrimaryForPetOwner = true;
+      }
+    }
 
     const newAddress = {
       label: label.trim(),
@@ -285,6 +322,8 @@ exports.addAddress = async (req, res) => {
       zipCode: zipCode.trim(),
       country: country || 'USA',
       isPrimary: shouldBePrimary,
+      isPrimaryForBusiness: shouldBePrimaryForBusiness || false,
+      isPrimaryForPetOwner: shouldBePrimaryForPetOwner || false,
       isActive: true
     };
 
@@ -396,6 +435,7 @@ exports.deleteAddress = async (req, res) => {
 exports.setPrimaryAddress = async (req, res) => {
   try {
     const { addressId } = req.params;
+    const { forRole } = req.body; // Optional: specify role (Business/Pet Owner)
 
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
@@ -405,12 +445,23 @@ exports.setPrimaryAddress = async (req, res) => {
       return res.status(404).json({ message: 'Address not found' });
     }
 
-    // Set as primary using the model method
-    await user.setPrimaryAddress(addressId);
+    // If role is specified, use role-specific method
+    if (forRole && ['Business', 'Pet Owner'].includes(forRole)) {
+      await user.setPrimaryAddressForRole(addressId, forRole);
+    } else {
+      // Default: set for current role if user can switch roles, otherwise use legacy method
+      const currentRole = user.currentRole || user.userType;
+      if (user.canSwitchToRole && ['Business', 'Pet Owner'].includes(currentRole)) {
+        await user.setPrimaryAddressForRole(addressId, currentRole);
+      } else {
+        await user.setPrimaryAddress(addressId);
+      }
+    }
 
     res.status(200).json({
       message: 'Primary address set successfully',
-      address: address
+      address: address,
+      forRole: forRole || user.currentRole || user.userType
     });
   } catch (error) {
     res.status(500).json({ message: 'Error setting primary address', error: error.message });
@@ -420,10 +471,34 @@ exports.setPrimaryAddress = async (req, res) => {
 // Get primary address
 exports.getPrimaryAddress = async (req, res) => {
   try {
+    const { forRole } = req.query; // Optional: get primary for specific role
+
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const primaryAddress = user.primaryAddress;
+    let primaryAddress;
+    let addressRole;
+
+    if (forRole && ['Business', 'Pet Owner'].includes(forRole)) {
+      // Get primary address for specific role
+      if (forRole === 'Business') {
+        primaryAddress = user.addresses.find(addr => addr.isPrimaryForBusiness && addr.isActive);
+        addressRole = 'Business';
+      } else if (forRole === 'Pet Owner') {
+        primaryAddress = user.addresses.find(addr => addr.isPrimaryForPetOwner && addr.isActive);
+        addressRole = 'Pet Owner';
+      }
+    } else {
+      // Get primary address for current role
+      primaryAddress = user.primaryAddressForCurrentRole;
+      addressRole = user.currentRole || user.userType;
+    }
+
+    // Fallback to legacy primary address if no role-specific address found
+    if (!primaryAddress) {
+      primaryAddress = user.primaryAddress;
+      addressRole = 'General';
+    }
 
     if (!primaryAddress) {
       return res.status(404).json({ message: 'No primary address found' });
@@ -431,9 +506,173 @@ exports.getPrimaryAddress = async (req, res) => {
 
     res.status(200).json({
       message: 'Primary address fetched successfully',
-      address: primaryAddress
+      address: primaryAddress,
+      forRole: addressRole
     });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching primary address', error: error.message });
+  }
+};
+
+// Get primary addresses for all roles
+exports.getPrimaryAddressesForAllRoles = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const primaryAddresses = {
+      general: user.primaryAddress,
+      business: user.addresses.find(addr => addr.isPrimaryForBusiness && addr.isActive) || null,
+      petOwner: user.addresses.find(addr => addr.isPrimaryForPetOwner && addr.isActive) || null,
+      currentRole: user.primaryAddressForCurrentRole
+    };
+
+    res.status(200).json({
+      message: 'Primary addresses fetched successfully',
+      addresses: primaryAddresses,
+      currentRole: user.currentRole || user.userType
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching primary addresses', error: error.message });
+  }
+};
+
+// Delete complete user profile and all related data
+exports.deleteProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { confirmPassword } = req.body;
+
+    // Validate password confirmation
+    if (!confirmPassword) {
+      return res.status(400).json({
+        message: 'Password confirmation is required to delete profile'
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Verify password
+    const bcrypt = require('bcryptjs');
+    const isPasswordValid = await bcrypt.compare(confirmPassword, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: 'Invalid password' });
+    }
+
+    // Prevent admin deletion through this endpoint
+    if (user.userType === 'Admin') {
+      return res.status(403).json({
+        message: 'Admin profiles cannot be deleted through this endpoint'
+      });
+    }
+
+    // Start deletion process - collect all models that need cleanup
+    const deletionResults = {
+      pets: 0,
+      services: 0,
+      appointments: 0,
+      orders: 0,
+      reviews: 0,
+      articles: 0,
+      adoptions: 0,
+      subscriptions: 0
+    };
+
+    try {
+      // Delete pets owned by the user
+      const Pet = require('../models/Pet');
+      const deletedPets = await Pet.deleteMany({ owner: userId });
+      deletionResults.pets = deletedPets.deletedCount;
+
+      // Delete services provided by the user (if business)
+      const Service = require('../models/Service');
+      const deletedServices = await Service.deleteMany({ business: userId });
+      deletionResults.services = deletedServices.deletedCount;
+
+      // Delete appointments where user is customer or business
+      const Appointment = require('../models/Appointment');
+      const deletedAppointments = await Appointment.deleteMany({
+        $or: [{ customer: userId }, { business: userId }]
+      });
+      deletionResults.appointments = deletedAppointments.deletedCount;
+
+      // Delete orders placed by the user
+      const Order = require('../models/Order');
+      const deletedOrders = await Order.deleteMany({ user: userId });
+      deletionResults.orders = deletedOrders.deletedCount;
+
+      // Delete reviews written by the user or for the user's business
+      const Review = require('../models/Review');
+      const deletedReviews = await Review.deleteMany({
+        $or: [{ reviewer: userId }, { business: userId }]
+      });
+      deletionResults.reviews = deletedReviews.deletedCount;
+
+      // Delete articles written by the user
+      const Article = require('../models/Article');
+      const deletedArticles = await Article.deleteMany({ author: userId });
+      deletionResults.articles = deletedArticles.deletedCount;
+
+      // Delete adoption listings posted by the user and remove from favorites
+      const Adoption = require('../models/Adoption');
+      const deletedAdoptions = await Adoption.deleteMany({ postedBy: userId });
+      deletionResults.adoptions = deletedAdoptions.deletedCount;
+
+      // Remove user from favorites in other adoption listings
+      await Adoption.updateMany(
+        { favorites: userId },
+        { $pull: { favorites: userId } }
+      );
+
+      // Delete subscriptions
+      try {
+        const Subscription = require('../models/Subscription');
+        const deletedSubscriptions = await Subscription.deleteMany({ user: userId });
+        deletionResults.subscriptions = deletedSubscriptions.deletedCount;
+      } catch (error) {
+        console.log('Subscription model not found or error deleting subscriptions:', error.message);
+      }
+
+      // Remove user from likes in articles
+      await Article.updateMany(
+        { 'likes.user': userId },
+        { $pull: { likes: { user: userId } } }
+      );
+
+      // Delete products created by the user (if business)
+      try {
+        const Product = require('../models/Product');
+        const deletedProducts = await Product.deleteMany({ business: userId });
+        deletionResults.products = deletedProducts.deletedCount;
+      } catch (error) {
+        console.log('Product model not found or error deleting products:', error.message);
+      }
+
+      // Finally, delete the user profile
+      await User.findByIdAndDelete(userId);
+
+      res.status(200).json({
+        message: 'Profile and all related data deleted successfully',
+        deletionSummary: deletionResults
+      });
+
+    } catch (cleanupError) {
+      console.error('Error during profile cleanup:', cleanupError);
+      res.status(500).json({
+        message: 'Error occurred during profile deletion',
+        error: cleanupError.message,
+        partialDeletion: deletionResults
+      });
+    }
+
+  } catch (error) {
+    console.error('Profile deletion error:', error);
+    res.status(500).json({
+      message: 'Error deleting profile',
+      error: error.message
+    });
   }
 };
