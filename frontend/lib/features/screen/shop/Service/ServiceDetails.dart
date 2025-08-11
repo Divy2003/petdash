@@ -135,7 +135,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                                 return Text(
                                   text,
                                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: Color(0xFF4552CB),
+                                    color: AppColors.cart,
                                   ),
                                 );
                               },
@@ -237,6 +237,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                 ),
               ),
             ),
+            SizedBox(height: AppSizes.spaceBtwSections/2),
             _buildServicesList(),
           ],
         ),

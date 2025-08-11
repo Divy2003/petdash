@@ -47,8 +47,11 @@ class _CreateProfileState extends State<CreateProfile> {
   @override
   void initState() {
     super.initState();
-    _loadExistingProfile();
-    _loadBusinessRating();
+    // Defer provider calls until after first frame to avoid notifyListeners during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadExistingProfile();
+      _loadBusinessRating();
+    });
   }
 
   @override
@@ -408,12 +411,14 @@ class _CreateProfileState extends State<CreateProfile> {
                         height: double.infinity,
                       ),
                     )
-                  : existingImageUrl != null
+                  : (existingImageUrl != null && existingImageUrl.trim().isNotEmpty)
                       ? ClipRRect(
                           borderRadius:
                               BorderRadius.circular(AppSizes.borderRadiusLg),
-                          child: Image.asset(
-                            '${AppConfig.baseFileUrl}$existingImageUrl',
+                          child: Image.network(
+                            existingImageUrl.startsWith('http')
+                                ? existingImageUrl
+                                : '${AppConfig.baseFileUrl}${existingImageUrl.startsWith('/') ? '' : '/'}$existingImageUrl',
                             fit: BoxFit.cover,
                             width: double.infinity,
                             height: double.infinity,

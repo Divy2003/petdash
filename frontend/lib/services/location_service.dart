@@ -5,6 +5,52 @@ import 'package:geolocator/geolocator.dart';
 import '../utlis/app_config/app_config.dart';
 
 class LocationService {
+  // Simple in-memory caches to avoid repeated lookups and delays
+  static Position? _cachedPosition;
+  static DateTime? _cachedPositionAt;
+  static const Duration _positionTtl = Duration(minutes: 5);
+
+  static final Map<String, Map<String, double>> _geocodeCache = {};
+  static final Map<String, Future<Map<String, double>?>> _geocodeInFlight = {};
+  static final Map<String, double> _distanceCache = {};
+
+  static Future<Position?> getCurrentLocationCached({Duration? ttl}) async {
+    final effectiveTtl = ttl ?? _positionTtl;
+    final now = DateTime.now();
+    if (_cachedPosition != null && _cachedPositionAt != null) {
+      if (now.difference(_cachedPositionAt!) < effectiveTtl) {
+        return _cachedPosition;
+      }
+    }
+    final pos = await getCurrentLocation();
+    if (pos != null) {
+      _cachedPosition = pos;
+      _cachedPositionAt = now;
+    }
+    return pos;
+  }
+
+  static Future<Map<String, double>?> getLatLngForAddressCached(String address) async {
+    // Return cached if present
+    if (_geocodeCache.containsKey(address)) {
+      return _geocodeCache[address]!;
+    }
+    // If a request is already in-flight for this address, await it
+    if (_geocodeInFlight.containsKey(address)) {
+      return await _geocodeInFlight[address]!;
+    }
+    // Start a new in-flight lookup
+    final future = getLatLngForAddress(address).then((result) {
+      if (result != null) {
+        _geocodeCache[address] = result;
+      }
+      _geocodeInFlight.remove(address);
+      return result;
+    });
+    _geocodeInFlight[address] = future;
+    return await future;
+  }
+
   // Calculate distance between two coordinates using Haversine formula
   static double calculateDistance(double lat1,
       double lon1,
@@ -301,17 +347,26 @@ class LocationService {
   // Convenience: distance in miles from current user to a destination address
   static Future<double?> getDistanceToAddressInMiles(String address) async {
     try {
-      final pos = await getCurrentLocation();
+      // Cache by address to avoid repeated work between rebuilds
+      if (_distanceCache.containsKey(address)) {
+        return _distanceCache[address]!;
+      }
+
+      final pos = await getCurrentLocationCached();
       if (pos == null) return null;
-      final dest = await getLatLngForAddress(address);
+
+      final dest = await getLatLngForAddressCached(address);
       if (dest == null) return null;
+
       final km = calculateDistance(
         pos.latitude,
         pos.longitude,
         dest['lat']!,
         dest['lng']!,
       );
-      return kmToMiles(km);
+      final miles = kmToMiles(km);
+      _distanceCache[address] = miles;
+      return miles;
     } catch (e) {
       print('Error computing distance to address: $e');
       return null;

@@ -70,25 +70,24 @@ class BusinessModel {
       // Create a simple business hours object from shop times
       Map<String, DayHours> hoursMap = {};
 
-      // Assume the shop is open Monday to Friday with the given times
-      List<String> weekdays = [
+      // If only simple open/close times are provided, assume the same schedule every day
+      // (Mon–Sun) rather than forcing weekend closed.
+      final allDays = [
         'monday',
         'tuesday',
         'wednesday',
         'thursday',
-        'friday'
+        'friday',
+        'saturday',
+        'sunday',
       ];
-      for (String day in weekdays) {
+      for (final day in allDays) {
         hoursMap[day] = DayHours(
           isOpen: true,
           openTime: json['shopOpenTime'],
           closeTime: json['shopCloseTime'],
         );
       }
-
-      // Weekend closed
-      hoursMap['saturday'] = DayHours(isOpen: false);
-      hoursMap['sunday'] = DayHours(isOpen: false);
 
       businessHours = BusinessHours(hours: hoursMap);
     } else if (json['businessHours'] != null) {
@@ -237,7 +236,8 @@ class BusinessHours {
     Map<String, DayHours> hoursMap = {};
     json.forEach((key, value) {
       if (value != null) {
-        hoursMap[key] = DayHours.fromJson(value);
+        final normalizedKey = key.toString().toLowerCase();
+        hoursMap[normalizedKey] = DayHours.fromJson(value);
       }
     });
     return BusinessHours(hours: hoursMap);
@@ -297,10 +297,13 @@ class DayHours {
   });
 
   factory DayHours.fromJson(Map<String, dynamic> json) {
+    final openTime = json['openTime'];
+    final closeTime = json['closeTime'];
+    final inferredOpen = (openTime != null && closeTime != null);
     return DayHours(
-      isOpen: json['isOpen'] ?? false,
-      openTime: json['openTime'],
-      closeTime: json['closeTime'],
+      isOpen: (json['isOpen'] ?? inferredOpen) == true,
+      openTime: openTime,
+      closeTime: closeTime,
     );
   }
 
