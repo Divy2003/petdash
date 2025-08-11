@@ -348,7 +348,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Pick Location'),
+      appBar:  CustomAppBar(title: 'Pick Location'),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(AppSizes.md),
         child: Column(
@@ -358,7 +358,6 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
             Text(
               'Search Location',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
                     color: AppColors.primary,
                   ),
             ),
@@ -391,7 +390,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                       ? const SizedBox(
                           width: 20,
                           height: 20,
-                          child: ThreeDotIndicator(),
+                          child: CircularProgressIndicator(),
                         )
                       : Icon(
                           Icons.search,
@@ -411,7 +410,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                     ? const SizedBox(
                         width: 16,
                         height: 16,
-                        child: ThreeDotIndicator(),
+                        child: CircularProgressIndicator(),
                       )
                     : Icon(Icons.my_location, color: AppColors.primary),
                 label: Text(
@@ -484,7 +483,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
             // City and State
             Row(
               children: [
-                Expanded(
+                Flexible(
                   flex: 2,
                   child: CustomTextField(
                     label: 'City',
@@ -493,7 +492,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                   ),
                 ),
                 SizedBox(width: AppSizes.spaceBtwInputFields),
-                Expanded(
+                Flexible(
                   child: CustomTextField(
                     label: 'State',
                     controller: _stateController,

@@ -79,24 +79,18 @@ class _RequestPasswordResetScreenState
 
                 // Title
                 Text(
-                  'Forgot\nPassword?',
-                  style: TextStyle(
-                    fontSize: 35,
+                  'Forgot\nPassword ?',
+                  style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                     color: AppColors.secondary,
-                    fontFamily: 'Playfair Display',
-                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: AppSizes.defaultSpace),
 
                 // Subtitle
                 Text(
                   'Enter your email address and we\'ll send you a code to reset your password.',
-                  style: TextStyle(
+                  style:  Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: AppColors.textPrimaryColor,
-                    fontFamily: 'Encode Sans Expanded',
-                    fontWeight: FontWeight.w400,
-                    fontSize: AppSizes.fontSizeMd,
                   ),
                 ),
                 SizedBox(height: 40),
@@ -104,14 +98,12 @@ class _RequestPasswordResetScreenState
                 // Email field
                 Text(
                   'Email',
-                  style: TextStyle(
-                    color: AppColors.secondary,
-                    fontFamily: 'Encode Sans Expanded',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.w500,
-                    fontSize: AppSizes.fontSizeMd,
-                  ),
+                    color: AppColors.primary,
                 ),
-                SizedBox(height: 8),
+                ),
+                SizedBox(height: AppSizes.spaceBtwItems/2),
                 TextFormField(
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -161,7 +153,7 @@ class _RequestPasswordResetScreenState
                     return null;
                   },
                 ),
-                SizedBox(height: 40),
+                SizedBox(height: AppSizes.defaultSpace*2),
 
                 // Send button
                 PrimaryButton(

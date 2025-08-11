@@ -27,18 +27,12 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Welcome \n Back!',
+                'Welcome \nBack!',
                 style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                   color: AppColors.secondary,
                 ),
-                // style: TextStyle(
-                //   fontSize: AppSizes.fontSizeXXl,
-                //   color: AppColors.secondary,
-                //   fontFamily: 'Playfair Display',
-                //   fontWeight: FontWeight.w700,
-                // ),
               ),
-              SizedBox(height: 30,),
+              SizedBox(height: AppSizes.spaceBtwSections,),
               LoginForm(),
             ],
           ),

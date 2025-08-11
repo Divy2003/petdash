@@ -92,12 +92,12 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
                   ),
                 ),
 
-                // Backend addresses list
+                // Backend addresses list (show only default/primary)
                 if (backendAddresses.isNotEmpty) ...[
                   Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Your Addresses',
+                          'Default Address',
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: AppColors.black,
                                 fontWeight: FontWeight.w600,
@@ -106,57 +106,62 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
                       ),
                       SizedBox(height: AppSizes.sm),
                       Expanded(
-                        child: ListView.builder(
-                          itemCount: backendAddresses.length,
-                          itemBuilder: (context, index) {
-                            final addr = backendAddresses[index];
-                            return Card(
-                              child: ListTile(
-                                leading: Icon(
-                                  (addr.label ?? '').toLowerCase() == 'work'
-                                      ? Icons.work_outline
-                                      : Icons.home_outlined,
-                                  color: AppColors.primary,
-                                ),
-                                title: Text(addr.label ?? 'Address'),
-                                subtitle: Text(addr.fullAddress),
-                                trailing: addr.isPrimary == true
-                                    ? const Icon(Icons.check_circle, color: Colors.green)
-                                    : TextButton(
-                                        onPressed: () async {
-                                          await context
-                                              .read<ProfileProvider>()
-                                              .setPrimaryAddress(addr.id!);
-                                          await context
-                                              .read<LocationProvider>()
-                                              .refreshPrimaryAddress();
-                                        },
-                                        child: const Text('Make Primary'),
-                                      ),
+                        child: () {
+                          final defaultBackend = backendAddresses
+                              .where((a) => a.isPrimary == true)
+                              .toList();
+
+                          if (defaultBackend.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No default address set',
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             );
-                          },
-                        ),
+                          }
+
+                          return ListView.builder(
+                            itemCount: defaultBackend.length,
+                            itemBuilder: (context, index) {
+                              final addr = defaultBackend[index];
+                              return Card(
+                                child: ListTile(
+                                  leading: Icon(
+                                    (addr.label ?? '').toLowerCase() == 'work'
+                                        ? Icons.work_outline
+                                        : Icons.home_outlined,
+                                    color: AppColors.primary,
+                                  ),
+                                  title: Text(addr.label ?? 'Address'),
+                                  subtitle: Text(addr.fullAddress),
+                                ),
+                              );
+                            },
+                          );
+                        }(),
                       ),
                     ],
-                if (primary != null) ...[
-                  SizedBox(height: AppSizes.md),
-                  _buildPrimaryAddressCard(primary),
-                ],
-
                 SizedBox(height: AppSizes.lg),
 
-                // Saved Addresses List
+                // Saved Addresses List (show only default address)
                 Expanded(
-                  child: savedAddresses.isEmpty
-                      ? _buildEmptyState()
-                      : ListView.builder(
-                          itemCount: savedAddresses.length,
-                          itemBuilder: (context, index) {
-                            final address = savedAddresses[index];
-                            return _buildAddressCard(address, index);
-                          },
-                        ),
+                  child: () {
+                    final defaultAddresses = savedAddresses
+                        .where((a) => (a['isDefault'] ?? false) == true)
+                        .toList();
+
+                    if (defaultAddresses.isEmpty) {
+                      return _buildEmptyState();
+                    }
+
+                    return ListView.builder(
+                      itemCount: defaultAddresses.length,
+                      itemBuilder: (context, index) {
+                        final address = defaultAddresses[index];
+                        return _buildAddressCard(address, index);
+                      },
+                    );
+                  }(),
                 ),
               ],
             ),
@@ -325,51 +330,6 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
     );
   }
 
-  Widget _buildPrimaryAddressCard(AddressModel address) {
-    return Container(
-      padding: EdgeInsets.all(AppSizes.md),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: Colors.green.shade200, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.check_circle, color: Colors.green, size: 20.sp),
-          SizedBox(width: AppSizes.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Primary Address',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.black,
-                      ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  address.fullAddress,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.textPrimaryColor,
-                        height: 1.4,
-                      ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 }
 

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
+import '../../../../common/widgets/progessIndicator/threedotindicator.dart';
 import '../../../../utlis/constants/colors.dart';
 import '../../../../utlis/constants/image_strings.dart';
 import '../../../../utlis/app_config/app_config.dart';
@@ -87,7 +88,7 @@ class _ServicesSubDetailsState extends State<ServicesSubDetails> {
     if (isLoading) {
       return Scaffold(
         appBar: CustomAppBar(title: 'Service Details'),
-        body: const Center(child: CircularProgressIndicator()),
+        body:  Center(child: ThreeDotIndicator()),
       );
     }
 

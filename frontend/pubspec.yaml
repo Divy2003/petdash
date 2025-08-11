@@ -39,7 +39,7 @@ dependencies:
   google_fonts: ^6.2.1
   curved_labeled_navigation_bar: ^2.0.6
   intl: ^0.18.1
-  image_picker: ^1.0.5
+  image_picker: ^1.1.2
   dotted_border: ^2.0.0
   fl_chart: ^0.71.0
   iconsax_flutter: ^1.0.1

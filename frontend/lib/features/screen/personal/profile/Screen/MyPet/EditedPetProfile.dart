@@ -6,7 +6,9 @@ import '../../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../../utlis/constants/colors.dart';
 import '../../../../../../utlis/constants/size.dart';
+import 'dart:io';
 import '../../../../../../services/petowerServices/pet_service.dart';
+import '../../../../../../utlis/app_config/app_config.dart';
 import '../../../../business/widgets/avatarImagepicker.dart';
 import '../../../../business/widgets/custom_text_field.dart';
 
@@ -25,6 +27,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
   final _formKey = GlobalKey<FormState>();
   bool isMale = true;
   bool isLoading = false;
+  File? _pickedImage;
 
   // Form Fields
   late TextEditingController nameController;
@@ -145,7 +148,12 @@ class _EditPetScreenState extends State<EditPetScreen> {
             children: [
               // Photo & QR row
               Center(
-                child: AvatarImagePicker(),
+                child: AvatarImagePicker(
+                  onChanged: (file) => _pickedImage = file,
+                  initialImageUrl: widget.petData?['profileImage'] != null
+                      ? '${AppConfig.baseFileUrl}/${widget.petData!['profileImage']}'
+                      : null,
+                ),
               ),
               const SizedBox(height: 16),
 
@@ -425,6 +433,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
         currentMedications: medicationsController.text.trim().isNotEmpty ? medicationsController.text.trim() : null,
         lastVaccinatedDate: lastVaccinatedDate,
         favoriteToys: favoriteToys,
+        profileImageFile: _pickedImage,
         neutered: switches['neutered'],
         vaccinated: switches['vaccinated'],
         friendlyWithDogs: switches['friendlyDogs'],
