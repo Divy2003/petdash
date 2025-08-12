@@ -96,13 +96,13 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               color: AppColors.white,
             ),
             child: Padding(
-              padding:  EdgeInsets.all(16),
+              padding:  EdgeInsets.all(AppSizes.md),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// Status
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: AppSizes.xs),
                     decoration: BoxDecoration(
                       color: getStatusColor(status),
                       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
@@ -111,10 +111,11 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       status.capitalizeFirst ?? status,
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: AppColors.white,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: AppSizes.spaceBtwItems/2),
 
                   /// Title
                   Text(
@@ -124,17 +125,17 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     ),
                   ),
 
-                  SizedBox(height: 12),
-
+                  SizedBox(height: AppSizes.spaceBtwItems/1.5),
                   /// Date & Time Row
                   Row(
                     children: [
-                      Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                      Icon(Icons.calendar_today, size: AppSizes.iconSm, color: AppColors.textPrimaryColor),
                       SizedBox(width: 6),
                       Text(
                         DateFormat('MMMM dd yyyy, EEEE').format(dateTime),
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: AppColors.textPrimaryColor,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                       Spacer(),
@@ -147,69 +148,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     ],
                   ),
 
-                  if (status.toLowerCase() == 'upcoming') ...[
-                    /// Actions
-                    SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: PrimaryButton(
-                            title: _updating.contains(appt['_id']) ? 'Updating...' : 'Mark Completed',
-                            onPressed: _updating.contains(appt['_id'])
-                                ? null
-                                : () async {
-                                    final id = appt['_id']?.toString();
-                                    if (id == null) return;
-                                    setState(() => _updating.add(id));
-                                    final ok = await AppointmentService.updateAppointmentStatus(
-                                      appointmentId: id,
-                                      status: 'completed',
-                                    );
-                                    setState(() => _updating.remove(id));
-                                    if (ok) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Marked as completed')),
-                                      );
-                                      setState(() {
-                                        final idx = appointments.indexWhere((x) => x['_id'] == id);
-                                        if (idx != -1) appointments[idx]['status'] = 'completed';
-                                      });
-                                    }
-                                  },
-                          ),
-                        ),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: PrimaryButton(
-                            title: _updating.contains(appt['_id']) ? 'Updating...' : 'Cancel',
-                            onPressed: _updating.contains(appt['_id'])
-                                ? null
-                                : () async {
-                                    final id = appt['_id']?.toString();
-                                    if (id == null) return;
-                                    setState(() => _updating.add(id));
-                                    final ok = await AppointmentService.updateAppointmentStatus(
-                                      appointmentId: id,
-                                      status: 'cancelled',
-                                    );
-                                    setState(() => _updating.remove(id));
-                                    if (ok) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Appointment cancelled')),
-                                      );
-                                      setState(() {
-                                        appointments.removeWhere((x) => x['_id'] == id);
-                                      });
-                                    }
-                                  },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-
                   /// Details navigation
-                  SizedBox(height: 12),
+                  SizedBox(height: AppSizes.spaceBtwItems/1.5),
                   PrimaryButton(
                     title: "View Details",
                     onPressed: (){

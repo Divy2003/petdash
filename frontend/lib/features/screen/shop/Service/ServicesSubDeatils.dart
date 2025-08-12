@@ -100,14 +100,14 @@ class _ServicesSubDetailsState extends State<ServicesSubDetails> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.error_outline, size: 64, color: AppColors.error),
-              SizedBox(height: 16.h),
+              SizedBox(height: AppSizes.spaceBtwItems),
               Text('Error loading service details',
                   style: Theme.of(context).textTheme.titleMedium),
-              SizedBox(height: 8.h),
+              SizedBox(height: AppSizes.spaceBtwItems/2),
               Text(error!,
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center),
-              SizedBox(height: 16.h),
+              SizedBox(height: AppSizes.spaceBtwItems),
               PrimaryButton(
                 title: 'Retry',
                 onPressed: _loadServiceData,
@@ -148,11 +148,12 @@ class _ServicesSubDetailsState extends State<ServicesSubDetails> {
                 serviceData['title'] ?? 'Service',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
                       color: AppColors.primary,
-                      fontSize: AppSizes.fontSizeSm.sp,
+                      fontWeight: FontWeight.w600,
+                      fontSize: AppSizes.fontSizeMd,
                     ),
               ),
 
-              SizedBox(height: 10.h),
+              SizedBox(height: AppSizes.defaultSpace/2),
 
               /// Description
               Text(
@@ -162,30 +163,32 @@ class _ServicesSubDetailsState extends State<ServicesSubDetails> {
                     ),
               ),
 
-              SizedBox(height: 10.h),
+              SizedBox(height: AppSizes.defaultSpace*1.5),
 
               /// Service Included Title
               Text(
                 'Service included:',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: AppColors.primary,
+                      fontWeight: FontWeight.w600,
+                    fontSize: AppSizes.fontSizeMd,
                     ),
               ),
 
               /// Service List
               _buildServiceIncludedList(),
 
-              SizedBox(height: 10.h),
+              SizedBox(height:AppSizes.defaultSpace/2),
 
               /// Info Note
               Text(
                 "*Price varies based on breed, coat condition & service time. Book online & see estimated price before your visit.",
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: const Color(0xFF4552CB).withValues(alpha: 0.6),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: AppColors.cart,
                     ),
               ),
 
-              SizedBox(height: 30.h),
+              SizedBox(height:  AppSizes.defaultSpace*1.5),
 
               /// Estimated Price
               Text(
@@ -195,7 +198,7 @@ class _ServicesSubDetailsState extends State<ServicesSubDetails> {
                     ),
               ),
 
-              SizedBox(height: 30.h),
+              SizedBox(height:  AppSizes.defaultSpace*1.5),
 
               /// Book Appointment Button
               PrimaryButton(

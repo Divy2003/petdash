@@ -29,39 +29,32 @@ class _ThankyouAppoinmentBookState extends State<ThankyouAppoinmentBook> {
       appBar: AppBar(
         title: const Text('Appointment Confirmed'),
         backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.white,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding:  EdgeInsets.all(AppSizes.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 24),
+             SizedBox(height:  AppSizes.spaceBtwItems *1.5),
             Icon(Icons.check_circle, color: AppColors.success, size: 90),
-            const SizedBox(height: 16),
+             SizedBox(height:AppSizes.spaceBtwItems),
             Text(
               widget.message ??
                   'Your appointment has been booked successfully!',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: 24),
+             SizedBox(height: AppSizes.spaceBtwItems *1.5),
 
             // Receipt-like card
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding:  EdgeInsets.all(AppSizes.md),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  )
-                ],
-                border: Border.all(color: Colors.grey.shade200),
+                borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
+                border: Border.all(color: AppColors.textPrimaryColor),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +76,14 @@ class _ThankyouAppoinmentBookState extends State<ThankyouAppoinmentBook> {
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.white,
+                      padding: EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
+                      ),
+                    ),
                     onPressed: () {
                       // Basic print: log to console
                       debugPrint('--- Appointment Receipt ---');
@@ -95,10 +95,15 @@ class _ThankyouAppoinmentBookState extends State<ThankyouAppoinmentBook> {
                         'Printed',
                         'Receipt details printed to console',
                         backgroundColor: AppColors.success,
-                        colorText: Colors.white,
+                        colorText: AppColors.white,
                       );
                     },
-                    child: const Text('Print'),
+                    child:  Text('Print',
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColors.secondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
                  SizedBox(width: AppSizes.spaceBtwItems),
@@ -106,7 +111,7 @@ class _ThankyouAppoinmentBookState extends State<ThankyouAppoinmentBook> {
                   child: PrimaryButton(
                     title: 'Back to Home',
                     onPressed: () {
-                      Get.offAll(() => const CurvedNavScreen());
+                      Get.offAll(() =>  CurvedNavScreen());
                     },
                   ),
                 ),
@@ -124,8 +129,13 @@ class _ThankyouAppoinmentBookState extends State<ThankyouAppoinmentBook> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label, style: const TextStyle(color: Colors.black54)),
-            Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
+            Text(label, style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: AppColors.textPrimaryColor,
+            )),
+            Text(value, style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: AppColors.secondary,
+              fontWeight: FontWeight.w600,
+            )),
           ],
         ),
       );

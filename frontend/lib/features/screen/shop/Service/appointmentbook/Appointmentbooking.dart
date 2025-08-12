@@ -14,7 +14,9 @@ import 'package:petcare/services/petowerServices/pet_service.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/cart/servicescart.dart';
 
+import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/image_strings.dart';
+import '../../../../../utlis/constants/size.dart';
 import 'ThankyouAppoinmentbook.dart';
 
 class AppointmentBooking extends StatefulWidget {
@@ -60,8 +62,8 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
       Get.snackbar(
         "Error",
         provider.validationError ?? 'Please complete all required fields',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText:  AppColors.white,
       );
       return;
     }
@@ -71,8 +73,8 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
       Get.snackbar(
         'Error',
         'Please select or create a pet profile before booking.',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -84,8 +86,8 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
       Get.snackbar(
         'Error',
         'Service information is missing. Please reopen this service.',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText:  AppColors.white,
       );
       return;
     }
@@ -96,28 +98,67 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirm Appointment'),
+        backgroundColor: AppColors.white,
+        title:  Text(
+            'Confirm Appointment',
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              color: AppColors.primary,
+            ),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Date: ${provider.selectedDate.toString().split(' ')[0]}'),
-            Text('Time: ${provider.selectedTime.format(context)}'),
-            Text('Total: \$${provider.total.toStringAsFixed(2)}'),
+            Text(
+                'Date: ${provider.selectedDate.toString().split(' ')[0]}',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: AppColors.secondary,
+              ),
+            ),
+            Text('Time: ${provider.selectedTime.format(context)}',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: AppColors.secondary,
+              ),
+            ),
+            Text('Total: \$${provider.total.toStringAsFixed(2)}',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: AppColors.secondary,
+              ),
+            ),
             if (provider.selectedAddOns.isNotEmpty)
-              Text('Add-ons: ${provider.selectedAddOns.length} selected'),
+              Text('Add-ons: ${provider.selectedAddOns.length} selected',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: AppColors.secondary,
+                ),
+              ),
             if (provider.isCouponApplied)
-              Text('Coupon: ${provider.couponCode} applied'),
+              Text('Coupon: ${provider.couponCode} applied',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: AppColors.secondary,
+                ),
+              ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child:  Text('Cancel',
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
+              ),
+            ),
             onPressed: () async {
-              Navigator.pop(context); // close dialog
+              Navigator.pop(context);
+              // close dialog
               try {
                 provider.setLoading(true);
                 final payload = provider.getAppointmentData(
@@ -145,14 +186,19 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
                 Get.snackbar(
                   'Error',
                   e.toString(),
-                  backgroundColor: Colors.red,
-                  colorText: Colors.white,
+                  backgroundColor: AppColors.error,
+                  colorText: AppColors.white,
                 );
               } finally {
                 provider.setLoading(false);
               }
             },
-            child: const Text('Confirm'),
+            child:  Text('Confirm',
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              color: AppColors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ],
       ),
@@ -199,7 +245,7 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
                       child: Text(
                         provider.validationError ?? '',
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                              color: Colors.red,
+                              color: AppColors.error,
                             ),
                       ),
                     ),

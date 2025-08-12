@@ -219,8 +219,6 @@ class _AppointmentsDetailsState extends State<AppointmentsDetails> {
               ),
               SizedBox(height: AppSizes.spaceBtwSections),
 
-
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
