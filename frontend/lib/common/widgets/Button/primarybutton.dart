@@ -25,6 +25,7 @@ class PrimaryButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           title ?? '',
+          textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleSmall!.copyWith(
             color: AppColors.white,
             fontWeight: FontWeight.w600,

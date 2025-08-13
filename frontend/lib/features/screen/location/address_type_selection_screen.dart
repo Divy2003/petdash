@@ -13,12 +13,14 @@ class AddressTypeSelectionScreen extends StatefulWidget {
   final String? selectedAddress;
   final double? latitude;
   final double? longitude;
+  final String? baseUrlOverride;
 
   const AddressTypeSelectionScreen({
     super.key,
     this.selectedAddress,
     this.latitude,
     this.longitude,
+    this.baseUrlOverride,
   });
 
   @override
@@ -274,7 +276,7 @@ class _AddressTypeSelectionScreenState
           : '00000';
       final country = (place?.country != null && place!.country!.trim().isNotEmpty)
           ? place.country!.trim()
-          : 'USA';
+          : 'Unknown Country';
 
       // Add address via backend with all required fields
       await AddressService.addAddress(
@@ -285,6 +287,7 @@ class _AddressTypeSelectionScreenState
         zipCode: zip,
         country: country,
         isPrimary: true,
+        baseUrlOverride: widget.baseUrlOverride,
       );
 
       // Ensure primary is fetched and cached

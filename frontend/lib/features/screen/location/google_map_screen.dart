@@ -8,7 +8,9 @@ import '../../../utlis/constants/size.dart';
 import 'address_type_selection_screen.dart';
 
 class GoogleMapScreen extends StatefulWidget {
-  const GoogleMapScreen({super.key});
+  const GoogleMapScreen({super.key, this.baseUrlOverride});
+
+  final String? baseUrlOverride;
 
   @override
   State<GoogleMapScreen> createState() => _GoogleMapScreenState();
@@ -238,6 +240,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                                                 .selectedLocation?.longitude ??
                                             locationProvider
                                                 .currentPosition?.longitude,
+                                        baseUrlOverride: widget.baseUrlOverride,
                                       ),
                                     ),
                                   );

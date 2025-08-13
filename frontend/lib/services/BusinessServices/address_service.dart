@@ -64,10 +64,12 @@ class AddressService {
     required String zipCode,
     String? country,
     bool isPrimary = false,
+    String? baseUrlOverride,
   }) async {
     try {
+      final endpointBase = baseUrlOverride ?? baseUrl;
       print('🔄 Adding new address...');
-      print('📍 URL: $baseUrl/profile/addresses');
+      print('📍 URL: $endpointBase/profile/addresses');
 
       final headers = await _getHeaders();
       final body = json.encode({
@@ -81,7 +83,7 @@ class AddressService {
       });
 
       final response = await http.post(
-        Uri.parse('$baseUrl/profile/addresses'),
+        Uri.parse('$endpointBase/profile/addresses'),
         headers: headers,
         body: body,
       );
