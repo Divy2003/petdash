@@ -13,6 +13,33 @@ class UserSessionService {
   static const String _userTypeKey = 'user_type';
   static const String _tokenKey = 'auth_token';
 
+  /// Save user type
+  static Future<void> saveUserType(String userType) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_userTypeKey, userType);
+  }
+
+  /// Get saved user type
+  static Future<String?> getUserType() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_userTypeKey);
+  }
+
+  /// Save auth token
+  static Future<void> saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_tokenKey, token);
+  }
+
+  /// Get stored auth token
+  static Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_tokenKey);
+  }
+
+  /// Clear all stored session data (logout)
+
+
   // Switch between Pet Owner and Business account using proper role switching
   static Future<void> switchAccountType(BuildContext context) async {
     try {

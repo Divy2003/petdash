@@ -1,5 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:petcare/common/widgets/Tile/profilemenutile.dart';
@@ -11,6 +13,7 @@ import 'package:petcare/services/user_session_service.dart';
 import 'package:petcare/provider/profile_provider.dart';
 
 import '../../../common/widgets/progessIndicator/threedotindicator.dart';
+import '../../../services/BusinessServices/deleteAccounts_service.dart';
 import '../../../utlis/constants/colors.dart';
 import '../../../utlis/constants/image_strings.dart';
 import '../../../utlis/constants/size.dart';
@@ -69,12 +72,18 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                   SizedBox(height: AppSizes.md),
                   Text(
                     'Error loading profile',
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .titleMedium,
                   ),
                   SizedBox(height: AppSizes.sm),
                   Text(
                     profileProvider.error!,
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodySmall,
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: AppSizes.md),
@@ -107,7 +116,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                     imagePath: profileImagePath,
                     onEdit: () async {
                       final result = await Get.to(
-                          () => EditProfile(initialProfile: profile));
+                              () => EditProfile(initialProfile: profile));
                       // Refresh profile data when returning from edit
                       if (result == true) {
                         _refreshProfile();
@@ -124,7 +133,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                       decoration: BoxDecoration(
                         color: AppColors.white,
                         borderRadius:
-                            BorderRadius.circular(AppSizes.cardRadiusLg),
+                        BorderRadius.circular(AppSizes.cardRadiusLg),
                         border: Border.all(color: AppColors.secondary),
                       ),
                       child: Column(
@@ -144,7 +153,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                                 : 'Create Profile',
                             onTap: () async {
                               final result =
-                                  await Get.to(() => CreateProfile());
+                              await Get.to(() => CreateProfile());
                               // Refresh profile data when returning from create/edit
                               if (result == true) {
                                 _refreshProfile();
@@ -181,7 +190,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                           ProfileMenuTile(
                             icon: Icons.group,
                             title: 'My Clients',
-                            onTap: () => Get.to(() => MyClients()),
+                            onTap: () => Get.to(() => ()),
                           ),
                           Divider(
                               height: AppSizes.dividerHeight,
@@ -189,7 +198,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                           ProfileMenuTile(
                             icon: Icons.article_outlined,
                             title: 'My Articles',
-                            onTap: () => Get.to(() => MyArticles()),
+                            onTap: () => Get.to(() => ()),
                           ),
                           Divider(
                               height: AppSizes.dividerHeight,
@@ -197,7 +206,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                           ProfileMenuTile(
                             icon: Icons.bar_chart,
                             title: 'Reports',
-                            onTap: () => Get.to(() => StatisticsScreen()),
+                            onTap: () => Get.to(() => ()),
                           ),
                           Divider(
                               height: AppSizes.dividerHeight,
@@ -205,7 +214,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                           ProfileMenuTile(
                             icon: Icons.credit_card,
                             title: 'PaymentsMethod',
-                            onTap: () => Get.to(() => MyCardScreen()),
+                            onTap: () => Get.to(() => ()),
                           ),
                           Divider(
                               height: AppSizes.dividerHeight,
@@ -213,7 +222,17 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                           ProfileMenuTile(
                             icon: Icons.subscriptions,
                             title: 'Subscription',
-                            onTap: () => Get.to(() => SubscriptionScreen()),
+                            onTap: () => Get.to(() => ()),
+                          ),
+                          Divider(
+                              height: AppSizes.dividerHeight,
+                              color: AppColors.divider),
+                          ProfileMenuTile(
+                            icon: Icons.account_box,
+                            title: 'Account detetion',
+                            onTap: () {
+                              _showAccountDeletionConfirmationDialog();
+                            },
                           ),
                           Divider(
                               height: AppSizes.dividerHeight,
@@ -249,28 +268,30 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                                       child: IntrinsicHeight(
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
+                                          CrossAxisAlignment.stretch,
                                           children: [
                                             Text(
                                               'Logout',
                                               textAlign: TextAlign.center,
-                                              style: Theme.of(context)
+                                              style: Theme
+                                                  .of(context)
                                                   .textTheme
                                                   .titleLarge!
                                                   .copyWith(
-                                                    color: AppColors.primary,
-                                                  ),
+                                                color: AppColors.primary,
+                                              ),
                                             ),
                                             SizedBox(height: AppSizes.sm),
                                             Text(
                                               'Are you sure you want to logout?',
                                               textAlign: TextAlign.center,
-                                              style: Theme.of(context)
+                                              style: Theme
+                                                  .of(context)
                                                   .textTheme
                                                   .bodyLarge!
                                                   .copyWith(
-                                                    color: AppColors.primary,
-                                                  ),
+                                                color: AppColors.primary,
+                                              ),
                                             ),
                                             SizedBox(height: AppSizes.md),
                                             Row(
@@ -285,26 +306,27 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                                                           color: AppColors
                                                               .primary),
                                                       shape:
-                                                          RoundedRectangleBorder(
+                                                      RoundedRectangleBorder(
                                                         borderRadius: BorderRadius
                                                             .circular(AppSizes
-                                                                .buttonRadius),
+                                                            .buttonRadius),
                                                       ),
                                                       padding:
-                                                          EdgeInsets.symmetric(
+                                                      EdgeInsets.symmetric(
                                                         vertical: AppSizes
                                                             .buttonHeight,
                                                       ),
                                                     ),
                                                     child: Text(
                                                       'Cancel',
-                                                      style: Theme.of(context)
+                                                      style: Theme
+                                                          .of(context)
                                                           .textTheme
                                                           .titleMedium!
                                                           .copyWith(
-                                                            color:
-                                                                AppColors.black,
-                                                          ),
+                                                        color:
+                                                        AppColors.black,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -321,34 +343,35 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                                                         MaterialPageRoute(
                                                             builder: (_) =>
                                                                 LoginScreen()),
-                                                        (route) => false,
+                                                            (route) => false,
                                                       );
                                                     },
                                                     style: ElevatedButton
                                                         .styleFrom(
                                                       backgroundColor:
-                                                          AppColors.primary,
+                                                      AppColors.primary,
                                                       shape:
-                                                          RoundedRectangleBorder(
+                                                      RoundedRectangleBorder(
                                                         borderRadius: BorderRadius
                                                             .circular(AppSizes
-                                                                .buttonRadius),
+                                                            .buttonRadius),
                                                       ),
                                                       padding:
-                                                          EdgeInsets.symmetric(
+                                                      EdgeInsets.symmetric(
                                                         vertical: AppSizes
                                                             .buttonHeight,
                                                       ),
                                                     ),
                                                     child: Text(
                                                       'Logout',
-                                                      style: Theme.of(context)
+                                                      style: Theme
+                                                          .of(context)
                                                           .textTheme
                                                           .titleMedium!
                                                           .copyWith(
-                                                            color:
-                                                                AppColors.white,
-                                                          ),
+                                                        color:
+                                                        AppColors.white,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -377,5 +400,155 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
         },
       ),
     );
+  }
+
+  Future<void> _showAccountDeletionConfirmationDialog() async {
+    final TextEditingController passwordController = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          backgroundColor: AppColors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.cardRadiusLg),
+          ),
+          title: Text(
+            'Account Deletion',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              color: AppColors.primary,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  Text(
+                    'Are you sure you want to delete your account? This action cannot be undone.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      border: OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius.circular(AppSizes.inputFieldRadius),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                    child: const Text('Cancel'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.error,
+                    ),
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        Navigator.of(dialogContext).pop();
+                        await _handleAccountDeletion(passwordController.text);
+                      }
+                    },
+                    child: const Text('Delete'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
+  Future<void> _handleAccountDeletion(String password) async {
+    Get.dialog(
+      const Center(child: CircularProgressIndicator()),
+      barrierDismissible: false,
+    );
+
+    try {
+      // You should get token from your session service / provider
+      final token = await UserSessionService.getToken();
+
+      final result = await DeletionService.deleteAccount(
+        password: password,
+        token: token ?? '',
+      );
+      Get.back(); // Remove loading dialog
+
+      if (result["statusCode"] == 200 || result["statusCode"] == 204) {
+        Get.dialog(
+          AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Your account has been deleted.'),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () => Get.offAll(() => const LoginScreen()),
+              ),
+            ],
+          ),
+        );
+      } else {
+        String errorMessage =
+            result["body"]["message"] ?? 'Failed to delete account.';
+        Get.dialog(
+          AlertDialog(
+            title: const Text('Error'),
+            content: Text(errorMessage),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () => Get.back(),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      Get.back();
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Error'),
+          content: const Text('An unexpected error occurred.'),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
