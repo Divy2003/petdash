@@ -94,7 +94,6 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
           final profile = profileProvider.profile;
           final businessName = profile?.name ?? 'Pet Care Business';
           // Hide location on Business profile header
-          final businessLocation = '';
           final profileImagePath = profile?.profileImage ?? AppImages.person;
 
           return RefreshIndicator(
@@ -105,20 +104,40 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                 children: [
                   // Business user header with real data
                   ProfileHeaderWidget(
-                    name: businessName,
-                    location: businessLocation,
                     imagePath: profileImagePath,
-                    onEdit: () async {
-                      final result = await Get.to(
-                              () => EditProfile(initialProfile: profile));
-                      // Refresh profile data when returning from edit
-                      if (result == true) {
-                        _refreshProfile();
-                      }
-                    },
                   ),
 
                   SizedBox(height: AppSizes.lg),
+                  //Name Edit
+
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            businessName,
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                            IconButton(
+                              onPressed:  () async {
+                                final result =
+                                await Get.to(() => CreateProfile());
+                                // Refresh profile data when returning from create/edit
+                                if (result == true) {
+                                  _refreshProfile();
+                                }
+                              },
+                              icon: Icon(Icons.edit,
+                                  size: AppSizes.iconSm, color: AppColors.primary),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
 
                   // Menu Section
                   Padding(

@@ -31,14 +31,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 // cart user
                 ProfileHeaderWidget(
-                  name: 'User Name',
-                  location: 'New York, USA',
                   imagePath:  AppImages.person,
-                  onEdit: ()  {
-                     Get.to(() => EditProfile());
-                  },
                 ),
                 SizedBox(height: AppSizes.defaultSpace * 2),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "sahil",
+                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed:  ()  {
+                            Get.to(() => EditProfile());
+                          },
+                          icon: Icon(Icons.edit,
+                              size: AppSizes.iconSm, color: AppColors.primary),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
                 Expanded(
                     child: SingleChildScrollView(
                   child: Padding(

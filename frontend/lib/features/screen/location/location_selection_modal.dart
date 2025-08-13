@@ -76,46 +76,46 @@ class _LocationSelectionModalState extends State<LocationSelectionModal> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      // Show saved addresses only if they exist
-                      if (savedAddresses.isNotEmpty)
-                        _buildAddressList(savedAddresses),
+                      // // Show saved addresses only if they exist
+                      // if (savedAddresses.isNotEmpty)
+                      //   _buildAddressList(savedAddresses),
 
-                      // Show empty state if no addresses
-                      if (savedAddresses.isEmpty)
-                        Container(
-                          padding: EdgeInsets.all(AppSizes.lg),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.location_off_outlined,
-                                size: 48.sp,
-                                color: AppColors.textPrimaryColor,
-                              ),
-                              SizedBox(height: AppSizes.md),
-                              Text(
-                                'No saved addresses',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
-                                      color: AppColors.textPrimaryColor,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                              ),
-                              SizedBox(height: AppSizes.sm),
-                              Text(
-                                'Add your first address to get started',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                      color: AppColors.textPrimaryColor,
-                                    ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
+                      // // Show empty state if no addresses
+                      // if (savedAddresses.isEmpty)
+                      //   Container(
+                      //     padding: EdgeInsets.all(AppSizes.lg),
+                      //     child: Column(
+                      //       children: [
+                      //         Icon(
+                      //           Icons.location_off_outlined,
+                      //           size: 48.sp,
+                      //           color: AppColors.textPrimaryColor,
+                      //         ),
+                      //         SizedBox(height: AppSizes.md),
+                      //         Text(
+                      //           'No saved addresses',
+                      //           style: Theme.of(context)
+                      //               .textTheme
+                      //               .titleMedium
+                      //               ?.copyWith(
+                      //                 color: AppColors.textPrimaryColor,
+                      //                 fontWeight: FontWeight.w500,
+                      //               ),
+                      //         ),
+                      //         SizedBox(height: AppSizes.sm),
+                      //         Text(
+                      //           'Add your first address to get started',
+                      //           style: Theme.of(context)
+                      //               .textTheme
+                      //               .bodyMedium
+                      //               ?.copyWith(
+                      //                 color: AppColors.textPrimaryColor,
+                      //               ),
+                      //           textAlign: TextAlign.center,
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
 
                       // Use my current location
                       Container(

@@ -7,17 +7,14 @@ import '../../../../../utlis/constants/size.dart';
 import '../../../../../utlis/helpers/image_helper.dart';
 
 class ProfileHeaderWidget extends StatelessWidget {
-  final String name;
-  final String location;
+
   final String imagePath;
-  final VoidCallback? onEdit;
+
 
   const ProfileHeaderWidget({
     super.key,
-    required this.name,
-    required this.location,
+
     required this.imagePath,
-    this.onEdit,
   });
 
   Widget _buildProfileImage(String imagePath) {
@@ -161,7 +158,7 @@ class ProfileHeaderWidget extends StatelessWidget {
 
         // Profile Image
         Positioned(
-          left: 20.w,
+          left: 110.w,
           top: 80.h,
           child: Container(
             width: 100.w,
@@ -177,48 +174,7 @@ class ProfileHeaderWidget extends StatelessWidget {
         ),
 
         // Name & Location
-        Positioned(
-          top: 80.h,
-          left: 135.w,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    name,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: AppColors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                  if (onEdit != null)
-                    IconButton(
-                      onPressed: onEdit,
-                      icon: Icon(Icons.edit,
-                          size: AppSizes.iconSm, color: AppColors.white),
-                    ),
-                ],
-              ),
-              if (location.trim().isNotEmpty)
-                Row(
-                  children: [
-                    Icon(Icons.location_on_outlined,
-                        size: AppSizes.iconSm, color: AppColors.white),
-                    SizedBox(width: 5.w),
-                    Text(
-                      location,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: AppColors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                    ),
-                  ],
-                )
-            ],
-          ),
-        ),
+
       ],
     );
   }

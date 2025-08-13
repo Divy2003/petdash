@@ -35,7 +35,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                   context: context,
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
-                  builder: (context) => const LocationSelectionModal(),
+                  builder: (context) =>  LocationSelectionModal(),
                 );
               },
               child: Consumer<LocationProvider>(
