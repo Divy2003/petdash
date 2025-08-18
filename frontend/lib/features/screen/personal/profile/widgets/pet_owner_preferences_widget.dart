@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import '../../../../../utlis/constants/size.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../services/location_service.dart';
-import '../../../business/widgets/custom_text_field.dart';
 
 
 class PetOwnerPreferencesWidget extends StatefulWidget {

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/image_strings.dart';
-import '../../../../../utlis/constants/size.dart';
 import '../../../../../utlis/helpers/image_helper.dart';
 
 class ProfileHeaderWidget extends StatelessWidget {

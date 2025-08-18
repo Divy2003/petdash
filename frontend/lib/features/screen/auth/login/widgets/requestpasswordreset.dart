@@ -8,6 +8,8 @@ import '../../../../../provider/auth_provider/forgot_password_provider.dart';
 import 'otp_verification_screen.dart';
 
 class RequestPasswordResetScreen extends StatefulWidget {
+  const RequestPasswordResetScreen({super.key});
+
   @override
   State<RequestPasswordResetScreen> createState() =>
       _RequestPasswordResetScreenState();

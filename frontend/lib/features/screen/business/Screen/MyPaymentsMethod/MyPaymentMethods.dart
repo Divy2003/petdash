@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../../common/widgets/appbar/appbar.dart';
-import '../../../../../common/widgets/progessIndicator/threedotindicator.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/image_strings.dart';
 import '../../../../../utlis/constants/size.dart';
@@ -10,6 +9,8 @@ import '../../model/cardModel.dart';
 import 'addNewPayment.dart';
 
 class MyCardScreen extends StatefulWidget {
+  const MyCardScreen({super.key});
+
   @override
   State<MyCardScreen> createState() => _MyCardScreenState();
 }

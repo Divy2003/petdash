@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:petcare/features/screen/auth/login/loginscreen.dart';
-import 'package:petcare/features/screen/business/BusinessProfileScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../common/widgets/Button/primarybutton.dart';
@@ -11,7 +10,6 @@ import '../../../../../provider/auth_provider/registerprovider.dart';
 import '../../../../../utlis/constants/colors.dart';
 import '../../../../../utlis/constants/image_strings.dart';
 import '../../../../../utlis/constants/size.dart';
-import '../../../Navigation.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -156,10 +154,12 @@ class _RegisterFormState extends State<RegisterForm> {
                 TextFormField(
                   controller: emailController,
                   validator: (value) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return 'Email is required';
-                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value))
+                    }
+                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                       return 'Enter a valid email';
+                    }
                     return null;
                   },
                   keyboardType: TextInputType.emailAddress,
@@ -203,8 +203,9 @@ class _RegisterFormState extends State<RegisterForm> {
                   controller: passwordController,
                   obscureText: true,
                   validator: (value) {
-                    if (value == null || value.length < 6)
+                    if (value == null || value.length < 6) {
                       return 'Password must be at least 6 characters';
+                    }
                     return null;
                   },
                   keyboardType: TextInputType.emailAddress,

@@ -5,7 +5,7 @@ import 'package:dotted_border/dotted_border.dart';
 class SingleImagePicker extends StatefulWidget {
   final Function(String path)? onImagePicked;
 
-  const SingleImagePicker({Key? key, this.onImagePicked}) : super(key: key);
+  const SingleImagePicker({super.key, this.onImagePicked});
 
   @override
   State<SingleImagePicker> createState() => _SingleImagePickerState();

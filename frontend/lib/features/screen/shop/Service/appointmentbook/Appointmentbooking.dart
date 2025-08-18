@@ -5,7 +5,6 @@ import 'package:petcare/common/widgets/Button/primarybutton.dart';
 import 'package:petcare/features/screen/shop/Service/appointmentbook/widgets/Notes.dart';
 import 'package:petcare/features/screen/shop/Service/appointmentbook/widgets/addonChecklist.dart';
 import 'package:petcare/features/screen/shop/Service/appointmentbook/widgets/astimatedcost.dart';
-import 'package:petcare/features/screen/shop/Service/appointmentbook/widgets/couponcode.dart';
 import 'package:petcare/features/screen/shop/Service/appointmentbook/widgets/dateAndTimePicker.dart';
 import 'package:petcare/provider/appointment_provider/appointment_booking_provider.dart';
 import 'package:petcare/services/api_service.dart';

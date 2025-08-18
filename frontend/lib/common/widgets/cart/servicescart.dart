@@ -9,11 +9,11 @@ class ServiceCard extends StatelessWidget {
   final String imagePath;
 
   const ServiceCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.subtitle,
     required this.imagePath,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

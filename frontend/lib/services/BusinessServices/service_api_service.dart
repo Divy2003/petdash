@@ -283,7 +283,7 @@ class ServiceApiService {
               contentType: MediaType.parse(_getContentType(extension)),
             );
             request.files.add(multipartFile);
-            print('📎 Added file: ${file.path} (${extension})');
+            print('📎 Added file: ${file.path} ($extension)');
           } catch (e) {
             print('❌ Failed to add file ${file.path}: $e');
             throw Exception('Failed to process image file: ${file.path}');

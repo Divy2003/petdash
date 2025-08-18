@@ -49,9 +49,7 @@ class _EditProfileState extends State<EditProfile> {
 
       // Use initial profile if provided, otherwise fetch from service
       ProfileModel? profile = widget.initialProfile;
-      if (profile == null) {
-        profile = await ProfileService.getProfile();
-      }
+      profile ??= await ProfileService.getProfile();
 
       if (profile != null) {
         setState(() {

@@ -112,7 +112,7 @@ class _AllReviewState extends State<AllReview> {
                     SizedBox(height: 20,),
                   ],
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),

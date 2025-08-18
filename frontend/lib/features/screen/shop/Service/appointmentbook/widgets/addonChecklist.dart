@@ -48,7 +48,7 @@ class AddOnsChecklist extends StatelessWidget {
                   ),
                 ],
               );
-            }).toList(),
+            }),
           ],
         );
       },

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../../utlis/constants/colors.dart';
 import '../../../../../../utlis/constants/image_strings.dart';
 import '../../../../../../utlis/constants/size.dart';
-import '../../../../business/Screen/order/orderdetails.dart';
 import 'orderDetailsScreen.dart';
 
 class MyOrdersScreen extends StatelessWidget {

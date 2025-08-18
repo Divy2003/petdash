@@ -7,7 +7,6 @@ import '../../../utlis/constants/colors.dart';
 import '../../../utlis/constants/size.dart';
 import '../../../provider/location_provider.dart';
 import '../../../services/BusinessServices/address_service.dart';
-import 'google_map_screen.dart';
 
 class AddressTypeSelectionScreen extends StatefulWidget {
   final String? selectedAddress;
@@ -172,7 +171,7 @@ class _AddressTypeSelectionScreenState
                   ),
                 ),
               );
-            }).toList(),
+            }),
 
             SizedBox(height: AppSizes.lg),
 

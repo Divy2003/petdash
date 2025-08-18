@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utlis/constants/size.dart';
-import '../../widgets/ImagePicker.dart';
 import '../../widgets/custom_text_field.dart';
 
 class AddNewArticles extends StatefulWidget {

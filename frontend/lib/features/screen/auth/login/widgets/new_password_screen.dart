@@ -10,7 +10,7 @@ import '../loginscreen.dart';
 class NewPasswordScreen extends StatefulWidget {
   final String otpCode;
 
-  const NewPasswordScreen({Key? key, required this.otpCode}) : super(key: key);
+  const NewPasswordScreen({super.key, required this.otpCode});
 
   @override
   State<NewPasswordScreen> createState() => _NewPasswordScreenState();

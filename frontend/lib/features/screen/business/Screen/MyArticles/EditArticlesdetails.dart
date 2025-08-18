@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:petcare/common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../utlis/constants/size.dart';
-import '../../widgets/ImagePicker.dart';
 import '../../widgets/custom_text_field.dart';
 
 class EditArticlesDetails extends StatefulWidget {

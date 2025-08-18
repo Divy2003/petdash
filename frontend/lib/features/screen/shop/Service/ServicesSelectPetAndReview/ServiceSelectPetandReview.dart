@@ -7,7 +7,6 @@ import 'package:petcare/features/screen/shop/Service/ServicesSelectPetAndReview/
 
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utlis/constants/colors.dart';
-import '../../../../../utlis/constants/image_strings.dart';
 import '../../../../../utlis/constants/size.dart';
 class ServiceSelectPetAndReview extends StatefulWidget {
   const ServiceSelectPetAndReview({super.key});

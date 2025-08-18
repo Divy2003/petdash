@@ -16,7 +16,7 @@ class ServicesProvider with ChangeNotifier {
   // Additional state for better UX
   bool _hasInitialized = false;
   String? _lastRefreshTime;
-  Map<String, bool> _deletingServices = {}; // Track individual service deletion states
+  final Map<String, bool> _deletingServices = {}; // Track individual service deletion states
 
   List<ServiceModel> get services => _services;
   bool get isLoading => _isLoading;
