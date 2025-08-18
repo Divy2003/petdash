@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petcare/services/api_service.dart';
-import 'package:petcare/utlis/constants/colors.dart';
 
 import '../../../../../../common/widgets/appbar/appbar.dart';
 

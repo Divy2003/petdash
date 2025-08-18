@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:petcare/utlis/constants/colors.dart';
 import 'package:petcare/utlis/constants/size.dart';
 

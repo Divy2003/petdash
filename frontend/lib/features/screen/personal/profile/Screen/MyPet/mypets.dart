@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:petcare/features/screen/personal/profile/Screen/MyPet/AddAnotherPet.dart';
 
 import '../../../../../../common/widgets/Button/primarybutton.dart';
@@ -129,7 +128,7 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
                         child: Column(
                           children: [
                             // Pet List
-                            ...pets.map((pet) => _buildPetCard(pet)).toList(),
+                            ...pets.map((pet) => _buildPetCard(pet)),
                             const SizedBox(height: 24),
 
                             // Add Another Pet Button

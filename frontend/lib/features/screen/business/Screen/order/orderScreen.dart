@@ -24,6 +24,8 @@ class OrderScreen extends StatelessWidget {
     // Add more orders as needed
   ];
 
+   OrderScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

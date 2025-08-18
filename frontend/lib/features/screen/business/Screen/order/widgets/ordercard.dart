@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import '../../../../../../utlis/constants/colors.dart';
 import '../../../../../../utlis/constants/size.dart';
 import '../../../model/ordermodel.dart';
@@ -11,7 +10,7 @@ import '../orderdetails.dart';
 class OrderCard extends StatelessWidget {
   final OrderModel order;
 
-  const OrderCard({Key? key, required this.order}) : super(key: key);
+  const OrderCard({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {

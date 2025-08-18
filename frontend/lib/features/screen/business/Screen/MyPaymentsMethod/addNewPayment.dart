@@ -300,7 +300,7 @@ class _ExpiryDateInputFormatter extends TextInputFormatter {
       TextEditingValue oldValue, TextEditingValue newValue) {
     var digitsOnly = newValue.text.replaceAll(RegExp(r'\D'), '');
     if (digitsOnly.length >= 3) {
-      digitsOnly = digitsOnly.substring(0, 2) + '/' + digitsOnly.substring(2);
+      digitsOnly = '${digitsOnly.substring(0, 2)}/${digitsOnly.substring(2)}';
     }
     return TextEditingValue(
       text: digitsOnly,

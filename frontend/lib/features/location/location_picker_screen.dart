@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 
 import '../../common/widgets/appbar/appbar.dart';
 import '../../common/widgets/Button/primarybutton.dart';
-import '../../common/widgets/progessIndicator/threedotindicator.dart';
 import '../../utlis/constants/size.dart';
 import '../../utlis/constants/colors.dart';
 import '../../utlis/app_config/app_config.dart';

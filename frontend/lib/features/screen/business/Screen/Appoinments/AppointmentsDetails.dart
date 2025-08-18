@@ -73,7 +73,7 @@ class _AppointmentsDetailsState extends State<AppointmentsDetails> {
                 final customer = (appt['customer'] ?? {}) as Map<String, dynamic>;
                 return ServiceCard(
                   title: (service['title'] ?? 'Service').toString(),
-                  subtitle: 'Customer: ' + (customer['name'] ?? 'N/A').toString(),
+                  subtitle: 'Customer: ${customer['name'] ?? 'N/A'}',
                   imagePath: AppImages.person,
                 );
               }),

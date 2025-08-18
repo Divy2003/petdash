@@ -10,13 +10,12 @@ import 'package:petcare/services/BusinessServices/products_services.dart';
 import 'package:petcare/utlis/constants/colors.dart';
 import 'package:petcare/utlis/constants/size.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../../utlis/constants/image_strings.dart';
 import '../../model/addproductsmodel.dart';
 import 'AddNewProducts.dart';
 import 'editNewProducts.dart';
 
 class MyProductsScreen extends StatefulWidget {
-  const MyProductsScreen({Key? key}) : super(key: key);
+  const MyProductsScreen({super.key});
 
   @override
   State<MyProductsScreen> createState() => _MyProductsScreenState();

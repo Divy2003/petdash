@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../common/widgets/Button/primarybutton.dart';
 import '../../../../../../common/widgets/appbar/appbar.dart';
-import '../../../../../../utlis/constants/colors.dart';
 import '../../../../../../utlis/constants/size.dart';
-import '../../../../business/widgets/ImagePicker.dart';
 import '../../../../business/widgets/custom_text_field.dart';
 
 

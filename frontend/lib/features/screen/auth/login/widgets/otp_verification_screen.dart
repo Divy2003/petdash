@@ -9,6 +9,8 @@ import '../../../../../provider/auth_provider/forgot_password_provider.dart';
 import 'new_password_screen.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
+  const OtpVerificationScreen({super.key});
+
   @override
   State<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
 }
@@ -104,7 +106,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   }
 
   Widget buildOtpField(int index) {
-    return Container(
+    return SizedBox(
       width: 50,
       height: 60,
       child: TextFormField(

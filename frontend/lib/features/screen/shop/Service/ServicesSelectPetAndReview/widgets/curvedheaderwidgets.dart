@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:petcare/utlis/constants/image_strings.dart';
 
-import '../../../../../../utlis/constants/colors.dart';
 import '../../../../../../models/business_model.dart';
 
 class CurvedHeaderWidget extends StatelessWidget {

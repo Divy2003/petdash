@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import '../../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../../utlis/constants/colors.dart';
 import '../../../../../../utlis/constants/size.dart';
-import '../../../../../../provider/location_provider.dart';
-import '../../../../../../provider/profile_provider.dart';
-import '../../../../../../models/profile_model.dart';
 import '../../../../location/google_map_screen.dart';
-import '../../../../location/address_type_selection_screen.dart';
 
 class SaveAddressScreen extends StatefulWidget {
   const SaveAddressScreen({super.key});

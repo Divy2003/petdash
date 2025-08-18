@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:petcare/common/widgets/Tile/profilemenutile.dart';
 import 'package:petcare/features/screen/auth/login/loginscreen.dart';
 import 'package:petcare/features/screen/business/profiles/Createprofile.dart';
-import 'package:petcare/features/screen/personal/profile/widgets/editProfile.dart';
 import 'package:petcare/features/screen/personal/profile/widgets/profileheaderwidgets.dart';
 import 'package:petcare/services/user_session_service.dart';
 import 'package:petcare/provider/profile_provider.dart';

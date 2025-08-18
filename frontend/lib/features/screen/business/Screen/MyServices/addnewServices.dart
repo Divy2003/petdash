@@ -37,8 +37,8 @@ class _AddNewServicesState extends State<AddNewServices> {
   String? _selectedImagePath;
 
   String? _selectedCategoryId;
-  List<String> _catSizes = [];
-  List<String> _dogSizes = [];
+  final List<String> _catSizes = [];
+  final List<String> _dogSizes = [];
 
   Future<void> _saveService(BuildContext context) async {
     if (_titleController.text.trim().isEmpty) {

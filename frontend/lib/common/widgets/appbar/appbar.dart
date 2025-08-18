@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:petcare/utlis/constants/size.dart';
 import '../../../utlis/constants/colors.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -10,11 +8,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions; // <-- Optional actions
 
   const CustomAppBar({
-    Key? key,
+    super.key,
     required this.title,
     this.onBack,
     this.actions,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
